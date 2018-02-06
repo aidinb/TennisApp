@@ -8,7 +8,8 @@ exports.COLORS_HEX = {
     darkGray: 'rgba(255,255,255,0.8)',
     lightGray: 'rgba(255,255,255,0.5)',
     gray: '#4D4D4D',
-    boxGray:'#333333'
+    boxGray:'#333333',
+    whiteBoxBlur:'rgba(255,255,255,0.85)'
 
 };
 

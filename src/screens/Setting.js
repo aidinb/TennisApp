@@ -56,6 +56,7 @@ export default class Setting extends React.Component {
     }
 
     componentDidMount() {
+        const {store, navigator} = this.props;
 
     }
 
@@ -84,13 +85,15 @@ export default class Setting extends React.Component {
                     right: 0,
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
-                <Navbar title={'Setting'} rightBtnTitle={'Save'} onPressRightBtn={() => navigator.push({
-                    screen: 'Tourney',
-                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                    animationType: 'fade',
-                    passProps: {backTitle: 'Setting'}
+                <Navbar title={'Setting'} rightBtnTitle={'Save'} onPressRightBtn={() => {
+                    navigator.push({
+                        screen: 'Tourney',
+                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                        animationType: 'fade',
+                        passProps: {backTitle: 'Setting'}
 
-                })} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
+                    })
+                }} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
                     screen: 'Menu',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
@@ -98,7 +101,7 @@ export default class Setting extends React.Component {
                 })}/>
 
                 <PersonRow title={'Hanneke Siemens'}/>
-                <ScrollView contentContainerStyle={{paddingBottom:70}}>
+                <ScrollView contentContainerStyle={{paddingBottom: 70}}>
                     <View style={{width: width, padding: 20}}>
                         <Text
                             style={{
@@ -126,7 +129,8 @@ export default class Setting extends React.Component {
                                 fontSize: 16,
                             }}>Punten teller</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
-                                tintColor={Platform.OS ==='ios'?UI.COLORS_HEX.orange:UI.COLORS_HEX.lightGray} thumbTintColor={'white'} onValueChange={(val) => this.setState({punten: val})}
+                                tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
+                                thumbTintColor={'white'} onValueChange={(val) => this.setState({punten: val})}
                                 value={this.state.punten}/>
                     </View>
 
@@ -148,7 +152,8 @@ export default class Setting extends React.Component {
                                 fontSize: 16,
                             }}>Service</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
-                                tintColor={Platform.OS ==='ios'?UI.COLORS_HEX.orange:UI.COLORS_HEX.lightGray} thumbTintColor={'white'}  onValueChange={(val) => this.setState({service: val})}
+                                tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
+                                thumbTintColor={'white'} onValueChange={(val) => this.setState({service: val})}
                                 value={this.state.service}/>
                     </View>
 
@@ -170,7 +175,8 @@ export default class Setting extends React.Component {
                                 fontSize: 16,
                             }}>Winner, (Un)forced Error</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
-                                tintColor={Platform.OS ==='ios'?UI.COLORS_HEX.orange:UI.COLORS_HEX.lightGray} thumbTintColor={'white'}  onValueChange={(val) => this.setState({winner: val})}
+                                tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
+                                thumbTintColor={'white'} onValueChange={(val) => this.setState({winner: val})}
                                 value={this.state.winner}/>
                     </View>
                     <View style={{
@@ -191,7 +197,8 @@ export default class Setting extends React.Component {
                                 fontSize: 16,
                             }}>Type slag</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
-                                tintColor={Platform.OS ==='ios'?UI.COLORS_HEX.orange:UI.COLORS_HEX.lightGray} thumbTintColor={'white'}  onValueChange={(val) => this.setState({type: val})}
+                                tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
+                                thumbTintColor={'white'} onValueChange={(val) => this.setState({type: val})}
                                 value={this.state.type}/>
                     </View>
                 </ScrollView>

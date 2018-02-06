@@ -577,12 +577,22 @@ export default class SetUpWedstrijd extends React.Component {
                                 color={UI.COLORS_HEX.white}
                                 width={width/2+50}
                                 onPress={() => {
-                                    navigator.push({
-                                        screen: 'StartMatch',
-                                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                        animationType: 'fade',
-                                        passProps: {backTitle: 'Set up'}
-                                    })
+                                    if(store.Services === true){
+                                        navigator.push({
+                                            screen: 'StartMatch',
+                                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                            animationType: 'fade',
+                                            passProps: {backTitle: 'Set up'}
+                                        })
+                                    }else {
+                                        navigator.push({
+                                            screen: 'Services',
+                                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                            animationType: 'fade',
+                                            passProps: {backTitle: 'Set up'}
+                                        })
+                                    }
+
                                 }}/>
                    </View>
 

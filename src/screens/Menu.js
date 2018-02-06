@@ -52,6 +52,9 @@ export default class Menu extends React.Component {
     }
 
     componentDidMount() {
+        const {navigator, store} = this.props;
+
+        store.setServices(false)
 
     }
 
@@ -92,6 +95,7 @@ export default class Menu extends React.Component {
                <PersonRow title={'Hanneke Siemens'}/>
 
                 <TouchableOpacity onPress={() => {
+                    store.setServices(true)
                     navigator.push({
                         screen: 'Setting',
                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},

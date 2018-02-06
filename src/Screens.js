@@ -15,6 +15,9 @@ import KiesCat from './screens/KiesCat';
 import StartMatch from './screens/StartMatch';
 import MatchResult from './screens/MatchResult';
 import Statics from './screens/Statics';
+import Services from './screens/Services';
+import Winner from './screens/Winner';
+import SlagType from './screens/SlagType';
 
 
 
@@ -35,5 +38,8 @@ export function registerScreens() {
     Navigation.registerComponent('StartMatch', () => StartMatch, store, Provider);
     Navigation.registerComponent('MatchResult', () => MatchResult, store, Provider);
     Navigation.registerComponent('Statics', () => Statics, store, Provider);
+    Navigation.registerComponent('Services', () => Services, store, Provider);
+    Navigation.registerComponent('Winner', () => Winner, store, Provider);
+    Navigation.registerComponent('SlagType', () => SlagType, store, Provider);
 
 }
