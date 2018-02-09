@@ -577,7 +577,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 color={UI.COLORS_HEX.white}
                                 width={width/2+50}
                                 onPress={() => {
-                                    if(store.Services === true){
+                                    if(store.HasService === false){
                                         navigator.push({
                                             screen: 'StartMatch',
                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},

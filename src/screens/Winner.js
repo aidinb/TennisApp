@@ -211,12 +211,17 @@ export default class Winner extends React.Component {
                         }}>
                             <Box title={'Punt'} colors={['#00914C', '#00A550', '#64C08A']}
                                  onPress={() => {
-                                     this.setState({
-                                         player1: {punt: true, winner: true, forced: false, unforced: false},
-                                         player2: {punt: false, winner: false, forced: true, unforced: true},
-                                         service1Disable:true,
-                                         service2Disable:true
-                                     })
+                                     if (store.HasWinner === true) {
+                                         this.setState({
+                                             player1: {punt: true, winner: true, forced: false, unforced: false},
+                                             player2: {punt: false, winner: false, forced: true, unforced: true},
+                                             service1Disable: true,
+                                             service2Disable: true
+                                         })
+                                     } else {
+                                         alert('Api Call')
+                                     }
+
                                  }}
                                  selected={this.state.player1.punt}/>
                             <Box title={'Punt'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
@@ -261,12 +266,19 @@ export default class Winner extends React.Component {
 
                     }}>
                         <Box title={'Winner'} colors={['#00914C', '#00A550', '#64C08A']}
-                             onPress={() => navigator.push({
-                                 screen: 'SlagType',
-                                 navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                 animationType: 'fade',
-                                 passProps: {backTitle: 'Undo'}
-                             })}
+                             onPress={() => {
+                                 if(store.HasStroke === true){
+                                     navigator.push({
+                                         screen: 'SlagType',
+                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                         animationType: 'fade',
+                                         passProps: {backTitle: 'Undo'}
+                                     })
+                                 }else {
+                                     alert('Api Call')
+                                 }
+
+                             }}
                              fontFamily={UI.FONT.bold}
                              selected={this.state.player1.winner}
                              service1Disable={this.state.service1Disable}

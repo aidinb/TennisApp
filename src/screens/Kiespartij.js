@@ -90,40 +90,13 @@ export default class Kiespartij extends React.Component {
                 })}/>
                 <PersonRow title={'RG Sports Open 2018'}/>
 
-
-                <TouchableOpacity activeOpacity={0.7} onPress={() => {
-                    if (this.state.show === '1') {
-                        this.setState({show: ''})
-                    } else {
-                        this.setState({show: '1'})
-                    }
-                }} style={{
-                    width: width,
-                    flexDirection: 'row',
-                    padding: 20,
-                    justifyContent: 'space-between',
-                    paddingTop: 0,
-                    borderColor: UI.COLORS_HEX.white,
-                    borderTopWidth: 0.5,
-                    borderBottomWidth: this.state.show === '1' ? 0 : 0.5,
-                    marginTop: 10,
-                    alignItems: 'center',
-                    paddingBottom: 0,
-                    height: 50
+                <View style={{
+                    borderColor: UI.COLORS_HEX.gray,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    marginTop: 10
                 }}>
-                    <Text
-                        style={{
-                            fontFamily: UI.FONT.regular,
-                            color: UI.COLORS_HEX.white,
-                            fontSize: 17,
-                        }}>Kies hier een partij</Text>
-                    {this.state.show === '1' ?
-                        <Ionicons name="ios-arrow-down" size={28} color={UI.COLORS_HEX.darkGray}/> :
-                        <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>}
-                </TouchableOpacity>
 
-                {this.state.show === '1' &&
-                <View style={{width: width, justifyContent: 'center', alignItems: 'center'}}>
                     <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
                         screen: 'DamesEnkel',
                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -136,10 +109,9 @@ export default class Kiespartij extends React.Component {
                         justifyContent: 'space-between',
                         paddingTop: 0,
                         borderColor: UI.COLORS_HEX.white,
-                        borderTopWidth: 0.5,
                         alignItems: 'center',
                         paddingBottom: 0,
-                        height: 40,
+                        height: 50,
                         backgroundColor: UI.COLORS_HEX.lightBlack
                     }}>
                         <Text
@@ -166,7 +138,7 @@ export default class Kiespartij extends React.Component {
                         borderTopWidth: 0.5,
                         alignItems: 'center',
                         paddingBottom: 0,
-                        height: 40,
+                        height: 50,
                         backgroundColor: UI.COLORS_HEX.lightBlack
                     }}>
                         <Text
@@ -191,10 +163,9 @@ export default class Kiespartij extends React.Component {
                         paddingTop: 0,
                         borderColor: UI.COLORS_HEX.white,
                         borderTopWidth: 0.5,
-                        borderBottomWidth: 0.5,
                         alignItems: 'center',
                         paddingBottom: 0,
-                        height: 40,
+                        height: 50,
                         backgroundColor: UI.COLORS_HEX.lightBlack
                     }}>
                         <Text
@@ -205,122 +176,9 @@ export default class Kiespartij extends React.Component {
                             }}>Dames enkel</Text>
                         <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
                     </TouchableOpacity>
-                </View>}
+                </View>
 
-                <TouchableOpacity activeOpacity={0.7} onPress={() => {
-                    if (this.state.show === '2') {
-                        this.setState({show: ''})
-                    } else {
-                        this.setState({show: '2'})
-                    }
-                }} style={{
-                    width: width,
-                    flexDirection: 'row',
-                    padding: 20,
-                    justifyContent: 'space-between',
-                    paddingTop: 0,
-                    borderColor: UI.COLORS_HEX.white,
-                    borderTopWidth: 0.5,
-                    borderBottomWidth: this.state.show === '2' ? 0 : 0.5,
-                    marginTop: 0,
-                    alignItems: 'center',
-                    paddingBottom: 0,
-                    height: 50
-                }}>
-                    <Text
-                        style={{
-                            fontFamily: UI.FONT.regular,
-                            color: UI.COLORS_HEX.white,
-                            fontSize: 17,
-                        }}>Kies hier een partij</Text>
-                    {this.state.show === '2' ?
-                        <Ionicons name="ios-arrow-down" size={28} color={UI.COLORS_HEX.darkGray}/> :
-                        <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>}
-                </TouchableOpacity>
 
-                {this.state.show === '2' && <View style={{width: width, justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                        screen: 'DamesEnkel',
-                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                        animationType: 'fade',
-                        passProps: {backTitle: 'Categorie'}
-                    })} style={{
-                        width: width,
-                        flexDirection: 'row',
-                        padding: 20,
-                        justifyContent: 'space-between',
-                        paddingTop: 0,
-                        borderColor: UI.COLORS_HEX.white,
-                        borderTopWidth: 0.5,
-                        alignItems: 'center',
-                        paddingBottom: 0,
-                        height: 40,
-                        backgroundColor: UI.COLORS_HEX.lightBlack
-                    }}>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                            }}>Dames enkel 35+</Text>
-                        <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                        screen: 'DamesEnkel',
-                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                        animationType: 'fade',
-                        passProps: {backTitle: 'Categorie'}
-                    })} style={{
-                        width: width,
-                        flexDirection: 'row',
-                        padding: 20,
-                        justifyContent: 'space-between',
-                        paddingTop: 0,
-                        borderColor: UI.COLORS_HEX.white,
-                        borderTopWidth: 0.5,
-                        alignItems: 'center',
-                        paddingBottom: 0,
-                        height: 40,
-                        backgroundColor: UI.COLORS_HEX.lightBlack
-                    }}>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                            }}>Heren dubbel</Text>
-                        <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                        screen: 'DamesEnkel',
-                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                        animationType: 'fade',
-                        passProps: {backTitle: 'Categorie'}
-                    })} style={{
-                        width: width,
-                        flexDirection: 'row',
-                        padding: 20,
-                        justifyContent: 'space-between',
-                        paddingTop: 0,
-                        borderColor: UI.COLORS_HEX.white,
-                        borderTopWidth: 0.5,
-                        borderBottomWidth: 0.5,
-                        alignItems: 'center',
-                        paddingBottom: 0,
-                        height: 40,
-                        backgroundColor: UI.COLORS_HEX.lightBlack
-                    }}>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                            }}>Dames enkel</Text>
-                        <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                    </TouchableOpacity>
-                </View>}
                 <Footer/>
 
 

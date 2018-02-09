@@ -367,25 +367,14 @@ export default class Services extends React.Component {
                         }}>
                             <Box title={'Ace'} colors={['#00914C', '#00A550', '#64C08A']}
                                  onPress={() => {
-                                     this.setState({
-                                         service1: {inSpel: false, winner: false, fout: false, ace: true},
-                                         service2: {inSpel: true, winner: true, fout: true, ace: true},
-                                         service2Disable: false,
-                                         service1Disable: true,
-                                     })
+                                     alert('Point Added')
                                  }}
                                  width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
                                  service1Disable={this.state.service1Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service1.ace}/>
                             <Box title={'Winner serve'} colors={['#666666', '#808080', '#999999']}
-                                 onPress={() => this.setState({
-                                     service1: {inSpel: false, ace: false, fout: false, winner: true},
-                                     service2: {inSpel: true, winner: true, fout: true, ace: true},
-                                     service2Disable: false,
-                                     service1Disable: true,
-
-                                 })}
+                                 onPress={() => alert('Point Added')}
                                  width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
                                  service1Disable={this.state.service1Disable}
                                  fontFamily={UI.FONT.bold}
@@ -403,12 +392,11 @@ export default class Services extends React.Component {
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service1.fout}/>
                             <Box title={'In spel'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
-                                 onPress={() => this.setState({
-                                     service1: {inSpel: true, ace: false, winner: false, fout: false},
-                                     service2: {inSpel: true, winner: true, fout: true, ace: true},
-                                     service2Disable: false,
-                                     service1Disable: true,
-
+                                 onPress={() => navigator.push({
+                                     screen: 'Winner',
+                                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                     animationType: 'fade',
+                                     passProps: {backTitle: 'Undo'}
                                  })}
                                  width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
                                  service1Disable={this.state.service1Disable}
@@ -457,34 +445,24 @@ export default class Services extends React.Component {
 
                             <Box title={'Ace'} colors={['#00914C', '#00A550', '#64C08A']}
                                  onPress={() => {
-                                     navigator.push({
-                                         screen: 'Winner',
-                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                         animationType: 'fade',
-                                         passProps: {backTitle: 'Undo'}
-                                     })
+                                     alert('Point Added')
                                  }}
                                  width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
                                  service2Disable={this.state.service2Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service2.ace}/>
                             <Box title={'Winner serve'} colors={['#666666', '#808080', '#999999']}
-                                 onPress={() => navigator.push({
-                                     screen: 'Winner',
-                                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                     animationType: 'fade',
-                                     passProps: {backTitle: 'Undo'}
-                                 })}
+                                 onPress={() => alert('Point Added')}
                                  width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
                                  service2Disable={this.state.service2Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service2.winner}/>
                             <Box title={'Fout'} colors={['#CD118C', '#EB008B', '#F074AC']}
-                                 onPress={() => navigator.push({
-                                     screen: 'Winner',
-                                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                     animationType: 'fade',
-                                     passProps: {backTitle: 'Undo'}
+                                 onPress={() => this.setState({
+                                     service1: {inSpel: true, winner: true, fout: true, ace: true},
+                                     service2: {inSpel: false, winner: false, fout: true, ace: false},
+                                     service2Disable: true,
+                                     service1Disable: false,
                                  })}
                                  width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
                                  service2Disable={this.state.service2Disable}

@@ -30,7 +30,7 @@ export default class Setting extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            punten: false,
+            punten: true,
             service: false,
             winner: false,
             slag: false,
@@ -153,8 +153,8 @@ export default class Setting extends React.Component {
                             }}>Service</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => this.setState({service: val})}
-                                value={this.state.service}/>
+                                thumbTintColor={'white'} onValueChange={(val) => store.HasService=val}
+                                value={store.HasService}/>
                     </View>
 
                     <View style={{
@@ -176,8 +176,8 @@ export default class Setting extends React.Component {
                             }}>Winner, (Un)forced Error</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => this.setState({winner: val})}
-                                value={this.state.winner}/>
+                                thumbTintColor={'white'} onValueChange={(val) => store.HasWinner=val}
+                                value={store.HasWinner}/>
                     </View>
                     <View style={{
                         width: width,
@@ -198,8 +198,8 @@ export default class Setting extends React.Component {
                             }}>Type slag</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => this.setState({type: val})}
-                                value={this.state.type}/>
+                                thumbTintColor={'white'} onValueChange={(val) => store.HasStroke=val}
+                                value={store.HasStroke}/>
                     </View>
                 </ScrollView>
                 <Footer/>
