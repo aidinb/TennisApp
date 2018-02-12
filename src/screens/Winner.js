@@ -92,7 +92,7 @@ export default class Winner extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd ' + store.Baan} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
+                <Navbar title={'Wedstrijd ' + store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
@@ -161,8 +161,8 @@ export default class Winner extends React.Component {
                                         color: UI.COLORS_HEX.white,
                                         fontSize: 17,
                                         marginTop: -3,
-                                    }}>A. Kleijsen</Text>
-                                {store.Service === 'A. Kleijsen' && <Image source={require('../assets/images/ball.png')}
+                                    }}>{store.Match.player1}</Text>
+                                {store.Service === store.Match.player1 && <Image source={require('../assets/images/ball.png')}
                                                                            style={{
                                                                                width: 18,
                                                                                height: 18,
@@ -174,7 +174,7 @@ export default class Winner extends React.Component {
                                 alignItems: 'center',
                                 flexDirection: 'row',
                                 paddingRight: 10,
-                                paddingLeft: 10
+                                paddingLeft: 10,
                             }}>
                                 <Text
                                     style={{
@@ -182,8 +182,8 @@ export default class Winner extends React.Component {
                                         color: UI.COLORS_HEX.white,
                                         fontSize: 17,
                                         marginTop: -3,
-                                    }}>M. Luschen</Text>
-                                {store.Service === 'M. Luschen' && <Image source={require('../assets/images/ball.png')}
+                                    }}>{store.Match.player2}n</Text>
+                                {store.Service === store.Match.player2 && <Image source={require('../assets/images/ball.png')}
                                                                           style={{
                                                                               width: 18,
                                                                               height: 18,
@@ -266,7 +266,7 @@ export default class Winner extends React.Component {
                                     color: UI.COLORS_HEX.white,
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>A. Kleijsen</Text>
+                                }}>{store.Match.player1}</Text>
                             {this.state.service1Disable === false && <View style={{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 position: 'absolute',
@@ -370,7 +370,7 @@ export default class Winner extends React.Component {
                                     color: UI.COLORS_HEX.white,
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>M. Luschen</Text>
+                                }}>{store.Match.player2}</Text>
                             {this.state.service2Disable === false && <View style={{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 position: 'absolute',

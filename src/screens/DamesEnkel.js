@@ -14,8 +14,6 @@ import {
     Picker
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
-
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 import CTextInput from '../components/CTextInput';
@@ -24,13 +22,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
+import Loading from '../components/Loading'
+
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class DamesEnkel extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isLoading: false
+
+        };
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
     }
@@ -51,13 +55,50 @@ export default class DamesEnkel extends React.Component {
     }
 
     componentDidMount() {
-
+        const {store, navigator} = this.props;
+        this.setState({isLoading: true})
+        store.getMatches().then(()=>{
+            this.setState({isLoading: false})
+            console.log(store.Matches)
+        })
     }
 
     componentWillUnmount() {
 
     }
-
+    renderItem=({item,index})=>{
+        const {store, navigator} = this.props;
+        return (
+            <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                store.setMatch(item)
+                navigator.push({
+                screen: 'SetUpWedstrijd',
+                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                animationType: 'fade',
+                passProps: {backTitle: 'kies partij'}
+            })}} style={{
+                width: width,
+                flexDirection: 'row',
+                padding: 20,
+                justifyContent: 'space-between',
+                paddingTop: 0,
+                borderColor: UI.COLORS_HEX.white,
+                borderTopWidth: index===0?0:0.5,
+                alignItems: 'center',
+                paddingBottom: 0,
+                height: 50,
+                backgroundColor: UI.COLORS_HEX.lightBlack
+            }}>
+                <Text
+                    style={{
+                        fontFamily: UI.FONT.regular,
+                        color: UI.COLORS_HEX.white,
+                        fontSize: 17,
+                    }}>{'DE'+item.category_id+' '+item.player1+' vs '+item.player2}</Text>
+                <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
+            </TouchableOpacity>
+        )
+    }
 
     render() {
         const {navigator, store} = this.props;
@@ -87,154 +128,21 @@ export default class DamesEnkel extends React.Component {
 
                 })}/>
 
-                <PersonRow title={'RG Sports Open 2018'}/>
-                <ScrollView>
-                    <View style={{
-                        borderColor: UI.COLORS_HEX.gray,
-                        borderTopWidth: 1,
-                        borderBottomWidth: 1,
-                        marginTop: 10
-                    }}>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                            screen: 'SetUpWedstrijd',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'kies partij'}
-                        })} style={{
-                            width: width,
-                            flexDirection: 'row',
-                            padding: 20,
-                            justifyContent: 'space-between',
-                            paddingTop: 0,
-                            borderColor: UI.COLORS_HEX.white,
-                            alignItems: 'center',
-                            paddingBottom: 0,
-                            height: 50,
-                            backgroundColor: UI.COLORS_HEX.lightBlack
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 17,
-                                }}>DE4 D. Roumen vs L. Nijholt</Text>
-                            <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                        </TouchableOpacity>
+                <PersonRow title={store.TournamentByNumber.name}/>
+                <View style={{
+                    borderColor: UI.COLORS_HEX.gray,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    marginTop: 10
+                }}>
+                    {store.Matches&&<FlatList data={store.Matches}
+                                              keyExtractor={(item, index) => 'Match'+item.id}
+                                              renderItem={this.renderItem}
+                    />}
 
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                            screen: 'SetUpWedstrijd',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'kies partij'}
-
-                        })} style={{
-                            width: width,
-                            flexDirection: 'row',
-                            padding: 20,
-                            justifyContent: 'space-between',
-                            paddingTop: 0,
-                            borderColor: UI.COLORS_HEX.white,
-                            borderTopWidth: 0.5,
-                            alignItems: 'center',
-                            paddingBottom: 0,
-                            height: 50,
-                            backgroundColor: UI.COLORS_HEX.lightBlack
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 17,
-                                }}>DE5 A. Kleijsen vs M. Luschen</Text>
-                            <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                            screen: 'SetUpWedstrijd',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'kies partij'}
-
-                        })} style={{
-                            width: width,
-                            flexDirection: 'row',
-                            padding: 20,
-                            justifyContent: 'space-between',
-                            paddingTop: 0,
-                            borderColor: UI.COLORS_HEX.white,
-                            borderTopWidth: 0.5,
-                            alignItems: 'center',
-                            paddingBottom: 0,
-                            height: 50,
-                            backgroundColor: UI.COLORS_HEX.lightBlack
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 17,
-                                }}>DE6 M. de Bruin vs H. Platenkamp</Text>
-                            <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                            screen: 'SetUpWedstrijd',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'kies partij'}
-
-                        })} style={{
-                            width: width,
-                            flexDirection: 'row',
-                            padding: 20,
-                            justifyContent: 'space-between',
-                            paddingTop: 0,
-                            borderColor: UI.COLORS_HEX.white,
-                            borderTopWidth: 0.5,
-                            alignItems: 'center',
-                            paddingBottom: 0,
-                            height: 50,
-                            backgroundColor: UI.COLORS_HEX.lightBlack
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 17,
-                                }}>DE7 E. Spil vs R. Sikkema</Text>
-                            <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => navigator.push({
-                            screen: 'SetUpWedstrijd',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'kies partij'}
-
-                        })} style={{
-                            width: width,
-                            flexDirection: 'row',
-                            padding: 20,
-                            justifyContent: 'space-between',
-                            paddingTop: 0,
-                            borderColor: UI.COLORS_HEX.white,
-                            borderTopWidth: 0.5,
-                            alignItems: 'center',
-                            paddingBottom: 0,
-                            height: 50,
-                            backgroundColor: UI.COLORS_HEX.lightBlack
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 17,
-                                }}>DE8 S. vd Straaten vs W. Peters</Text>
-                            <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
+                </View>
                 <Footer/>
+                {this.state.isLoading && <Loading/>}
 
 
             </View>

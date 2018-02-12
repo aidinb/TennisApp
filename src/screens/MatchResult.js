@@ -89,7 +89,7 @@ export default class MatchResult extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd baan 8'} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
+                <Navbar title={'Wedstrijd '+store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Terug'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
@@ -133,7 +133,7 @@ export default class MatchResult extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>A. Kleijsen</Text>
+                                        }}>{store.Match.player1}</Text>
                                 </View>
                                 <View style={{
                                     paddingLeft: 10,
@@ -225,7 +225,7 @@ export default class MatchResult extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>M. Luschen</Text>
+                                        }}>{store.Match.player2}</Text>
                                 </View>
                                 <View style={{
                                     paddingLeft: 10,
@@ -316,7 +316,7 @@ export default class MatchResult extends React.Component {
                                 color: UI.COLORS_HEX.white,
                                 fontSize: 32,
                                 marginTop: -3,
-                            }}>A. Kleijsen</Text>
+                            }}>{store.Match.player1}</Text>
                         <Text
                             style={{
                                 fontFamily: UI.FONT.blackItalic,

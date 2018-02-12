@@ -1,0 +1,1 @@
+export default 'https://api.gamesetstats.nl/';

@@ -94,13 +94,13 @@ export default class StartMatch extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd '+store.Baan} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
+                <Navbar title={'Wedstrijd '+store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
                             animationType: 'fade',
                         })}/>
-                <PersonRow title={'RG Sports Open 2018'}/>
+                <PersonRow title={store.TournamentByNumber.name}/>
 
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70}}>
@@ -140,8 +140,8 @@ export default class StartMatch extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>A. Kleijsen</Text>
-                                    {store.Service === 'A. Kleijsen'&&<Image source={require('../assets/images/ball.png')}
+                                        }}>{store.Match.player1}</Text>
+                                    {store.Service === store.Match.player1&&<Image source={require('../assets/images/ball.png')}
                                            style={{
                                                width: 20,
                                                height: 20,
@@ -238,8 +238,8 @@ export default class StartMatch extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>M. Luschen</Text>
-                                    {store.Service === 'M. Luschen'&&<Image source={require('../assets/images/ball.png')}
+                                        }}>{store.Match.player2}</Text>
+                                    {store.Service === store.Match.player2&&<Image source={require('../assets/images/ball.png')}
                                            style={{
                                                width: 20,
                                                height: 20,
@@ -375,7 +375,7 @@ export default class StartMatch extends React.Component {
                                         color: UI.COLORS_HEX.white,
                                         fontSize: 17,
                                         marginTop: -3,
-                                    }}>A. Kleijsen</Text>
+                                    }}>{store.Match.player1}</Text>
                                 {store.Service === 'A. Kleijsen'&&<Image source={require('../assets/images/ball.png')}
                                                                         style={{
                                                                             width: 18,
@@ -396,7 +396,7 @@ export default class StartMatch extends React.Component {
                                         color: UI.COLORS_HEX.white,
                                         fontSize: 17,
                                         marginTop: -3,
-                                    }}>M. Luschen</Text>
+                                    }}>{store.Match.player2}</Text>
                                 {store.Service === 'M. Luschen'&&<Image source={require('../assets/images/ball.png')}
                                        style={{
                                            width: 18,

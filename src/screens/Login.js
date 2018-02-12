@@ -10,7 +10,8 @@ import {
     Platform,
     Image,
     TextInput,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 
@@ -21,6 +22,7 @@ import CTextInput from '../components/CTextInput';
 import CCheckbox from '../components/CCheckbox'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Navbar from '../components/Navbar';
+import Loading from '../components/Loading'
 
 @inject("store") @observer
 export default class Login extends React.Component {
@@ -28,9 +30,10 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            pass: '',
-            checked: true
+            email: 'rob@socialbrothers.nl',
+            pass: 'wachtwoord',
+            checked: true,
+            isLoading: false
         };
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
@@ -59,6 +62,45 @@ export default class Login extends React.Component {
 
     }
 
+    onLogin = () => {
+        const {store, navigator} = this.props;
+        this.setState({isLoading: true})
+        store.getAuthenticate({
+            email: this.state.email,
+            pass: this.state.pass,
+        }).then(() => {
+                this.setState({isLoading: false})
+                navigator.push({
+                    screen: 'Menu',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                    animationType: 'fade',
+                    passProps: {backTitle: 'Login'}
+
+                })
+        }).catch((e) => {
+            this.setState({isLoading: false})
+
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    'Authentication Failed',
+                    'Please check your username or password',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'common.slowConnection',
+                    'common.pleaseTryAgainLater',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+
+
+    }
 
     render() {
         const {navigator, store} = this.props;
@@ -86,142 +128,135 @@ export default class Login extends React.Component {
                     animationType: 'fade',
                 })}/>
                 <ScrollView>
-                    <KeyboardAvoidingView behavior={'position'} contentContainerStyle={{paddingBottom:80}}>
+                    <KeyboardAvoidingView behavior={'position'} contentContainerStyle={{paddingBottom: 80}}>
 
-                    <View style={{width: width, justifyContent: 'center', alignItems: 'center', marginTop: 15}}>
-                        <Image source={require('../assets/images/placeholder.png')}
-                               style={{
-                                   width: 130,
-                                   height: 130
-                               }}/>
-                    </View>
-
-                    <View style={{
-                        flexDirection: 'row',
-                        padding: 10,
-                        alignSelf: 'center',
-                        width: width - 60,
-                        alignItems: 'center',
-                        paddingLeft: 5
-                    }}>
-                        <Image source={require('../assets/images/emailIcon.png')}
-                               style={{
-                                   width: 24,
-                                   height: 14,
-                                   resizeMode: 'contain'
-
-                               }}/>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                                marginLeft: 5
-                            }}>Email</Text>
-                    </View>
-
-                    <View style={{
-                        flexDirection: 'row',
-                        alignSelf: 'center',
-                        width: width - 60,
-                        alignItems: 'center',
-                    }}>
-                        <CTextInput placeholder={'Voer je email adres in'}
-                                    keyboardType={'email-address'}
-                                    onChangeText={(text) => this.setState({email: text})}
-                                    value={this.state.email}/>
-                    </View>
-
-                    <View style={{
-                        flexDirection: 'row',
-                        padding: 10,
-                        alignSelf: 'center',
-                        width: width - 60,
-                        alignItems: 'center',
-                        marginTop: 0,
-                        paddingLeft: 5
-                    }}>
-                        <Image source={require('../assets/images/passIcon.png')}
-                               style={{
-                                   width: 40,
-                                   height: 20,
-                                   resizeMode: 'contain',
-                                   marginLeft: -13
-                               }}/>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                                marginLeft: -5
-                            }}>Wachtwoord</Text>
-                    </View>
-
-                    <View style={{
-                        flexDirection: 'row',
-                        alignSelf: 'center',
-                        width: width - 60,
-                        alignItems: 'center',
-                    }}>
-                        <CTextInput placeholder={'Voer je wachtwoord in'}
-                                    secureTextEntry={true}
-                                    onChangeText={(text) => this.setState({pass: text})}
-                                    value={this.state.pass}/>
-                    </View>
-
-                    <View style={{
-                        flexDirection: 'row',
-                        padding: 10,
-                        alignSelf: 'center',
-                        width: width - 60,
-                        alignItems: 'center',
-                        marginTop: 10,
-                        paddingLeft: 5,
-                        paddingRight: 5,
-                        justifyContent: 'space-between'
-                    }}>
-                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                            <CCheckbox checked={this.state.checked}
-                                       onPress={() => this.state.checked === true ? this.setState({checked: false}) : this.setState({checked: true})}/>
-
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 12,
-                                    marginLeft: 5
-                                }}>Aangemeld blijven</Text>
+                        <View style={{width: width, justifyContent: 'center', alignItems: 'center', marginTop: 15}}>
+                            <Image source={require('../assets/images/placeholder.png')}
+                                   style={{
+                                       width: 130,
+                                       height: 130
+                                   }}/>
                         </View>
+
                         <View style={{
-                            borderBottomWidth: 0.5,
-                            borderColor: UI.COLORS_HEX.white,
-                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            padding: 10,
+                            alignSelf: 'center',
+                            width: width - 60,
                             alignItems: 'center',
-                            paddingBottom: 1
+                            paddingLeft: 5
                         }}>
+                            <Image source={require('../assets/images/emailIcon.png')}
+                                   style={{
+                                       width: 24,
+                                       height: 14,
+                                       resizeMode: 'contain'
+
+                                   }}/>
                             <Text
                                 style={{
                                     fontFamily: UI.FONT.regular,
                                     color: UI.COLORS_HEX.white,
-                                    fontSize: 12,
-                                }}>Wachtwoord vergeten</Text>
+                                    fontSize: 17,
+                                    marginLeft: 5
+                                }}>Email</Text>
                         </View>
-                    </View>
 
-                <View style={{width: width, alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
-                    <CButton title={'Inloggen'} backgroundColor={UI.COLORS_HEX.blue} color={UI.COLORS_HEX.black}
-                             onPress={() => {
-                                 navigator.push({
-                                     screen: 'Menu',
-                                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                     animationType: 'fade',
-                                     passProps: {backTitle: 'Login'}
+                        <View style={{
+                            flexDirection: 'row',
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                        }}>
+                            <CTextInput placeholder={'Voer je email adres in'}
+                                        keyboardType={'email-address'}
+                                        onChangeText={(text) => this.setState({email: text})}
+                                        value={this.state.email}/>
+                        </View>
 
-                                 })
-                             }}/>
-                </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 10,
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                            marginTop: 0,
+                            paddingLeft: 5
+                        }}>
+                            <Image source={require('../assets/images/passIcon.png')}
+                                   style={{
+                                       width: 40,
+                                       height: 20,
+                                       resizeMode: 'contain',
+                                       marginLeft: -13
+                                   }}/>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 17,
+                                    marginLeft: -5
+                                }}>Wachtwoord</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                        }}>
+                            <CTextInput placeholder={'Voer je wachtwoord in'}
+                                        secureTextEntry={true}
+                                        onChangeText={(text) => this.setState({pass: text})}
+                                        value={this.state.pass}/>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 10,
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                            marginTop: 10,
+                            paddingLeft: 5,
+                            paddingRight: 5,
+                            justifyContent: 'space-between'
+                        }}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                                <CCheckbox checked={this.state.checked}
+                                           onPress={() => this.state.checked === true ? this.setState({checked: false}) : this.setState({checked: true})}/>
+
+                                <Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.white,
+                                        fontSize: 12,
+                                        marginLeft: 5
+                                    }}>Aangemeld blijven</Text>
+                            </View>
+                            <View style={{
+                                borderBottomWidth: 0.5,
+                                borderColor: UI.COLORS_HEX.white,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                paddingBottom: 1
+                            }}>
+                                <Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.white,
+                                        fontSize: 12,
+                                    }}>Wachtwoord vergeten</Text>
+                            </View>
+                        </View>
+
+                        <View style={{width: width, alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
+                            <CButton title={'Inloggen'} backgroundColor={UI.COLORS_HEX.blue} color={UI.COLORS_HEX.black}
+                                     onPress={this.onLogin}/>
+                        </View>
                     </KeyboardAvoidingView>
                 </ScrollView>
+                {this.state.isLoading && <Loading/>}
             </View>
         )
 

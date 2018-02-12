@@ -55,7 +55,26 @@ export default class Menu extends React.Component {
         const {navigator, store} = this.props;
 
         store.setServices(false)
+        this.setState({isLoading:true});
+        store.getListSettings().then(() => {
+            if (store.ListSettings.service && store.ListSettings.service == 1) {
+                store.setHasService(true)
+            } else {
+                store.setHasService(false)
+            }
+            if (store.ListSettings.shot && store.ListSettings.shot == 1) {
+                store.setHasWinner(true)
+            } else {
+                store.setHasWinner(false)
+            }
+            if (store.ListSettings.kaas && store.ListSettings.kaas == 1) {
+                store.setHasStroke(true)
+            } else {
+                store.setHasStroke(false)
+            }
+            this.setState({isLoading:false});
 
+        })
     }
 
     componentWillUnmount() {
@@ -92,7 +111,7 @@ export default class Menu extends React.Component {
 
 
 
-               <PersonRow title={'Hanneke Siemens'}/>
+               <PersonRow title={store.User.name}/>
 
                 <TouchableOpacity onPress={() => {
                     store.setServices(true)

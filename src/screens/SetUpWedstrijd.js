@@ -58,7 +58,8 @@ export default class SetUpWedstrijd extends React.Component {
     componentDidMount() {
         const {navigator, store} = this.props;
 
-        store.setService('A. Kleijsen')
+        store.setService(store.Match.player1)
+
     }
 
     componentWillUnmount() {
@@ -94,7 +95,7 @@ export default class SetUpWedstrijd extends React.Component {
                     animationType: 'fade',
                     passProps: {backTitle: 'Categorie'}
                 })}/>
-                <PersonRow title={'RG Sports Open 2018'}/>
+                <PersonRow title={store.TournamentByNumber.name}/>
 
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70}}>
@@ -129,7 +130,7 @@ export default class SetUpWedstrijd extends React.Component {
                                     fontFamily: UI.FONT.bold,
                                     color: UI.COLORS_HEX.gray,
                                     fontSize: 16,
-                                }}>DE5</Text>
+                                }}>{store.Category.name}</Text>
                         </View>
                     </View>
 
@@ -173,14 +174,14 @@ export default class SetUpWedstrijd extends React.Component {
                                         color: UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         marginTop: -3,
-                                    }}>A. Kleijsen</Text>
+                                    }}>{store.Match.player1}</Text>
                                 <Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
                                         color: UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         marginTop: -3,
-                                    }}>M. Luschen</Text>
+                                    }}>{store.Match.player2}</Text>
                             </View>
                             <View
                                 style={{
@@ -237,7 +238,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 passProps: {
                                     onSelectKies: (e) => {
                                         navigator.dismissLightBox();
-                                        store.setBaan(e)
+                                        store.setCourt(e)
                                     }
                                 }
                             })
@@ -251,7 +252,7 @@ export default class SetUpWedstrijd extends React.Component {
                                         navigator.dismissModal({
                                             animationType: 'slide-down'
                                         });
-                                        store.setBaan(e)
+                                        store.setCourt(e)
                                     }
                                 }
                             });
@@ -274,13 +275,13 @@ export default class SetUpWedstrijd extends React.Component {
                                 marginTop: -3,
                                 flex: 1
                             }}>Kies een baan</Text>
-                        {store.Baan !== '' && <Text style={{
+                        {store.Court !== '' && <Text style={{
                             fontFamily: UI.FONT.regular,
                             color: UI.COLORS_HEX.white,
                             fontSize: 17,
                             marginTop: -3,
                             flex: 1
-                        }}>{store.Baan}</Text>}
+                        }}>{store.Court}</Text>}
                         <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
 
                     </TouchableOpacity>
@@ -315,7 +316,7 @@ export default class SetUpWedstrijd extends React.Component {
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                     this.setState({wie: true});
-                                store.setService('A. Kleijsen');
+                                store.setService(store.Match.player1);
                             }} style={{
                                 width: (width / 2 + 50) / 2,
                                 backgroundColor: this.state.wie === true ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
@@ -331,11 +332,11 @@ export default class SetUpWedstrijd extends React.Component {
                                         color: this.state.wie === true ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         backgroundColor: 'transparent'
-                                    }}>A. Kleijsen</Text>
+                                    }}>{store.Match.player1}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                     this.setState({wie: false})
-                                store.setService('M. Luschen');
+                                store.setService(store.Match.player2);
 
                             }} style={{
                                 width: (width / 2 + 50) / 2,
@@ -353,7 +354,7 @@ export default class SetUpWedstrijd extends React.Component {
                                         fontSize: 14,
                                         backgroundColor: 'transparent'
 
-                                    }}>M. Luschen</Text>
+                                    }}>{store.Match.player2}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -579,7 +580,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 color={UI.COLORS_HEX.white}
                                 width={width/2+50}
                                 onPress={() => {
-                                    if(store.Baan !== '') {
+                                    if(store.Court !== '') {
                                         if (store.HasService === false) {
                                             navigator.push({
                                                 screen: 'StartMatch',

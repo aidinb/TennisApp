@@ -116,7 +116,7 @@ export default class Statics extends React.Component {
                                         color: UI.COLORS_HEX.white,
                                         fontSize: 20,
                                         marginTop: -2
-                                    }}>A. Kleijsen</Text>
+                                    }}>{store.Match.player1}</Text>
                             </View>
                             <View style={{
                                 paddingLeft: 10,
@@ -195,7 +195,7 @@ export default class Statics extends React.Component {
                                         color: UI.COLORS_HEX.white,
                                         fontSize: 20,
                                         marginTop: -2
-                                    }}>M. Luschen</Text>
+                                    }}>{store.Match.player2}</Text>
                             </View>
                             <View style={{
                                 paddingLeft: 10,
@@ -290,7 +290,7 @@ export default class Statics extends React.Component {
                                 color: UI.COLORS_HEX.white,
                                 fontSize: 20,
                             }}>
-                                A. Kleijsen
+                                {store.Match.player1}
                             </Text>
                             <Text style={{
                                 fontFamily: UI.FONT.bold,
@@ -304,7 +304,7 @@ export default class Statics extends React.Component {
                                 color: UI.COLORS_HEX.white,
                                 fontSize: 20,
                             }}>
-                                M. Luschen
+                                {store.Match.player2}
                             </Text>
                         </View>
 

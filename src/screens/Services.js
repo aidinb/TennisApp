@@ -60,8 +60,6 @@ export default class Services extends React.Component {
 
     componentDidMount() {
         const {navigator, store} = this.props;
-
-
     }
 
     componentWillUnmount() {
@@ -91,7 +89,7 @@ export default class Services extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd ' + store.Baan} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
+                <Navbar title={'Wedstrijd ' + store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.push({
                             screen: 'SetUpWedstrijd',
@@ -138,8 +136,8 @@ export default class Services extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>A. Kleijsen</Text>
-                                    {store.Service === 'A. Kleijsen' &&
+                                        }}>{store.Match.player1}</Text>
+                                    {store.Service === store.Match.player1 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
                                                width: 20,
@@ -237,8 +235,8 @@ export default class Services extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>M. Luschen</Text>
-                                    {store.Service === 'M. Luschen' &&
+                                        }}>{store.Match.player2}</Text>
+                                    {store.Service === store.Match.player2 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
                                                width: 20,
