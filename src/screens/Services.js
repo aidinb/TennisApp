@@ -93,9 +93,11 @@ export default class Services extends React.Component {
 
                 <Navbar title={'Wedstrijd ' + store.Baan} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
-                        onPressLeftBtn={() => navigator.pop({
-                            animated: true,
+                        onPressLeftBtn={() => navigator.push({
+                            screen: 'SetUpWedstrijd',
+                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                             animationType: 'fade',
+                            passProps: {backTitle: 'kies partij'}
                         })}/>
 
 
@@ -335,7 +337,7 @@ export default class Services extends React.Component {
                             borderRadius: 5,
                             marginTop: 15
                         }}>
-                            <Text
+                            {Platform.OS === 'IOS'?<Text
                                 style={{
                                     fontFamily: UI.FONT.regular,
                                     color: UI.COLORS_HEX.white,
@@ -344,7 +346,16 @@ export default class Services extends React.Component {
                                 }}>1<View style={{width: 10, height: 20}}><Text style={{
                                 fontSize: 14, fontFamily: UI.FONT.regular,
                                 color: UI.COLORS_HEX.white,
-                            }}>e</Text></View> Service</Text>
+                            }}>e</Text></View> Service</Text>:<Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 18,
+                                    marginTop: -3,
+                                }}>1<Text style={{
+                                fontSize: 14, fontFamily: UI.FONT.regular,
+                                color: UI.COLORS_HEX.white,
+                            }}>e</Text> Service</Text>}
                             {this.state.service1Disable === true && <View style={{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 position: 'absolute',
@@ -413,7 +424,7 @@ export default class Services extends React.Component {
                             borderRadius: 5,
                             marginTop: 30
                         }}>
-                            <Text
+                            {Platform.OS ==='IOS'?<Text
                                 style={{
                                     fontFamily: UI.FONT.regular,
                                     color: UI.COLORS_HEX.white,
@@ -422,7 +433,16 @@ export default class Services extends React.Component {
                                 }}>2<View style={{width: 10, height: 20}}><Text style={{
                                 fontSize: 14, fontFamily: UI.FONT.regular,
                                 color: UI.COLORS_HEX.white,
-                            }}>e</Text></View> Service</Text>
+                            }}>e</Text></View> Service</Text>:<Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 18,
+                                    marginTop: -3,
+                                }}>2<Text style={{
+                                fontSize: 14, fontFamily: UI.FONT.regular,
+                                color: UI.COLORS_HEX.white,
+                            }}>e</Text> Service</Text>}
                             {this.state.service2Disable === true && <View style={{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 position: 'absolute',

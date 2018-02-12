@@ -415,21 +415,35 @@ export default class StartMatch extends React.Component {
                         }}>
                             <Box title={'Punt'} colors={['#00914C', '#00A550', '#64C08A']}
                                  onPress={() => {
-                                     if(this.state.score11===40){
+                                     if(this.state.score21===15){
                                          navigator.push({
                                              screen: 'MatchResult',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps:{backTitle:'Terug'}
+                                             passProps: {backTitle: 'Terug'}
 
-                                         })
+                                         })}
+                                     if(this.state.score11>40){
+                                         this.setState({
+                                             score11: 40,
+                                             score12: 6,
+                                             score13: 3,
+                                             score14: 5,
+                                             score21: 15,
+                                             score22: 4,
+                                             score23: 6,
+                                             score24: 2,
+                                         });
+
                                      }else{
                                          this.setState({score11: this.state.score11+15})
                                      }
 
-                                 }}/>
+                                 }}
+                                 selected={true}/>
                             <Box title={'Punt'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
-                                 onPress={() => this.setState({score21: this.state.score21+15})}/>
+                                 onPress={() => this.setState({score21: this.state.score21+15})}
+                                 selected={true}/>
                         </View>
                     </View>
                 </ScrollView>

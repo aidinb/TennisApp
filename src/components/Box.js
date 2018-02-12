@@ -18,7 +18,7 @@ export default class Box extends Component {
 
     render() {
         return (
-            <TouchableOpacity activeOpacity={0.8} onPress={this.props.onPress} style={{
+            <TouchableOpacity disabled={!this.props.selected} activeOpacity={0.8} onPress={this.props.onPress} style={{
                 width: this.props.width?this.props.width:width/3-30,
                 height: this.props.width?this.props.width:width/3-30,
                 backgroundColor: 'transparent',

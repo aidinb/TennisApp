@@ -84,9 +84,12 @@ export default class Kiespartij extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
                 <Navbar title={'Kies Categorie'} rightBtnColor={UI.COLORS_HEX.orange}
-                        leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.pop({
-                    animated: true,
+                        leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
+                    screen: 'Tourney',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
+                    passProps:{backTitle:'Home'}
+
                 })}/>
                 <PersonRow title={'RG Sports Open 2018'}/>
 

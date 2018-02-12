@@ -88,9 +88,11 @@ export default class SetUpWedstrijd extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Partij instellingen'} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.pop({
-                    animated: true,
+                <Navbar title={'Partij instellingen'} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
+                    screen: 'DamesEnkel',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
+                    passProps: {backTitle: 'Categorie'}
                 })}/>
                 <PersonRow title={'RG Sports Open 2018'}/>
 
@@ -577,22 +579,25 @@ export default class SetUpWedstrijd extends React.Component {
                                 color={UI.COLORS_HEX.white}
                                 width={width/2+50}
                                 onPress={() => {
-                                    if(store.HasService === false){
-                                        navigator.push({
-                                            screen: 'StartMatch',
-                                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                            animationType: 'fade',
-                                            passProps: {backTitle: 'Set up'}
-                                        })
-                                    }else {
-                                        navigator.push({
-                                            screen: 'Services',
-                                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                            animationType: 'fade',
-                                            passProps: {backTitle: 'Set up'}
-                                        })
+                                    if(store.Baan !== '') {
+                                        if (store.HasService === false) {
+                                            navigator.push({
+                                                screen: 'StartMatch',
+                                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                                animationType: 'fade',
+                                                passProps: {backTitle: 'Set up'}
+                                            })
+                                        } else {
+                                            navigator.push({
+                                                screen: 'Services',
+                                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                                animationType: 'fade',
+                                                passProps: {backTitle: 'Set up'}
+                                            })
+                                        }
+                                    }else{
+                                        alert('Please choose kies een baan')
                                     }
-
                                 }}/>
                    </View>
 

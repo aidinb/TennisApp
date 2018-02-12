@@ -151,7 +151,7 @@ export default class SlagType extends React.Component {
                                          ground: true,
                                          lob: true,
                                          volley: true,
-                                         foreHand:true
+                                         foreHand: true
                                      })
                                  }}
                                  selected={this.state.foreHand}/>
@@ -164,7 +164,7 @@ export default class SlagType extends React.Component {
                                      ground: true,
                                      lob: true,
                                      volley: true,
-                                     backHand:true
+                                     backHand: true
                                  })}
                                  selected={this.state.backHand}/>
                         </View>
@@ -200,7 +200,7 @@ export default class SlagType extends React.Component {
                             <Box title={'Drop-\nshot'} colors={['#FAAC18', '#FFCA05', '#FFE7A3']}
                                  onPress={() => {
                                      navigator.push({
-                                         screen: 'MatchResult',
+                                         screen: 'Services',
                                          navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                          animationType: 'fade',
                                          passProps: {backTitle: 'Undo'}
@@ -217,12 +217,13 @@ export default class SlagType extends React.Component {
 
                         }}>
                             <Box title={'Ground-\nstroke'} colors={['#666666', '#808080', '#999999']}
-                                 onPress={() => navigator.push({
-                                     screen: 'Services',
-                                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                     animationType: 'fade',
-                                     passProps: {backTitle: 'Undo'}
-                                 })}
+                                 onPress={() =>
+                                     navigator.push({
+                                         screen: 'MatchResult',
+                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                         animationType: 'fade',
+                                         passProps: {backTitle: 'Undo'}
+                                     })}
                                  selected={this.state.ground}/>
                         </View>
                         <View style={{
@@ -231,10 +232,23 @@ export default class SlagType extends React.Component {
                         }}>
                             <Box title={'Lob'} colors={['#CD118C', '#EB008B', '#F074AC']}
                                  onPress={() => {
+                                     navigator.push({
+                                         screen: 'Services',
+                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                         animationType: 'fade',
+                                         passProps: {backTitle: 'Undo'}
+                                     })
                                  }}
                                  selected={this.state.lob}/>
                             <Box title={'Volley'} colors={['#93278F', '#93278F', '#93278F']}
-                                 onPress={() => alert('hi')}
+                                 onPress={() => {
+                                     navigator.push({
+                                         screen: 'Services',
+                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                         animationType: 'fade',
+                                         passProps: {backTitle: 'Undo'}
+                                     })
+                                 }}
                                  selected={this.state.volley}/>
                         </View>
                     </View>

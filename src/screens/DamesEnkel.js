@@ -79,9 +79,12 @@ export default class DamesEnkel extends React.Component {
                     right: 0,
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
-                <Navbar title={'Dames enkel'} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.pop({
-                    animated: true,
+                <Navbar title={'Dames enkel'} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
+                    screen: 'Kiespartij',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
+                    passProps: {backTitle: 'Toernooi'}
+
                 })}/>
 
                 <PersonRow title={'RG Sports Open 2018'}/>

@@ -219,139 +219,245 @@ export default class Winner extends React.Component {
                                              service2Disable: true
                                          })
                                      } else {
-                                         alert('Api Call')
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
                                      }
 
                                  }}
                                  selected={this.state.player1.punt}/>
                             <Box title={'Punt'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
-                                 onPress={() => this.setState({score21: this.state.score21 + 15})}
+                                 onPress={() => {
+                                     if (store.HasWinner === true) {
+                                         this.setState({
+                                             player1: {punt: false, winner: false, forced: true, unforced: true},
+                                             player2: {punt: true, winner: true, forced: false, unforced: false},
+                                             service1Disable: true,
+                                             service2Disable: true
+                                         })
+                                     } else {
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     }
+                                 }}
                                  selected={this.state.player2.punt}/>
                         </View>
                     </View>
-
-                    <View style={{
-                        width: width - 25,
-                        backgroundColor: UI.COLORS_HEX.gray,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: 30,
-                        borderRadius: 5,
-                        marginTop: 15
-                    }}>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 18,
-                                marginTop: -3,
-                            }}>A. Kleijsen</Text>
-                        {this.state.service1Disable === false && <View style={{
-                            backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                            position: 'absolute',
-                            top: 0,
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
+                    {store.HasWinner === true && <View>
+                        <View style={{
+                            width: width - 25,
+                            backgroundColor: UI.COLORS_HEX.gray,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: 30,
                             borderRadius: 5,
+                            marginTop: 15
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 18,
+                                    marginTop: -3,
+                                }}>A. Kleijsen</Text>
+                            {this.state.service1Disable === false && <View style={{
+                                backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                borderRadius: 5,
 
-                        }}/>}
+                            }}/>}
 
-                    </View>
+                        </View>
 
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        width: width - 20,
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            width: width - 20,
 
-                    }}>
-                        <Box title={'Winner'} colors={['#00914C', '#00A550', '#64C08A']}
-                             onPress={() => {
-                                 if(store.HasStroke === true){
-                                     navigator.push({
-                                         screen: 'SlagType',
-                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                         animationType: 'fade',
-                                         passProps: {backTitle: 'Undo'}
-                                     })
-                                 }else {
-                                     alert('Api Call')
-                                 }
+                        }}>
+                            <Box title={'Winner'} colors={['#00914C', '#00A550', '#64C08A']}
+                                 onPress={() => {
+                                     if (store.HasStroke === true) {
+                                         navigator.push({
+                                             screen: 'SlagType',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     } else {
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     }
 
-                             }}
-                             fontFamily={UI.FONT.bold}
-                             selected={this.state.player1.winner}
-                             service1Disable={this.state.service1Disable}
-                        />
-                        <Box title={'Forced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
-                             onPress={() => alert('Hi')}
-                             fontFamily={UI.FONT.bold}
-                             selected={this.state.player1.forced}
-                             service1Disable={this.state.service1Disable}
-                        />
-                        <Box title={'Unforced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
-                             onPress={() => alert('Hi')}
-                             fontFamily={UI.FONT.bold}
-                             selected={this.state.player1.unforced}
-                             service1Disable={this.state.service1Disable}
-                        />
-                    </View>
+                                 }}
+                                 fontFamily={UI.FONT.bold}
+                                 selected={this.state.player1.winner}
+                                 service1Disable={this.state.service1Disable}
+                            />
+                            <Box title={'Forced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
+                                 onPress={() => {
+                                     if (store.HasStroke === true) {
+                                         navigator.push({
+                                             screen: 'SlagType',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     } else {
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     }
+                                 }}
+                                 fontFamily={UI.FONT.bold}
+                                 selected={this.state.player1.forced}
+                                 service1Disable={this.state.service1Disable}
+                            />
+                            <Box title={'Unforced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
+                                 onPress={() => {
+                                     if (store.HasStroke === true) {
+                                         navigator.push({
+                                             screen: 'SlagType',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     } else {
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     }
+                                 }}
+                                 fontFamily={UI.FONT.bold}
+                                 selected={this.state.player1.unforced}
+                                 service1Disable={this.state.service1Disable}
+                            />
+                        </View>
 
-                    <View style={{
-                        width: width - 25,
-                        backgroundColor: UI.COLORS_HEX.gray,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: 30,
-                        borderRadius: 5,
-                        marginTop: 15
-                    }}>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 18,
-                                marginTop: -3,
-                            }}>M. Luschen</Text>
-                        {this.state.service2Disable === false && <View style={{
-                            backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                            position: 'absolute',
-                            top: 0,
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
+                        <View style={{
+                            width: width - 25,
+                            backgroundColor: UI.COLORS_HEX.gray,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: 30,
                             borderRadius: 5,
+                            marginTop: 15
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 18,
+                                    marginTop: -3,
+                                }}>M. Luschen</Text>
+                            {this.state.service2Disable === false && <View style={{
+                                backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                borderRadius: 5,
 
-                        }}/>}
+                            }}/>}
 
-                    </View>
+                        </View>
 
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        width: width - 20,
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            width: width - 20,
 
-                    }}>
-                        <Box title={'Winner'} colors={['#00914C', '#00A550', '#64C08A']}
-                             onPress={() => alert('Hi')}
-                             fontFamily={UI.FONT.bold}
-                             selected={this.state.player2.winner}
-                             service2Disable={this.state.service2Disable}
-                        />
-                        <Box title={'Forced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
-                             onPress={() => alert('Hi')}
-                             fontFamily={UI.FONT.bold}
-                             selected={this.state.player2.forced}
-                             service1Disable={this.state.service2Disable}
-                        />
-                        <Box title={'Unforced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
-                             onPress={() => alert('Hi')}
-                             fontFamily={UI.FONT.bold}
-                             selected={this.state.player2.unforced}
-                             service1Disable={this.state.service2Disable}
-                        />
-                    </View>
-
+                        }}>
+                            <Box title={'Winner'} colors={['#00914C', '#00A550', '#64C08A']}
+                                 onPress={() => {
+                                     if (store.HasStroke === true) {
+                                         navigator.push({
+                                             screen: 'SlagType',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     } else {
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     }
+                                 }}
+                                 fontFamily={UI.FONT.bold}
+                                 selected={this.state.player2.winner}
+                                 service2Disable={this.state.service2Disable}
+                            />
+                            <Box title={'Forced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
+                                 onPress={() => {
+                                     if (store.HasStroke === true) {
+                                         navigator.push({
+                                             screen: 'SlagType',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     } else {
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     }
+                                 }}
+                                 fontFamily={UI.FONT.bold}
+                                 selected={this.state.player2.forced}
+                                 service1Disable={this.state.service2Disable}
+                            />
+                            <Box title={'Unforced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
+                                 onPress={() => {
+                                     if (store.HasStroke === true) {
+                                         navigator.push({
+                                             screen: 'SlagType',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     } else {
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Undo'}
+                                         })
+                                     }
+                                 }}
+                                 fontFamily={UI.FONT.bold}
+                                 selected={this.state.player2.unforced}
+                                 service1Disable={this.state.service2Disable}
+                            />
+                        </View>
+                    </View>}
                 </ScrollView>
                 <Footer/>
 
