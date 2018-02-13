@@ -16,9 +16,10 @@ iconsLoaded.then(() => {
 
 
 function startApp() {
+
     Navigation.startSingleScreenApp({
         screen: {
-            screen: 'Index',
+            screen: 'LandingPage',
             navigatorStyle: {...UI.NAVIGATION_STYLE,navBarHidden: true},
         },
     });

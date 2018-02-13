@@ -9,7 +9,8 @@ import {
     FlatList,
     Platform,
     Image,
-    TextInput
+    TextInput,
+    Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 
@@ -39,6 +40,7 @@ export default class Index extends React.Component {
             case 'willDisappear':
                 break;
             case 'didDisappear':
+
                 break;
         }
     }

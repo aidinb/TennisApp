@@ -22,10 +22,10 @@ export default class PersonRow extends Component {
                 width: width,
                 alignItems: 'center',
                 padding: 10,
-                paddingLeft: 15,
+                paddingLeft: 10,
                 borderColor: UI.COLORS_HEX.orange,
                 borderBottomWidth: 1,
-                paddingBottom: 10
+                paddingBottom: 10,
             }}>
                 <Image source={require('../assets/images/placeholder.png')}
                        style={{
@@ -37,7 +37,8 @@ export default class PersonRow extends Component {
                         fontFamily: UI.FONT.regular,
                         color: UI.COLORS_HEX.white,
                         fontSize: 22,
-                        marginLeft: 15
+                        marginLeft: 10,
+                        flex:1
                     }}>{this.props.title}</Text>
             </View>
 

@@ -11,12 +11,12 @@ import {
     Image,
     TextInput,
     Switch,
-    Picker
+    Picker,
+    Alert,
+    CameraRoll
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import LinearGradient from 'react-native-linear-gradient';
-
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 import CTextInput from '../components/CTextInput';
@@ -26,13 +26,29 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
 import Box from "../components/Box";
+import {captureRef, captureScreen} from "react-native-view-shot";
+import Loading from '../components/Loading'
+
+const catsSource = {
+    uri: "https://i.imgur.com/5EOyTDQ.jpg"
+};
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class Statics extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            showSeg: 'Partij',
+            isLoading: false,
+            value: {
+                format: "png",
+                quality: 0.9,
+                result: "tmpfile",
+                snapshotContentContainer: false
+            }
+        };
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
     }
@@ -59,6 +75,29 @@ export default class Statics extends React.Component {
 
     }
 
+    snapshot = () => {
+        captureScreen(this.state.value).then(
+            res => {
+                console.log(res)
+                this.setState({isLoading:true})
+                CameraRoll.saveToCameraRoll(res, 'photo').then(() => {
+                    this.setState({isLoading:false})
+
+                    Alert.alert(
+                        '',
+                        'Screen Shot Successfully Added To Camera Roll',
+                        [
+                            {text: 'OK', onPress: () => console.log('OK Pressed')},
+                        ],
+                    )
+                })
+            })
+            .catch(
+                error => (
+                    console.warn(error)
+                )
+            );
+    };
 
     render() {
         const {navigator, store} = this.props;
@@ -82,184 +121,307 @@ export default class Statics extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'supervisor statistieken'} rightBtnColor={UI.COLORS_HEX.orange}
+                <Navbar title={'Statistieken'} rightBtnColor={UI.COLORS_HEX.orange}
                         rightBtnTitle={'Deel'}
-                        onPressRightBtn={() => alert('Start')} leftBtnTitle={'Home'}
-                        onPressLeftBtn={() => navigator.push({
-                            screen: 'Menu',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'Kies Categorie'}
-                        })}/>
+                        onPressRightBtn={() => this.snapshot()} leftBtnTitle={'Home'}
+                        onPressLeftBtn={() => {
+                            Alert.alert(
+                                '',
+                                'U gaat de partij verlaten, weet u het zeker?',
+                                [
+                                    {
+                                        text: 'Yes', onPress: () => navigator.push({
+                                        screen: 'Menu',
+                                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                        animationType: 'fade',
+                                        passProps: {backTitle: 'Kies Categorie'}
+                                    })
+                                    },
+                                    {text: 'Cancel', onPress: () => console.log('OK Pressed')},
+                                ],
+                            )
+                        }}/>
 
 
-                    <View
-                        style={{width: width, padding: 15, alignItems: 'center', marginTop: 5}}>
+                <View
+                    style={{width: width, padding: 15, alignItems: 'center', marginTop: 5}}>
+                    <View style={{
+                        width: width - 30,
+                        flexDirection: 'row',
+                        height: 35,
+                    }}>
                         <View style={{
-                            width: width - 30,
+                            paddingLeft: 10,
+                            justifyContent: 'center',
+                            backgroundColor: UI.COLORS_HEX.gray,
+                            borderRadius: 3,
+                            flex: 0.7,
+                            paddingRight: 10,
+
+
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 20,
+                                    marginTop: -2
+                                }}>{store.Match.player1}</Text>
+                        </View>
+                        <View style={{
+                            paddingLeft: 10,
+                            borderRadius: 5,
+                            justifyContent: 'space-around',
                             flexDirection: 'row',
-                            height: 35,
+                            flex: 0.5
+
                         }}>
                             <View style={{
-                                paddingLeft: 10,
+                                width: (width - 40) / 8 - 4,
+                                backgroundColor: UI.COLORS_HEX.gray,
+                                borderRadius: 3,
                                 justifyContent: 'center',
-                                backgroundColor: UI.COLORS_HEX.gray,
-                                borderRadius: 3,
-                                flex: 0.7,
-                                paddingRight: 10,
+                                alignItems: 'center'
 
 
                             }}>
-                                <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.white,
-                                        fontSize: 20,
-                                        marginTop: -2
-                                    }}>{store.Match.player1}</Text>
+                                <Text style={{
+                                    fontSize: 24,
+                                    fontFamily: UI.FONT.bold,
+                                    color: UI.COLORS_HEX.orange,
+                                }}>{this.state.score11}</Text>
                             </View>
                             <View style={{
-                                paddingLeft: 10,
-                                borderRadius: 5,
-                                justifyContent: 'space-around',
-                                flexDirection: 'row',
-                                flex: 0.5
+                                width: (width - 40) / 8 - 4,
+                                backgroundColor: UI.COLORS_HEX.gray,
+                                borderRadius: 3,
+                                justifyContent: 'center',
+                                alignItems: 'center'
 
                             }}>
-                                <View style={{
-                                    width: (width - 40) / 8 - 4,
-                                    backgroundColor: UI.COLORS_HEX.gray,
-                                    borderRadius: 3,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-
-
-                                }}>
-                                    <Text style={{
-                                        fontSize: 24,
-                                        fontFamily: UI.FONT.bold,
-                                        color: UI.COLORS_HEX.orange,
-                                    }}>{this.state.score11}</Text>
-                                </View>
-                                <View style={{
-                                    width: (width - 40) / 8 - 4,
-                                    backgroundColor: UI.COLORS_HEX.gray,
-                                    borderRadius: 3,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-
-                                }}>
-                                    <Text style={{
-                                        fontSize: 24,
-                                        fontFamily: UI.FONT.bold,
-                                        color: this.state.score12 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.score12}</Text>
-                                </View>
-                                <View style={{
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    width: (width - 40) / 8 - 4,
-                                    backgroundColor: UI.COLORS_HEX.gray,
-                                    borderRadius: 3
-                                }}>
-                                    <Text style={{
-                                        fontSize: 24,
-                                        fontFamily: UI.FONT.bold,
-                                        color: UI.COLORS_HEX.white,
-                                    }}>{this.state.score13}</Text>
-                                </View>
-
+                                <Text style={{
+                                    fontSize: 24,
+                                    fontFamily: UI.FONT.bold,
+                                    color: this.state.score12 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                }}>{this.state.score12}</Text>
                             </View>
-                        </View>
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: (width - 40) / 8 - 4,
+                                backgroundColor: UI.COLORS_HEX.gray,
+                                borderRadius: 3
+                            }}>
+                                <Text style={{
+                                    fontSize: 24,
+                                    fontFamily: UI.FONT.bold,
+                                    color: UI.COLORS_HEX.white,
+                                }}>{this.state.score13}</Text>
+                            </View>
 
+                        </View>
+                    </View>
+
+                    <View style={{
+                        width: width - 30,
+                        flexDirection: 'row',
+                        height: 35,
+                        marginTop: 3,
+
+                    }}>
                         <View style={{
-                            width: width - 30,
+                            justifyContent: 'space-between',
+                            backgroundColor: UI.COLORS_HEX.gray,
+                            borderRadius: 3,
+                            flex: 0.7,
                             flexDirection: 'row',
-                            height: 35,
-                            marginTop: 3,
+                            alignItems: 'center',
+                            paddingLeft: 10,
+                            paddingRight: 10,
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 20,
+                                    marginTop: -2
+                                }}>{store.Match.player2}</Text>
+                        </View>
+                        <View style={{
+                            paddingLeft: 10,
+                            borderRadius: 5,
+                            justifyContent: 'space-around',
+                            flexDirection: 'row',
+                            flex: 0.5
 
                         }}>
                             <View style={{
-                                justifyContent: 'space-between',
+                                width: (width - 40) / 8 - 4,
                                 backgroundColor: UI.COLORS_HEX.gray,
                                 borderRadius: 3,
-                                flex: 0.7,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                paddingLeft: 10,
-                                paddingRight: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+
+
                             }}>
-                                <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.white,
-                                        fontSize: 20,
-                                        marginTop: -2
-                                    }}>{store.Match.player2}</Text>
+                                <Text style={{
+                                    fontSize: 24,
+                                    fontFamily: UI.FONT.bold,
+                                    color: UI.COLORS_HEX.orange,
+                                }}>{this.state.score21}</Text>
                             </View>
                             <View style={{
-                                paddingLeft: 10,
-                                borderRadius: 5,
-                                justifyContent: 'space-around',
-                                flexDirection: 'row',
-                                flex: 0.5
+                                width: (width - 40) / 8 - 4,
+                                backgroundColor: UI.COLORS_HEX.gray,
+                                borderRadius: 3,
+                                justifyContent: 'center',
+                                alignItems: 'center'
 
                             }}>
-                                <View style={{
-                                    width: (width - 40) / 8 - 4,
-                                    backgroundColor: UI.COLORS_HEX.gray,
-                                    borderRadius: 3,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-
-
-                                }}>
-                                    <Text style={{
-                                        fontSize: 24,
-                                        fontFamily: UI.FONT.bold,
-                                        color: UI.COLORS_HEX.orange,
-                                    }}>{this.state.score21}</Text>
-                                </View>
-                                <View style={{
-                                    width: (width - 40) / 8 - 4,
-                                    backgroundColor: UI.COLORS_HEX.gray,
-                                    borderRadius: 3,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-
-                                }}>
-                                    <Text style={{
-                                        fontSize: 24,
-                                        fontFamily: UI.FONT.bold,
-                                        color: UI.COLORS_HEX.white,
-                                    }}>{this.state.score22}</Text>
-                                </View>
-                                <View style={{
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    width: (width - 40) / 8 - 4,
-                                    backgroundColor: UI.COLORS_HEX.gray,
-                                    borderRadius: 3
-                                }}>
-                                    <Text style={{
-                                        fontSize: 24,
-                                        fontFamily: UI.FONT.bold,
-                                        color: this.state.score23 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.score23}</Text>
-                                </View>
-
+                                <Text style={{
+                                    fontSize: 24,
+                                    fontFamily: UI.FONT.bold,
+                                    color: UI.COLORS_HEX.white,
+                                }}>{this.state.score22}</Text>
                             </View>
-                        </View>
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: (width - 40) / 8 - 4,
+                                backgroundColor: UI.COLORS_HEX.gray,
+                                borderRadius: 3
+                            }}>
+                                <Text style={{
+                                    fontSize: 24,
+                                    fontFamily: UI.FONT.bold,
+                                    color: this.state.score23 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                }}>{this.state.score23}</Text>
+                            </View>
 
+                        </View>
+                    </View>
+                    <View style={{
+                        width: width - 30,
+                        flexDirection: 'row',
+                        height: 25,
+                        alignItems: 'center'
+                    }}>
                         <Text
                             style={{
-                                fontFamily: UI.FONT.blackItalic,
+                                fontFamily: UI.FONT.regular,
                                 color: UI.COLORS_HEX.white,
-                                fontSize: 25,
-                                marginTop: 10,
-                                marginBottom:10
-                            }}>Partij</Text>
-                        <ScrollView contentContainerStyle={{paddingBottom: 70,alignItems:'center'}}>
+                                fontSize: 15,
+                                marginTop: -3,
+                            }}>Partij duur: </Text>
+                        <Text
+                            style={{
+                                fontFamily: UI.FONT.regular,
+                                color: UI.COLORS_HEX.white,
+                                fontSize: 15,
+                                marginTop: -3,
+                            }}>{store.EndTimeMatch} </Text>
+
+                    </View>
+                    <View
+                        style={{
+                            width: width - 40,
+                            backgroundColor: UI.COLORS_HEX.white,
+                            borderRadius: 6,
+                            borderColor: UI.COLORS_HEX.blue,
+                            borderWidth: 0.5,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            marginTop: 10,
+                            height: 30
+                        }}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                            this.setState({showSeg: 'Partij'})
+
+                        }} style={{
+                            width: (width - 39) / 4,
+                            backgroundColor: this.state.showSeg === 'Partij' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderColor: UI.COLORS_HEX.blue,
+                            borderRightWidth: 1,
+                            height: 30,
+                            borderTopLeftRadius: 6,
+                            borderBottomLeftRadius: 6,
+
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: this.state.showSeg === 'Partij' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                    fontSize: 14,
+                                    backgroundColor: 'transparent'
+                                }}>Partij</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                            this.setState({showSeg: 'set1'})
+                        }} style={{
+                            width: (width - 39) / 4,
+                            backgroundColor: this.state.showSeg === 'set1' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderColor: UI.COLORS_HEX.blue,
+                            borderRightWidth: 1,
+                            height: 30
+
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: this.state.showSeg === 'set1' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                    fontSize: 14,
+                                    backgroundColor: 'transparent'
+
+                                }}>Set 1</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                            this.setState({showSeg: 'set2'})
+                        }} style={{
+                            width: (width - 39) / 4,
+                            backgroundColor: this.state.showSeg === 'set2' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderColor: UI.COLORS_HEX.blue,
+                            borderRightWidth: 1,
+                            height: 30
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: this.state.showSeg === 'set2' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                    fontSize: 14,
+                                    backgroundColor: 'transparent'
+
+                                }}>Set 2</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                            this.setState({showSeg: 'set3'})
+                        }} style={{
+                            width: (width - 39) / 4,
+                            backgroundColor: this.state.showSeg === 'set3' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 30,
+                            borderTopRightRadius: 6,
+                            borderBottomRightRadius: 6,
+
+                        }}>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: this.state.showSeg === 'set3' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                    fontSize: 14,
+                                    backgroundColor: 'transparent'
+
+                                }}>Set 3</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center', marginTop: 15}}>
 
                         <View style={{
                             width: width - 30,
@@ -373,7 +535,7 @@ export default class Statics extends React.Component {
                             borderRadius: 6,
                             justifyContent: 'space-around',
                             flexDirection: 'row',
-                            marginTop:5
+                            marginTop: 5
                         }}>
                             <LinearGradient
                                 start={{x: 0.5, y: 0}}
@@ -426,10 +588,13 @@ export default class Statics extends React.Component {
                                 77
                             </Text>
                         </View>
-                        </ScrollView>
+                    </ScrollView>
 
-                    </View>
+                </View>
                 <Footer/>
+
+                {this.state.isLoading && <Loading/>}
+
             </View>
         )
 

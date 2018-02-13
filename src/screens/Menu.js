@@ -72,6 +72,7 @@ export default class Menu extends React.Component {
             } else {
                 store.setHasStroke(false)
             }
+
             this.setState({isLoading:false});
 
         })
@@ -132,7 +133,7 @@ export default class Menu extends React.Component {
                             fontFamily: UI.FONT.regular,
                             color: UI.COLORS_HEX.white,
                             fontSize: 17,
-                        }}>Stap 1: Settings</Text>
+                        }}>Stap 1: Statistieken instellingen</Text>
                     <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
                 </TouchableOpacity>
 

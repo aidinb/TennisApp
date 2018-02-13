@@ -4,6 +4,7 @@ import {
 import {observable, action} from 'mobx';
 import axios from 'axios';
 import site from '../Site';
+import lstore from 'react-native-simple-store';
 
 axios.defaults.baseURL = site;
 axios.defaults.timeout = 20000;
@@ -15,6 +16,7 @@ class AppState {
     @observable HasService;
     @observable HasWinner;
     @observable HasStroke;
+    @observable HasSlag;
     @observable Service;
     @observable Court;
     @observable Services;
@@ -26,12 +28,14 @@ class AppState {
     @observable TournamentCourts;
     @observable Category;
     @observable Match;
+    @observable EndTimeMatch;
 
 
     constructor() {
         this.HasService = false;
         this.HasWinner = false;
         this.HasStroke = false;
+        this.HasSlag = false;
         this.Service = '';
         this.Court = '';
         this.Services = false;
@@ -43,6 +47,7 @@ class AppState {
         this.TournamentCourts = [];
         this.Category = [];
         this.Match = [];
+        this.EndTimeMatch = '';
 
 
     }
@@ -60,6 +65,10 @@ class AppState {
     @action
     setHasStroke(res) {
         this.HasStroke = res;
+    }
+    @action
+    setSlag(res) {
+        this.HasSlag = res;
     }
 
     @action
@@ -89,6 +98,11 @@ class AppState {
     setMatch(match) {
         this.Match = match;
     }
+
+    @action
+    setEndTimeMatch(time) {
+        this.EndTimeMatch = time;
+    }
     async getAuthenticate(opt) {
         let params = {
             email: opt.email,
@@ -97,7 +111,13 @@ class AppState {
         console.log(params)
         let {data} = await axios.post('/auth', JSON.stringify(params));
             axios.defaults.headers.common['Authorization'] = 'Bearer ' +data.token;
-            this.setUser(data.user)
+        lstore.save('profile', {
+            email: opt.email,
+            password: opt.pass
+        }).then(() => this.setUser(data.user))
+
+
+
             console.log("Authenticate", data.token)
             this.Authenticate = data;
     }

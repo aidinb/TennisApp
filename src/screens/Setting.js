@@ -75,10 +75,9 @@ export default class Setting extends React.Component {
             this.setState({isLoading:false});
 
             navigator.push({
-                screen: 'Tourney',
+                screen: 'Menu',
                 navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                 animationType: 'fade',
-                passProps: {backTitle: 'Setting'}
 
             })
         })
@@ -106,7 +105,7 @@ export default class Setting extends React.Component {
                     right: 0,
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
-                <Navbar title={'Setting'} rightBtnTitle={'Save'} onPressRightBtn={this.onSavePress}
+                <Navbar title={'Statistieken instellingen'} rightBtnTitle={'Opslaan'} onPressRightBtn={this.onSavePress}
                         leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
                     screen: 'Menu',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -144,8 +143,8 @@ export default class Setting extends React.Component {
                             }}>Punten teller</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => this.setState({punten: val})}
-                                value={this.state.punten}/>
+                                thumbTintColor={'white'} onValueChange={(val) => this.setState({punten: true})}
+                                value={this.state.punten} disabled={true}/>
                     </View>
 
                     <View style={{
@@ -193,6 +192,30 @@ export default class Setting extends React.Component {
                                 thumbTintColor={'white'} onValueChange={(val) => store.HasWinner = val}
                                 value={store.HasWinner}/>
                     </View>
+                    <View style={{
+                        width: width,
+                        padding: 20,
+                        backgroundColor: UI.COLORS_HEX.gray,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        paddingTop: 6,
+                        paddingBottom: 6,
+                        alignItems: 'center',
+                        marginTop: 10
+                    }}>
+                        <Text
+                            style={{
+                                fontFamily: UI.FONT.regular,
+                                color: UI.COLORS_HEX.white,
+                                fontSize: 16,
+                            }}>Slag (BH/FH)</Text>
+                        <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
+                                tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
+                                thumbTintColor={'white'} onValueChange={(val) => this.setState({Slag: store.HasSlag = val})}
+                                value={store.HasSlag}/>
+                    </View>
+
+
                     <View style={{
                         width: width,
                         padding: 20,

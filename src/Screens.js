@@ -3,6 +3,7 @@ import {Provider} from 'mobx-react/native';
 import store from './stores/AppState'
 
 
+import LandingPage from './screens/LandingPage';
 import Index from './screens/Index';
 import Login from './screens/Login';
 import Menu from './screens/Menu';
@@ -26,6 +27,7 @@ import SlagType from './screens/SlagType';
 export function registerScreens() {
 
 
+    Navigation.registerComponent('LandingPage', () => LandingPage, store, Provider);
     Navigation.registerComponent('Index', () => Index, store, Provider);
     Navigation.registerComponent('Login', () => Login, store, Provider);
     Navigation.registerComponent('Menu', () => Menu, store, Provider);

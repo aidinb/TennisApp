@@ -94,7 +94,7 @@ export default class DamesEnkel extends React.Component {
                         fontFamily: UI.FONT.regular,
                         color: UI.COLORS_HEX.white,
                         fontSize: 17,
-                    }}>{'DE'+item.category_id+' '+item.player1+' vs '+item.player2}</Text>
+                    }}>{this.props.cat+' '+item.player1+' vs '+item.player2}</Text>
                 <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
             </TouchableOpacity>
         )
@@ -120,7 +120,7 @@ export default class DamesEnkel extends React.Component {
                     right: 0,
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
-                <Navbar title={'Dames enkel'} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
+                <Navbar title={this.props.title} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
                     screen: 'Kiespartij',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',

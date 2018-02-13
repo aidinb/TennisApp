@@ -53,7 +53,7 @@ export default class Navbar extends Component {
                         style={{
                             fontFamily: UI.FONT.regular,
                             color: UI.COLORS_HEX.white,
-                            fontSize: 18,
+                            fontSize: 16,
                         }}>{this.props.title}</Text>
                     {this.props.rightBtnTitle&&<TouchableOpacity hitSlop={{top: 10, left: 5, right: 5, bottom: 10}} avtiveOpacity={0.6}
                                       onPress={this.props.onPressRightBtn}

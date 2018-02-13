@@ -79,7 +79,7 @@ export default class Kiespartij extends React.Component {
                     screen: 'DamesEnkel',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
-                    passProps: {backTitle: 'Categorie'}
+                    passProps: {backTitle: 'Categorie',title:item.name,cat:item.name_short}
                 })
             }} style={{
                 width: width,

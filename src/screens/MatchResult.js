@@ -89,8 +89,7 @@ export default class MatchResult extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd '+store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
-                        onPressRightBtn={() => alert('Start')} leftBtnTitle={'Terug'}
+                <Navbar title={'Wedstrijd '+store.Court} rightBtnColor={UI.COLORS_HEX.orange} leftBtnTitle={'Terug'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
                             animationType: 'fade',
@@ -307,7 +306,14 @@ export default class MatchResult extends React.Component {
                                     color: UI.COLORS_HEX.white,
                                     fontSize: 15,
                                     marginTop: -3,
-                                }}>Partij duur: 01u38m</Text>
+                                }}>Partij duur: </Text>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 15,
+                                    marginTop: -3,
+                                }}>{store.EndTimeMatch} </Text>
 
                         </View>
                         <Text
@@ -315,7 +321,7 @@ export default class MatchResult extends React.Component {
                                 fontFamily: UI.FONT.blackItalic,
                                 color: UI.COLORS_HEX.white,
                                 fontSize: 32,
-                                marginTop: -3,
+                                marginTop: 15,
                             }}>{store.Match.player1}</Text>
                         <Text
                             style={{
@@ -331,16 +337,8 @@ export default class MatchResult extends React.Component {
                                    height: 90,
                                    zIndex: 1
                                }}/>
-                        <Image source={require('../assets/images/logo.png')}
-                               style={{
-                                   width: width - 40,
-                                   height: 60,
-                                   resizeMode: 'contain',
-                                   marginTop: -20,
-                                   zIndex: 0
-                               }}/>
-                        <View style={{marginTop: 10}}>
-                            <CButton title={'Toon GameSetStat'} fontSize={16} width={width / 2}
+                        <View style={{marginTop: 40}}>
+                            <CButton title={'Toon GameSetStat'} fontSize={16} width={width -60}
                                      backgroundColor={UI.COLORS_HEX.blue}
                                      color={UI.COLORS_HEX.white}
                                      onPress={() => {
@@ -354,71 +352,7 @@ export default class MatchResult extends React.Component {
                         </View>
                     </View>
                 </ScrollView>
-                <View style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: 40,
-                    backgroundColor: UI.COLORS_HEX.lightBlack,
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    paddingLeft:15,
-                    paddingRight:15
-                }}>
-                    <TouchableOpacity activeOpacity={0.8} onPress={() =>navigator.push({
-                        screen: 'Menu',
-                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                        animationType: 'fade',
 
-                    })}
-                                      style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 16,
-                                marginTop: -3,
-                            }}>Home</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.8} onPress={() =>navigator.push({
-                        screen: 'Tourney',
-                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                        animationType: 'fade',
-                        passProps: {backTitle: 'Home'}
-
-                    })}
-                                      style={{justifyContent: 'center', alignItems: 'center'}}>
-
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 16,
-                                marginTop: -3,
-                            }}>Toernooi</Text>
-
-                    </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.8} onPress={() =>navigator.push({
-                        screen: 'Setting',
-                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                        animationType: 'fade',
-                        passProps: {backTitle: 'Home'}
-
-                    })}
-                                      style={{justifyContent: 'center', alignItems: 'center'}}>
-
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 16,
-                                marginTop: -3,
-                            }}>Setting</Text>
-                    </TouchableOpacity>
-
-                </View>
 
             </View>
         )

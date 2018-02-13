@@ -153,9 +153,7 @@ export default class Tourney extends React.Component {
                             fontFamily: UI.FONT.regular,
                             color: UI.COLORS_HEX.white,
                             fontSize: 16,
-                        }}>De toernooileiding heeft een toernooinummer
-                        aangemaakt. Voer deze in om vervolgens een
-                        baan te kiezen die aan jou is toegewezen.</Text>
+                        }}>Voer hier het unieke toernooinummer in welke de toernooileiding je vertrekt heeft en klik op 'Ga verder'.</Text>
                 </View>
 
                 <KeyboardAvoidingView behavior={'position'}

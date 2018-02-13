@@ -25,6 +25,8 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
 import Box from "../components/Box";
+import {Stopwatch} from 'react-native-stopwatch-timer'
+const endTime = '';
 
 @inject("store") @observer
 export default class Services extends React.Component {
@@ -35,8 +37,17 @@ export default class Services extends React.Component {
             gameScore: {player1: 0, player2: 0, games: [{p1: 0, p2: 0}, {p1: 0, p2: 0}, {p1: 0, p2: 0}]},
             service2Disable: true,
             service1Disable: false,
+            score11: 0,
+            score12: 0,
+            score13: 0,
+            score14: 0,
+            score21: 0,
+            score22: 0,
+            score23: 0,
+            score24: 0,
             service1: {ace: true, winner: true, fout: true, inSpel: true},
             service2: {ace: false, winner: false, fout: false, inSpel: false},
+            timerstart: true,
 
         };
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -66,7 +77,9 @@ export default class Services extends React.Component {
 
     }
 
-
+    getFormatedTime = (t) => {
+        this.endTime=t;
+    }
     render() {
         const {navigator, store} = this.props;
         return (
@@ -89,14 +102,21 @@ export default class Services extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd ' + store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
-                        onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
-                        onPressLeftBtn={() => navigator.push({
-                            screen: 'SetUpWedstrijd',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'kies partij'}
-                        })}/>
+                <Navbar title={'Wedstrijd ' + store.Court} rightBtnColor={UI.COLORS_HEX.orange}
+                        leftBtnTitle={this.state.score11 === 0 ? 'Instellingen' : 'Corrigeer'}
+                        onPressLeftBtn={() => {
+                            if(this.state.score11 <= 0){
+                                navigator.push({
+                                    screen: 'SetUpWedstrijd',
+                                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                    animationType: 'fade',
+                                    passProps: {backTitle: 'kies partij'}
+                                })
+                            }else{
+                                this.setState({score11:this.state.score11-15})
+                            }
+
+                        }}/>
 
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70}}>
@@ -315,7 +335,7 @@ export default class Services extends React.Component {
                             width: width - 30,
                             flexDirection: 'row',
                             height: 35,
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}>
                             <Text
                                 style={{
@@ -323,7 +343,10 @@ export default class Services extends React.Component {
                                     color: UI.COLORS_HEX.white,
                                     fontSize: 15,
                                     marginTop: -3,
-                                }}>Partij duur: 00u00m</Text>
+                                }}>Partij duur: </Text>
+                            <Stopwatch start={this.state.timerstart}
+                                       options={options}
+                                       getTime={this.getFormatedTime}/>
 
                         </View>
                         <View style={{
@@ -335,7 +358,7 @@ export default class Services extends React.Component {
                             borderRadius: 5,
                             marginTop: 15
                         }}>
-                            {Platform.OS === 'IOS'?<Text
+                            {Platform.OS === 'IOS' ? <Text
                                 style={{
                                     fontFamily: UI.FONT.regular,
                                     color: UI.COLORS_HEX.white,
@@ -344,7 +367,7 @@ export default class Services extends React.Component {
                                 }}>1<View style={{width: 10, height: 20}}><Text style={{
                                 fontSize: 14, fontFamily: UI.FONT.regular,
                                 color: UI.COLORS_HEX.white,
-                            }}>e</Text></View> Service</Text>:<Text
+                            }}>e</Text></View> Service</Text> : <Text
                                 style={{
                                     fontFamily: UI.FONT.regular,
                                     color: UI.COLORS_HEX.white,
@@ -376,15 +399,20 @@ export default class Services extends React.Component {
                         }}>
                             <Box title={'Ace'} colors={['#00914C', '#00A550', '#64C08A']}
                                  onPress={() => {
-                                     alert('Point Added')
+                                     this.setState({timerstart: true, score11: this.state.score11 + 15})
                                  }}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service1Disable={this.state.service1Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service1.ace}/>
                             <Box title={'Winner serve'} colors={['#666666', '#808080', '#999999']}
-                                 onPress={() => alert('Point Added')}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 onPress={() => {
+                                     this.setState({timerstart: true, score11: this.state.score11 + 15})
+
+                                 }}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service1Disable={this.state.service1Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service1.winner}/>
@@ -396,7 +424,8 @@ export default class Services extends React.Component {
                                      service1Disable: true,
 
                                  })}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service1Disable={this.state.service1Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service1.fout}/>
@@ -407,7 +436,8 @@ export default class Services extends React.Component {
                                      animationType: 'fade',
                                      passProps: {backTitle: 'Undo'}
                                  })}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service1Disable={this.state.service1Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service1.inSpel}/>
@@ -422,7 +452,7 @@ export default class Services extends React.Component {
                             borderRadius: 5,
                             marginTop: 30
                         }}>
-                            {Platform.OS ==='IOS'?<Text
+                            {Platform.OS === 'IOS' ? <Text
                                 style={{
                                     fontFamily: UI.FONT.regular,
                                     color: UI.COLORS_HEX.white,
@@ -431,7 +461,7 @@ export default class Services extends React.Component {
                                 }}>2<View style={{width: 10, height: 20}}><Text style={{
                                 fontSize: 14, fontFamily: UI.FONT.regular,
                                 color: UI.COLORS_HEX.white,
-                            }}>e</Text></View> Service</Text>:<Text
+                            }}>e</Text></View> Service</Text> : <Text
                                 style={{
                                     fontFamily: UI.FONT.regular,
                                     color: UI.COLORS_HEX.white,
@@ -465,13 +495,15 @@ export default class Services extends React.Component {
                                  onPress={() => {
                                      alert('Point Added')
                                  }}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service2Disable={this.state.service2Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service2.ace}/>
                             <Box title={'Winner serve'} colors={['#666666', '#808080', '#999999']}
                                  onPress={() => alert('Point Added')}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service2Disable={this.state.service2Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service2.winner}/>
@@ -482,7 +514,8 @@ export default class Services extends React.Component {
                                      service2Disable: true,
                                      service1Disable: false,
                                  })}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service2Disable={this.state.service2Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service2.fout}/>
@@ -493,7 +526,8 @@ export default class Services extends React.Component {
                                      animationType: 'fade',
                                      passProps: {backTitle: 'Undo'}
                                  })}
-                                 width={(width-20)/4-10} topShadowWidth={(width-20)/4-21} topShadowHeight={32}
+                                 width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
+                                 topShadowHeight={32}
                                  service2Disable={this.state.service2Disable}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.service2.inSpel}/>
@@ -508,3 +542,16 @@ export default class Services extends React.Component {
 
     }
 }
+
+const options = {
+    container: {
+        backgroundColor: 'transparent',
+        padding: 5,
+        borderRadius: 5,
+    },
+    text: {
+        fontFamily: UI.FONT.regular,
+        color: UI.COLORS_HEX.white,
+        fontSize: 15,
+    }
+};
