@@ -67,11 +67,11 @@ export default class Menu extends React.Component {
             } else {
                 store.setHasWinner(false)
             }
-            if (store.ListSettings.kaas && store.ListSettings.kaas == 1) {
-                store.setHasStroke(true)
-            } else {
-                store.setHasStroke(false)
-            }
+            // if (store.ListSettings.kaas && store.ListSettings.kaas == 1) {
+            //     store.setHasStroke(true)
+            // } else {
+            //     store.setHasStroke(true)
+            // }
 
             this.setState({isLoading:false});
 

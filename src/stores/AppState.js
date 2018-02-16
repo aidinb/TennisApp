@@ -16,7 +16,7 @@ class AppState {
     @observable HasService;
     @observable HasWinner;
     @observable HasStroke;
-    @observable HasSlag;
+    @observable HasStrokeType;
     @observable Service;
     @observable Court;
     @observable Services;
@@ -29,13 +29,17 @@ class AppState {
     @observable Category;
     @observable Match;
     @observable EndTimeMatch;
+    @observable CreateMatch;
+    @observable Play;
+    @observable WinnerPlayer;
+    @observable TournamentId;
 
 
     constructor() {
         this.HasService = false;
         this.HasWinner = false;
         this.HasStroke = false;
-        this.HasSlag = false;
+        this.HasStrokeType = false;
         this.Service = '';
         this.Court = '';
         this.Services = false;
@@ -48,6 +52,10 @@ class AppState {
         this.Category = [];
         this.Match = [];
         this.EndTimeMatch = '';
+        this.CreateMatch = [];
+        this.Play = [];
+        this.WinnerPlayer = [];
+        this.TournamentId = '';
 
 
     }
@@ -66,13 +74,15 @@ class AppState {
     setHasStroke(res) {
         this.HasStroke = res;
     }
-    @action
-    setSlag(res) {
-        this.HasSlag = res;
-    }
 
     @action
+    setHasStrokeType(res) {
+        this.HasStrokeType = res;
+    }
+    @action
     setService(name) {
+        console.log('+++service+++')
+        console.log(name)
         this.Service = name;
     }
 
@@ -102,6 +112,11 @@ class AppState {
     @action
     setEndTimeMatch(time) {
         this.EndTimeMatch = time;
+    }
+
+    @action
+    setWinnerPlayer(play) {
+        this.WinnerPlayer = play;
     }
     async getAuthenticate(opt) {
         let params = {
@@ -208,6 +223,7 @@ class AppState {
         console.log("TournamentCategories", data)
         this.TournamentCategories = data.categories;
         this.TournamentCourts = data.courts;
+        this.TournamentId = data.id;
 
     }
 
@@ -239,6 +255,106 @@ class AppState {
     }
 
 
+    async createMatch(opt) {
+        let params = {
+            category_id: opt.category_id,
+            court_id: opt.court_id,
+            player1: opt.player1,
+            player2: opt.player2,
+            server: opt.server,
+            short_game: opt.short_game,
+            super_tie_break: opt.super_tie_break,
+            clock: opt.clock,
+        };
+        console.log(params)
+        let {data} = await axios.put('/api/matches', JSON.stringify(params)).catch((e) => {
+            console.log(e.response)
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    'Server Error',
+                    'Please Try Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'Slow Connection',
+                    'please Try Again Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+        console.log("createMatch", data)
+        this.CreateMatch = data;
+
+    }
+
+    async startMatch(matchId) {
+
+        console.log(matchId)
+        let {data} = await axios.get('/api/matches/'+matchId+'/start').catch((e) => {
+            console.log(e.response)
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    'Server Error',
+                    'Please Try Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'Slow Connection',
+                    'please Try Again Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+        console.log("startMatch", data)
+
+    }
+
+
+    async addPlay(opt) {
+        let params = {
+            match_id: opt.match_id,
+            player: opt.player,
+            service: opt.service,
+            score_type: opt.score_type,
+            shot: opt.shot,
+            shot_type: opt.shot_type,
+            second_serve: opt.second_serve,
+        };
+        console.log(params)
+        let {data} = await axios.post('/api/plays', JSON.stringify(params)).catch((e) => {
+            console.log(e.response)
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    'Server Error',
+                    'Please Try Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'Slow Connection',
+                    'please Try Again Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+        console.log("addPlay", data)
+        this.Play = data;
+
+    }
 }
 
 const state = new AppState();

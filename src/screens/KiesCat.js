@@ -24,7 +24,7 @@ export default class KiesCat extends Component {
     renderItem = ({item, index}) => {
         const {store, navigator} = this.props;
         return (
-            <TouchableOpacity activeOpacity={0.8} onPress={() => this.props.onSelectKies(item.name)}
+            <TouchableOpacity activeOpacity={0.8} onPress={() => this.props.onSelectKies(item)}
                               style={{
                                   width: width,
                                   padding: 15,

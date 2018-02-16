@@ -95,7 +95,8 @@ export default class SlagType extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd ' + store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
+                <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
+                        rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
@@ -143,115 +144,155 @@ export default class SlagType extends React.Component {
                         }}>
                             <Box title={'Fore-\nhand'} colors={['#00914C', '#00A550', '#64C08A']}
                                  onPress={() => {
-                                     this.setState({
-                                         slag: false,
-                                         backHand: false,
-                                         drop: true,
-                                         smash: true,
-                                         ground: true,
-                                         lob: true,
-                                         volley: true,
-                                         foreHand: true
-                                     })
+                                     if (store.HasStrokeType === true) {
+                                         this.setState({
+                                             slag: false,
+                                             backHand: false,
+                                             drop: true,
+                                             smash: true,
+                                             ground: true,
+                                             lob: true,
+                                             volley: true,
+                                             foreHand: true
+                                         })
+                                     } else {
+                                         this.props.puntPress(this.props.playerPoint, this.props.forced, 'FH');
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Set up'}
+                                         })
+                                     }
+
+
                                  }}
                                  selected={this.state.foreHand}/>
                             <Box title={'Back-\nhand'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
-                                 onPress={() => this.setState({
-                                     slag: false,
-                                     foreHand: false,
-                                     drop: true,
-                                     smash: true,
-                                     ground: true,
-                                     lob: true,
-                                     volley: true,
-                                     backHand: true
-                                 })}
+                                 onPress={() => {
+                                     if (store.HasStrokeType === true) {
+                                         this.setState({
+                                             slag: false,
+                                             foreHand: false,
+                                             drop: true,
+                                             smash: true,
+                                             ground: true,
+                                             lob: true,
+                                             volley: true,
+                                             backHand: true
+                                         })
+                                     } else {
+                                         this.props.puntPress(this.props.playerPoint, this.props.forced, 'BH');
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Set up'}
+                                         })
+                                     }
+
+
+                                 }}
                                  selected={this.state.backHand}/>
                         </View>
                     </View>
-
-                    <View style={{
-                        width: width - 70,
-                        backgroundColor: UI.COLORS_HEX.gray,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: 30,
-                        borderRadius: 5,
-                        marginTop: 5
-                    }}>
-                        <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 18,
-                                marginTop: -3,
-                            }}>Type Slag</Text>
-                    </View>
-                    <View style={{
-                        width: width - 60,
-                        flexDirection: 'row',
-                        justifyContent: 'space-around'
-
-                    }}>
+                    {store.HasStrokeType === true && <View>
                         <View style={{
-                            justifyContent: 'space-between',
-
-                        }}>
-                            <Box title={'Drop-\nshot'} colors={['#FAAC18', '#FFCA05', '#FFE7A3']}
-                                 onPress={() => {
-                                     navigator.push({
-                                         screen: 'Services',
-                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                         animationType: 'fade',
-                                         passProps: {backTitle: 'Undo'}
-                                     })
-                                 }}
-                                 selected={this.state.drop}/>
-                            <Box title={'Smash'} colors={['#C7B299', '#C7B299', '#C7B299']}
-                                 onPress={() => alert('hi')}
-                                 selected={this.state.smash}/>
-                        </View>
-                        <View style={{
+                            width: width - 70,
+                            backgroundColor: UI.COLORS_HEX.gray,
+                            alignItems: 'center',
                             justifyContent: 'center',
-                            alignItems: 'center'
-
+                            height: 30,
+                            borderRadius: 5,
+                            marginTop: 5
                         }}>
-                            <Box title={'Ground-\nstroke'} colors={['#666666', '#808080', '#999999']}
-                                 onPress={() =>
-                                     navigator.push({
-                                         screen: 'MatchResult',
-                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                         animationType: 'fade',
-                                         passProps: {backTitle: 'Undo'}
-                                     })}
-                                 selected={this.state.ground}/>
+                            <Text
+                                style={{
+                                    fontFamily: UI.FONT.regular,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 18,
+                                    marginTop: -3,
+                                }}>Type Slag</Text>
                         </View>
                         <View style={{
-                            justifyContent: 'space-between',
+                            width: width - 60,
+                            flexDirection: 'row',
+                            justifyContent: 'space-around'
 
                         }}>
-                            <Box title={'Lob'} colors={['#CD118C', '#EB008B', '#F074AC']}
-                                 onPress={() => {
-                                     navigator.push({
-                                         screen: 'Services',
-                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                         animationType: 'fade',
-                                         passProps: {backTitle: 'Undo'}
-                                     })
-                                 }}
-                                 selected={this.state.lob}/>
-                            <Box title={'Volley'} colors={['#93278F', '#93278F', '#93278F']}
-                                 onPress={() => {
-                                     navigator.push({
-                                         screen: 'Services',
-                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                         animationType: 'fade',
-                                         passProps: {backTitle: 'Undo'}
-                                     })
-                                 }}
-                                 selected={this.state.volley}/>
+                            <View style={{
+                                justifyContent: 'space-between',
+
+                            }}>
+                                <Box title={'Drop-\nshot'} colors={['#FAAC18', '#FFCA05', '#FFE7A3']}
+                                     onPress={() => {
+                                         this.props.puntPress(this.props.playerPoint, this.props.forced, 'BH', 'DROPSHOT');
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Set up'}
+                                         })
+                                     }}
+                                     selected={this.state.drop}/>
+                                <Box title={'Smash'} colors={['#C7B299', '#C7B299', '#C7B299']}
+                                     onPress={() => {
+                                         this.props.puntPress(this.props.playerPoint, this.props.forced, 'BH', 'SMASH');
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Set up'}
+                                         })
+                                     }}
+                                     selected={this.state.smash}/>
+                            </View>
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center'
+
+                            }}>
+                                <Box title={'Ground-\nstroke'} colors={['#666666', '#808080', '#999999']}
+                                     onPress={() => {
+                                         this.props.puntPress(this.props.playerPoint, this.props.forced, 'BH', 'GROUNDSTROKE');
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Set up'}
+                                         })
+                                     }}
+                                     selected={this.state.ground}/>
+                            </View>
+                            <View style={{
+                                justifyContent: 'space-between',
+
+                            }}>
+                                <Box title={'Lob'} colors={['#CD118C', '#EB008B', '#F074AC']}
+                                     onPress={() => {
+                                         this.props.puntPress(this.props.playerPoint, this.props.forced, 'BH', 'LOB');
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Set up'}
+                                         })
+                                     }}
+                                     selected={this.state.lob}/>
+                                <Box title={'Volley'} colors={['#93278F', '#93278F', '#93278F']}
+                                     onPress={() => {
+                                         this.props.puntPress(this.props.playerPoint, this.props.forced, 'BH', 'VALLEY');
+                                         navigator.push({
+                                             screen: 'Services',
+                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                             animationType: 'fade',
+                                             passProps: {backTitle: 'Set up'}
+                                         })
+                                     }}
+                                     selected={this.state.volley}/>
+                            </View>
                         </View>
-                    </View>
+                    </View>}
                 </ScrollView>
                 <Footer/>
 

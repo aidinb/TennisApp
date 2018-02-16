@@ -58,7 +58,7 @@ export default class SetUpWedstrijd extends React.Component {
     componentDidMount() {
         const {navigator, store} = this.props;
 
-        store.setService(store.Match.player1)
+        store.setService(1)
 
     }
 
@@ -66,6 +66,43 @@ export default class SetUpWedstrijd extends React.Component {
 
     }
 
+    onStartPress = () => {
+        const {navigator, store} = this.props;
+
+        store.startMatch(store.Match.id);
+        // store.createMatch({
+        //     category_id:store.Category.id,
+        //     court_id:store.Court.id,
+        //     player1:store.Match.player1,
+        //     player2:store.Match.player2,
+        //     server:store.Service===store.Match.player1?1:2,
+        //     short_game:!this.state.kies1,
+        //     super_tie_break:!this.state.kies2,
+        //     clock:0,
+        // }).then(() => {
+        //     console.log(store.CreateMatch)
+        // })
+
+        if (store.Court !== '') {
+            if (store.HasService === false) {
+                navigator.push({
+                    screen: 'StartMatch',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                    animationType: 'fade',
+                    passProps: {backTitle: 'Set up'}
+                })
+            } else {
+                navigator.push({
+                    screen: 'Services',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                    animationType: 'fade',
+                    passProps: {backTitle: 'Set up'}
+                })
+            }
+        } else {
+            alert('Please choose kies een baan')
+        }
+    }
 
     render() {
         const {navigator, store} = this.props;
@@ -170,7 +207,7 @@ export default class SetUpWedstrijd extends React.Component {
                                     flex: 0.45,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    padding:5
+                                    padding: 5
                                 }}>
                                     <Text
                                         style={{
@@ -178,23 +215,23 @@ export default class SetUpWedstrijd extends React.Component {
                                             color: UI.COLORS_HEX.gray,
                                             fontSize: 14,
                                             marginTop: -3,
-                                            textAlign:'center'
+                                            textAlign: 'center'
                                         }}>{store.Match.player1}</Text>
                                 </View>
                                 <View style={{
                                     flex: 0.45,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    padding:5
+                                    padding: 5
                                 }}>
-                                <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.gray,
-                                        fontSize: 14,
-                                        marginTop: -3,
-                                        textAlign:'center'
-                                    }}>{store.Match.player2}</Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: UI.FONT.regular,
+                                            color: UI.COLORS_HEX.gray,
+                                            fontSize: 14,
+                                            marginTop: -3,
+                                            textAlign: 'center'
+                                        }}>{store.Match.player2}</Text>
                                 </View>
                             </View>
                             <View
@@ -295,7 +332,7 @@ export default class SetUpWedstrijd extends React.Component {
                             fontSize: 17,
                             marginTop: -3,
                             flex: 1
-                        }}>{store.Court}</Text>}
+                        }}>{store.Court.name}</Text>}
                         <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
 
                     </TouchableOpacity>
@@ -329,7 +366,7 @@ export default class SetUpWedstrijd extends React.Component {
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                 this.setState({wie: true});
-                                store.setService(store.Match.player1);
+                                store.setService(1);
                             }} style={{
                                 width: (width / 2 + 50) / 2,
                                 backgroundColor: this.state.wie === true ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
@@ -337,7 +374,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 alignItems: 'center',
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
-                                padding:5,
+                                padding: 5,
                             }}>
                                 <Text
                                     style={{
@@ -345,12 +382,12 @@ export default class SetUpWedstrijd extends React.Component {
                                         color: this.state.wie === true ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         backgroundColor: 'transparent',
-                                        textAlign:'center'
+                                        textAlign: 'center'
                                     }}>{store.Match.player1}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                 this.setState({wie: false})
-                                store.setService(store.Match.player2);
+                                store.setService(2);
 
                             }} style={{
                                 width: (width / 2 + 50) / 2,
@@ -359,7 +396,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 alignItems: 'center',
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
-                                padding:5,
+                                padding: 5,
                             }}>
                                 <Text
                                     style={{
@@ -367,7 +404,7 @@ export default class SetUpWedstrijd extends React.Component {
                                         color: this.state.wie === false ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         backgroundColor: 'transparent',
-                                        textAlign:'center',
+                                        textAlign: 'center',
 
                                     }}>{store.Match.player2}</Text>
                             </TouchableOpacity>
@@ -520,27 +557,7 @@ export default class SetUpWedstrijd extends React.Component {
                         <CButton title={'Start'} backgroundColor={UI.COLORS_HEX.blue}
                                  color={UI.COLORS_HEX.white}
                                  width={width / 2 + 50}
-                                 onPress={() => {
-                                     if (store.Court !== '') {
-                                         if (store.HasService === false) {
-                                             navigator.push({
-                                                 screen: 'StartMatch',
-                                                 navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                                 animationType: 'fade',
-                                                 passProps: {backTitle: 'Set up'}
-                                             })
-                                         } else {
-                                             navigator.push({
-                                                 screen: 'Services',
-                                                 navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                                 animationType: 'fade',
-                                                 passProps: {backTitle: 'Set up'}
-                                             })
-                                         }
-                                     } else {
-                                         alert('Please choose kies een baan')
-                                     }
-                                 }}/>
+                                 onPress={this.onStartPress}/>
                     </View>
 
                 </ScrollView>

@@ -92,7 +92,7 @@ export default class Winner extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd ' + store.Court} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
+                <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
@@ -137,7 +137,6 @@ export default class Winner extends React.Component {
                             backgroundColor: UI.COLORS_HEX.gray,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: 30,
                             borderRadius: 5,
                             marginTop: 10,
                             flexDirection: 'row',
@@ -150,10 +149,10 @@ export default class Winner extends React.Component {
                                 borderRightWidth: 1,
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                height: 30,
                                 flexDirection: 'row',
                                 paddingRight: 10,
-                                paddingLeft: 10
+                                paddingLeft: 10,
+                                padding:5,
                             }}>
                                 <Text
                                     style={{
@@ -162,7 +161,7 @@ export default class Winner extends React.Component {
                                         fontSize: 17,
                                         marginTop: -3,
                                     }}>{store.Match.player1}</Text>
-                                {store.Service === store.Match.player1 && <Image source={require('../assets/images/ball.png')}
+                                {store.Service === 1 && <Image source={require('../assets/images/ball.png')}
                                                                            style={{
                                                                                width: 18,
                                                                                height: 18,
@@ -175,6 +174,7 @@ export default class Winner extends React.Component {
                                 flexDirection: 'row',
                                 paddingRight: 10,
                                 paddingLeft: 10,
+                                padding:5,
                             }}>
                                 <Text
                                     style={{
@@ -182,8 +182,8 @@ export default class Winner extends React.Component {
                                         color: UI.COLORS_HEX.white,
                                         fontSize: 17,
                                         marginTop: -3,
-                                    }}>{store.Match.player2}n</Text>
-                                {store.Service === store.Match.player2 && <Image source={require('../assets/images/ball.png')}
+                                    }}>{store.Match.player2}</Text>
+                                {store.Service === 2 && <Image source={require('../assets/images/ball.png')}
                                                                           style={{
                                                                               width: 18,
                                                                               height: 18,
@@ -219,12 +219,8 @@ export default class Winner extends React.Component {
                                              service2Disable: true
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(1)
+                                         navigator.pop()
                                      }
 
                                  }}
@@ -239,12 +235,8 @@ export default class Winner extends React.Component {
                                              service2Disable: true
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(2)
+                                         navigator.pop()
                                      }
                                  }}
                                  selected={this.state.player2.punt}/>
@@ -293,15 +285,11 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
+                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'WINNER'}
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(this.state.player1.punt===true?1:2,'WINNER')
+                                         navigator.pop()
                                      }
 
                                  }}
@@ -316,15 +304,11 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
+                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'FORCED_ERROR'}
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(this.state.player1.punt===true?1:2,'FORCED_ERROR')
+                                         navigator.pop()
                                      }
                                  }}
                                  fontFamily={UI.FONT.bold}
@@ -338,15 +322,11 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
+                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'UNFORCED_ERROR'}
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(this.state.player1.punt===true?1:2,'UNFORCED_ERROR')
+                                         navigator.pop()
                                      }
                                  }}
                                  fontFamily={UI.FONT.bold}
@@ -397,15 +377,11 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
+                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'WINNER'}
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(this.state.player1.punt===true?1:2,'WINNER')
+                                         navigator.pop()
                                      }
                                  }}
                                  fontFamily={UI.FONT.bold}
@@ -419,15 +395,11 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
+                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'FORCED_ERROR'}
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(this.state.player1.punt===true?1:2,'FORCED_ERROR')
+                                         navigator.pop()
                                      }
                                  }}
                                  fontFamily={UI.FONT.bold}
@@ -441,15 +413,11 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
+                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'UNFORCED_ERROR'}
                                          })
                                      } else {
-                                         navigator.push({
-                                             screen: 'Services',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Undo'}
-                                         })
+                                         this.props.puntPress(this.state.player1.punt===true?1:2,'UNFORCED_ERROR')
+                                         navigator.pop()
                                      }
                                  }}
                                  fontFamily={UI.FONT.bold}

@@ -103,7 +103,7 @@ export default class StartMatch extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }}/>
 
-                <Navbar title={'Wedstrijd ' + store.Court} rightBtnColor={UI.COLORS_HEX.orange}
+                <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
                         leftBtnTitle={this.state.score11 === 0 ? 'Instellingen' : 'Corrigeer'}
                         onPressLeftBtn={() => {
                             if (this.state.score11 <= 0) {
@@ -154,7 +154,6 @@ export default class StartMatch extends React.Component {
                             <View style={{
                                 width: width - 30,
                                 flexDirection: 'row',
-                                height: 35,
                             }}>
                                 <View style={{
                                     justifyContent: 'space-between',
@@ -165,7 +164,8 @@ export default class StartMatch extends React.Component {
                                     alignItems: 'center',
                                     paddingLeft: 10,
                                     paddingRight: 10,
-                                    width: (width - 30) / 2
+                                    width: (width - 30) / 2,
+                                    padding:3
                                 }}>
                                     <Text
                                         style={{
@@ -252,7 +252,6 @@ export default class StartMatch extends React.Component {
                             <View style={{
                                 width: width - 30,
                                 flexDirection: 'row',
-                                height: 35,
                                 marginTop: 3
                             }}>
                                 <View style={{
@@ -264,7 +263,8 @@ export default class StartMatch extends React.Component {
                                     alignItems: 'center',
                                     paddingLeft: 10,
                                     paddingRight: 10,
-                                    width: (width - 30) / 2
+                                    width: (width - 30) / 2,
+                                    padding:3
                                 }}>
                                     <Text
                                         style={{
@@ -388,7 +388,6 @@ export default class StartMatch extends React.Component {
                             backgroundColor: UI.COLORS_HEX.gray,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: 30,
                             borderRadius: 5,
                             marginTop: 10,
                             flexDirection: 'row',
@@ -401,10 +400,10 @@ export default class StartMatch extends React.Component {
                                 borderRightWidth: 1,
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                height: 30,
                                 flexDirection: 'row',
                                 paddingRight: 10,
-                                paddingLeft: 10
+                                paddingLeft: 10,
+                                padding:3
                             }}>
                                 <Text
                                     style={{
@@ -425,7 +424,8 @@ export default class StartMatch extends React.Component {
                                 alignItems: 'center',
                                 flexDirection: 'row',
                                 paddingRight: 10,
-                                paddingLeft: 10
+                                paddingLeft: 10,
+                                padding:3
                             }}>
                                 <Text
                                     style={{

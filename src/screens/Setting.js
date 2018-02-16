@@ -166,7 +166,7 @@ export default class Setting extends React.Component {
                             }}>Service</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => store.HasService = val}
+                                thumbTintColor={'white'} onValueChange={(val) => store.setHasService(val)}
                                 value={store.HasService}/>
                     </View>
 
@@ -189,7 +189,7 @@ export default class Setting extends React.Component {
                             }}>Winner, (Un)forced Error</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => store.HasWinner = val}
+                                thumbTintColor={'white'} onValueChange={(val) => store.setHasWinner(val)}
                                 value={store.HasWinner}/>
                     </View>
                     <View style={{
@@ -211,8 +211,8 @@ export default class Setting extends React.Component {
                             }}>Slag (BH/FH)</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => this.setState({Slag: store.HasSlag = val})}
-                                value={store.HasSlag}/>
+                                thumbTintColor={'white'} onValueChange={(val) =>store.setHasStroke(val)}
+                                value={store.HasStroke}/>
                     </View>
 
 
@@ -235,8 +235,8 @@ export default class Setting extends React.Component {
                             }}>Type slag</Text>
                         <Switch style={{transform: [{scaleX: .8}, {scaleY: .8}]}} onTintColor={UI.COLORS_HEX.orange}
                                 tintColor={Platform.OS === 'ios' ? UI.COLORS_HEX.orange : UI.COLORS_HEX.lightGray}
-                                thumbTintColor={'white'} onValueChange={(val) => store.HasStroke = val}
-                                value={store.HasStroke}/>
+                                thumbTintColor={'white'} onValueChange={(val) => store.setHasStrokeType(val)}
+                                value={store.HasStrokeType}/>
                     </View>
                 </ScrollView>
                 <Footer/>

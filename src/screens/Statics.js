@@ -47,7 +47,11 @@ export default class Statics extends React.Component {
                 quality: 0.9,
                 result: "tmpfile",
                 snapshotContentContainer: false
-            }
+            },
+            set0Point1: '',
+            set0Point2: '',
+            set1Point1: '',
+            set1Point2: '',
         };
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
@@ -68,7 +72,16 @@ export default class Statics extends React.Component {
     }
 
     componentDidMount() {
+        const {store, navigator} = this.props;
 
+        if (store.Play.score.previousSets.length > 1) {
+            this.setState({set1Point1 : store.WinnerPlayer.score.previousSets[1].player1});
+            this.setState({set1Point2 : store.WinnerPlayer.score.previousSets[1].player2});
+        }
+        if (store.Play.score.previousSets.length >0) {
+            this.setState({set0Point1 : store.WinnerPlayer.score.previousSets[0].player1});
+            this.setState({set0Point2 : store.WinnerPlayer.score.previousSets[0].player2});
+        }
     }
 
     componentWillUnmount() {
@@ -79,9 +92,9 @@ export default class Statics extends React.Component {
         captureScreen(this.state.value).then(
             res => {
                 console.log(res)
-                this.setState({isLoading:true})
+                this.setState({isLoading: true})
                 CameraRoll.saveToCameraRoll(res, 'photo').then(() => {
-                    this.setState({isLoading:false})
+                    this.setState({isLoading: false})
 
                     Alert.alert(
                         '',
@@ -145,159 +158,187 @@ export default class Statics extends React.Component {
 
                 <View
                     style={{width: width, padding: 15, alignItems: 'center', marginTop: 5}}>
-                    <View style={{
-                        width: width - 30,
-                        flexDirection: 'row',
-                        height: 35,
-                    }}>
+                    <View>
                         <View style={{
-                            paddingLeft: 10,
-                            justifyContent: 'center',
-                            backgroundColor: UI.COLORS_HEX.gray,
-                            borderRadius: 3,
-                            flex: 0.7,
-                            paddingRight: 10,
-
-
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 20,
-                                    marginTop: -2
-                                }}>{store.Match.player1}</Text>
-                        </View>
-                        <View style={{
-                            paddingLeft: 10,
-                            borderRadius: 5,
-                            justifyContent: 'space-around',
+                            width: width - 30,
                             flexDirection: 'row',
-                            flex: 0.5
-
                         }}>
                             <View style={{
-                                width: (width - 40) / 8 - 4,
+                                paddingLeft: 10,
+                                justifyContent: 'center',
                                 backgroundColor: UI.COLORS_HEX.gray,
                                 borderRadius: 3,
-                                justifyContent: 'center',
-                                alignItems: 'center'
-
+                                flex: 0.7,
+                                paddingRight: 10,
+                                padding: 3
 
                             }}>
-                                <Text style={{
-                                    fontSize: 24,
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.orange,
-                                }}>{this.state.score11}</Text>
+                                <Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.white,
+                                        fontSize: 20,
+                                        marginTop: -2
+                                    }}>{store.Match.player1}</Text>
                             </View>
                             <View style={{
-                                width: (width - 40) / 8 - 4,
+                                paddingLeft: 10,
+                                borderRadius: 5,
+                                justifyContent: 'space-around',
+                                flexDirection: 'row',
+                                flex: 0.5
+
+                            }}>
+                                <View style={{
+                                    width: (width - 40) / 8 - 4,
+                                    backgroundColor: UI.COLORS_HEX.gray,
+                                    borderRadius: 3,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+
+
+                                }}>
+                                    {/*<TextInput style={{*/}
+                                    {/*flex: 1, justifyContent: 'center',*/}
+                                    {/*alignItems: 'center',*/}
+                                    {/*fontSize:22,*/}
+                                    {/*fontFamily: UI.FONT.bold,*/}
+                                    {/*color:UI.COLORS_HEX.white,*/}
+
+
+                                    {/*}}*/}
+                                    {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
+                                    {/*autoCapitalize={'none'}*/}
+                                    {/*onChangeText={(text) => this.setState({score11: text})}*/}
+                                    {/*value={this.state.score11}/>*/}
+
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontFamily: UI.FONT.bold,
+                                        color: store.WinnerPlayer.score.currentSet.player1>=6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{store.WinnerPlayer.score.currentSet.player1}</Text>
+                                </View>
+                                <View style={{
+                                    width: (width - 40) / 8 - 4,
+                                    backgroundColor: UI.COLORS_HEX.gray,
+                                    borderRadius: 3,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+
+                                }}>
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontFamily: UI.FONT.bold,
+                                        color: this.state.set1Point1 !== '' && this.state.set1Point1 >=6 ? UI.COLORS_HEX.orange : this.state.set0Point1!==''&&this.state.set0Point1>=6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1!==''?this.state.set0Point1:0}</Text>
+                                </View>
+                                <View style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: (width - 40) / 8 - 4,
+                                    backgroundColor: UI.COLORS_HEX.gray,
+                                    borderRadius: 3
+                                }}>
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontFamily: UI.FONT.bold,
+                                        color: this.state.set1Point1 !== '' &&this.state.set0Point1>=6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point1 !== '' && this.state.set0Point1!== '' ?this.state.set0Point1:0}</Text>
+                                </View>
+
+                            </View>
+                        </View>
+
+                        <View style={{
+                            width: width - 30,
+                            flexDirection: 'row',
+                            marginTop: 3
+                        }}>
+                            <View style={{
+                                justifyContent: 'space-between',
                                 backgroundColor: UI.COLORS_HEX.gray,
                                 borderRadius: 3,
-                                justifyContent: 'center',
-                                alignItems: 'center'
-
-                            }}>
-                                <Text style={{
-                                    fontSize: 24,
-                                    fontFamily: UI.FONT.bold,
-                                    color: this.state.score12 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                }}>{this.state.score12}</Text>
-                            </View>
-                            <View style={{
-                                justifyContent: 'center',
+                                flex: 0.7,
+                                flexDirection: 'row',
                                 alignItems: 'center',
-                                width: (width - 40) / 8 - 4,
-                                backgroundColor: UI.COLORS_HEX.gray,
-                                borderRadius: 3
+                                paddingLeft: 10,
+                                paddingRight: 10,
+                                padding: 3
                             }}>
-                                <Text style={{
-                                    fontSize: 24,
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.white,
-                                }}>{this.state.score13}</Text>
-                            </View>
-
-                        </View>
-                    </View>
-
-                    <View style={{
-                        width: width - 30,
-                        flexDirection: 'row',
-                        height: 35,
-                        marginTop: 3,
-
-                    }}>
-                        <View style={{
-                            justifyContent: 'space-between',
-                            backgroundColor: UI.COLORS_HEX.gray,
-                            borderRadius: 3,
-                            flex: 0.7,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingLeft: 10,
-                            paddingRight: 10,
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 20,
-                                    marginTop: -2
-                                }}>{store.Match.player2}</Text>
-                        </View>
-                        <View style={{
-                            paddingLeft: 10,
-                            borderRadius: 5,
-                            justifyContent: 'space-around',
-                            flexDirection: 'row',
-                            flex: 0.5
-
-                        }}>
-                            <View style={{
-                                width: (width - 40) / 8 - 4,
-                                backgroundColor: UI.COLORS_HEX.gray,
-                                borderRadius: 3,
-                                justifyContent: 'center',
-                                alignItems: 'center'
-
-
-                            }}>
-                                <Text style={{
-                                    fontSize: 24,
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.orange,
-                                }}>{this.state.score21}</Text>
+                                <Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.white,
+                                        fontSize: 20,
+                                        marginTop: -2
+                                    }}>{store.Match.player2}</Text>
                             </View>
                             <View style={{
-                                width: (width - 40) / 8 - 4,
-                                backgroundColor: UI.COLORS_HEX.gray,
-                                borderRadius: 3,
-                                justifyContent: 'center',
-                                alignItems: 'center'
+                                paddingLeft: 10,
+                                borderRadius: 5,
+                                justifyContent: 'space-around',
+                                flexDirection: 'row',
+                                flex: 0.5
 
                             }}>
-                                <Text style={{
-                                    fontSize: 24,
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.white,
-                                }}>{this.state.score22}</Text>
-                            </View>
-                            <View style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: (width - 40) / 8 - 4,
-                                backgroundColor: UI.COLORS_HEX.gray,
-                                borderRadius: 3
-                            }}>
-                                <Text style={{
-                                    fontSize: 24,
-                                    fontFamily: UI.FONT.bold,
-                                    color: this.state.score23 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                }}>{this.state.score23}</Text>
-                            </View>
+                                <View style={{
+                                    width: (width - 40) / 8 - 4,
+                                    backgroundColor: UI.COLORS_HEX.gray,
+                                    borderRadius: 3,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
 
+
+                                }}>
+                                    {/*<TextInput style={{*/}
+                                    {/*flex: 1, justifyContent: 'center',*/}
+                                    {/*alignItems: 'center',*/}
+                                    {/*fontSize:22,*/}
+                                    {/*fontFamily: UI.FONT.bold,*/}
+                                    {/*color:UI.COLORS_HEX.white,*/}
+
+
+                                    {/*}}*/}
+                                    {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
+                                    {/*autoCapitalize={'none'}*/}
+                                    {/*onChangeText={(text) => this.setState({score11: text})}*/}
+                                    {/*value={this.state.score11}/>*/}
+
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontFamily: UI.FONT.bold,
+                                        color: store.WinnerPlayer.score.currentSet.player2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{store.WinnerPlayer.score.currentSet.player2}</Text>
+                                </View>
+                                <View style={{
+                                    width: (width - 40) / 8 - 4,
+                                    backgroundColor: UI.COLORS_HEX.gray,
+                                    borderRadius: 3,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+
+                                }}>
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontFamily: UI.FONT.bold,
+                                        color: this.state.set1Point2 !== '' && this.state.set1Point2 >=6 ? UI.COLORS_HEX.orange : this.state.set1Point2===''&&this.state.set0Point2!==''&&this.state.set0Point2>=6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2!==''?this.state.set0Point2:0}</Text>
+                                </View>
+                                <View style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: (width - 40) / 8 - 4,
+                                    backgroundColor: UI.COLORS_HEX.gray,
+                                    borderRadius: 3
+                                }}>
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontFamily: UI.FONT.bold,
+                                        color: this.state.set1Point2 !== '' &&this.state.set0Point2>=6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point2 !== '' && this.state.set0Point2!== '' ?this.state.set0Point2:0}</Text>
+                                </View>
+
+                            </View>
                         </View>
                     </View>
                     <View style={{
@@ -425,7 +466,6 @@ export default class Statics extends React.Component {
 
                         <View style={{
                             width: width - 30,
-                            height: 45,
                             borderRadius: 6,
                             justifyContent: 'space-around',
                             flexDirection: 'row'
@@ -437,7 +477,7 @@ export default class Statics extends React.Component {
                                 colors={["#999999", "#000000"]}
                                 style={{
                                     width: width - 30,
-                                    borderRadius: 6, height: 45,
+                                    borderRadius: 6,
                                     shadowColor: 'black',
                                     shadowOffset: {width: 0, height: 0},
                                     shadowOpacity: 0.7,
@@ -447,27 +487,48 @@ export default class Statics extends React.Component {
                                     right: 0,
                                     bottom: 0
                                 }}/>
-                            <Text style={{
-                                fontFamily: UI.FONT.bold,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 20,
+                            <View style={{
+                                flex: 0.42,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 5
                             }}>
-                                {store.Match.player1}
-                            </Text>
-                            <Text style={{
-                                fontFamily: UI.FONT.bold,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 24,
+                                <Text style={{
+                                    fontFamily: UI.FONT.bold,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 20,
+                                }}>
+                                    {store.Match.player1}
+                                </Text>
+                            </View>
+                            <View style={{
+                                flex: 0.10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 5
                             }}>
-                                VS
-                            </Text>
-                            <Text style={{
-                                fontFamily: UI.FONT.bold,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 20,
+                                <Text style={{
+                                    fontFamily: UI.FONT.bold,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 24,
+                                }}>
+                                    VS
+                                </Text>
+                            </View>
+                            <View style={{
+                                flex: 0.42,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 5
                             }}>
-                                {store.Match.player2}
-                            </Text>
+                                <Text style={{
+                                    fontFamily: UI.FONT.bold,
+                                    color: UI.COLORS_HEX.white,
+                                    fontSize: 20,
+                                }}>
+                                    {store.Match.player2}
+                                </Text>
+                            </View>
                         </View>
 
                         <View style={{

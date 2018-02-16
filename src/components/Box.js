@@ -18,7 +18,7 @@ export default class Box extends Component {
 
     render() {
         return (
-            <TouchableOpacity disabled={!this.props.selected} activeOpacity={0.8} onPress={this.props.onPress} style={{
+            <TouchableOpacity disabled={this.props.fault?!this.props.fault:!this.props.selected} activeOpacity={0.8} onPress={this.props.onPress} style={{
                 width: this.props.width?this.props.width:width/3-30,
                 height: this.props.width?this.props.width:width/3-30,
                 backgroundColor: 'transparent',
@@ -75,7 +75,7 @@ export default class Box extends Component {
                            bottom:2,
                            right:4
                        }}/>
-                {this.props.selected===false&&<View style={{
+                {this.props.selected===false&&!this.props.fault&&<View style={{
                     backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                     position: 'absolute',
                     top: 0,
