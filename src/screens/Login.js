@@ -3,26 +3,22 @@ import {
     Text,
     View,
     ScrollView,
-    TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
-    Platform,
     Image,
-    TextInput,
     KeyboardAvoidingView,
     Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
+import BackImage from "../components/BackImage";
 
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 import CTextInput from '../components/CTextInput';
 import CCheckbox from '../components/CCheckbox'
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Navbar from '../components/Navbar';
-import Loading from '../components/Loading'
+import Loading from '../components/Loading';
+
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class Login extends React.Component {
@@ -35,31 +31,6 @@ export default class Login extends React.Component {
             checked: true,
             isLoading: false
         };
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
-    }
-
-    onNavigatorEvent(event) {
-        const {store, navigator} = this.props;
-        switch (event.id) {
-            case 'willAppear':
-                break;
-            case 'didAppear':
-
-                break;
-            case 'willDisappear':
-                break;
-            case 'didDisappear':
-                break;
-        }
-    }
-
-    componentDidMount() {
-
-    }
-
-    componentWillUnmount() {
-
     }
 
     onLogin = () => {
@@ -106,22 +77,10 @@ export default class Login extends React.Component {
         const {navigator, store} = this.props;
         return (
             <View style={{flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
-                       style={{
-                           position: 'absolute',
-                           top: 0,
-                           bottom: 0,
-                           left: 0,
-                           right: 0
-                       }}/>
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+              <BackImage/>
+                <View style={[UI.absoluteView,{
                     backgroundColor: 'rgba(0,0,0,0.8)'
-                }}/>
+                }]}/>
                 <Navbar title={'Login'} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
                     screen: 'Index',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -130,7 +89,7 @@ export default class Login extends React.Component {
                 <ScrollView>
                     <KeyboardAvoidingView behavior={'position'} contentContainerStyle={{paddingBottom: 80}}>
 
-                        <View style={{width: width, justifyContent: 'center', alignItems: 'center', marginTop: 15}}>
+                        <View style={[UI.defaultView,{marginTop: 15}]}>
                             <Image source={require('../assets/images/placeholder.png')}
                                    style={{
                                        width: 130,
@@ -154,12 +113,10 @@ export default class Login extends React.Component {
 
                                    }}/>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 17,
                                     marginLeft: 5
-                                }}>Email</Text>
+                                }]}>Email</Text>
                         </View>
 
                         <View style={{
@@ -191,12 +148,10 @@ export default class Login extends React.Component {
                                        marginLeft: -13
                                    }}/>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 17,
                                     marginLeft: -5
-                                }}>Wachtwoord</Text>
+                                }]}>Wachtwoord</Text>
                         </View>
 
                         <View style={{
@@ -227,12 +182,10 @@ export default class Login extends React.Component {
                                            onPress={() => this.state.checked === true ? this.setState({checked: false}) : this.setState({checked: true})}/>
 
                                 <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.white,
+                                    style={[UI.regularWhiteText25,{
                                         fontSize: 12,
                                         marginLeft: 5
-                                    }}>Aangemeld blijven</Text>
+                                    }]}>Aangemeld blijven</Text>
                             </View>
                             <View style={{
                                 borderBottomWidth: 0.5,
@@ -242,11 +195,9 @@ export default class Login extends React.Component {
                                 paddingBottom: 1
                             }}>
                                 <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.white,
+                                    style={[UI.regularWhiteText25,{
                                         fontSize: 12,
-                                    }}>Wachtwoord vergeten</Text>
+                                    }]}>Wachtwoord vergeten</Text>
                             </View>
                         </View>
 

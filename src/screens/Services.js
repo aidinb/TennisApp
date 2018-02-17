@@ -3,29 +3,20 @@ import {
     Text,
     View,
     ScrollView,
-    TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
     Platform,
     Image,
-    TextInput,
-    Switch,
-    Picker
+
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
-
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
-import CButton from '../components/CButton';
-import CTextInput from '../components/CTextInput';
-import CCheckbox from '../components/CCheckbox'
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import PersonRow from "../components/PersonRow";
 import Box from "../components/Box";
+import BackImage from "../components/BackImage";
 import {Stopwatch} from 'react-native-stopwatch-timer'
+
+let {height, width} = Dimensions.get('window');
 
 const endTime = '';
 let puntWinner = '';
@@ -38,7 +29,6 @@ export default class Services extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameScore: {player1: 0, player2: 0, games: [{p1: 0, p2: 0}, {p1: 0, p2: 0}, {p1: 0, p2: 0}]},
             timerstart: true,
             second_Serve: 0,
             fault: 1,
@@ -47,6 +37,7 @@ export default class Services extends React.Component {
             set0Point2: '',
             set1Point1: '',
             set1Point2: '',
+            scrollHeight:''
         }
         ;
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -76,16 +67,6 @@ export default class Services extends React.Component {
             case 'didDisappear':
                 break;
         }
-    }
-
-    componentDidMount() {
-        const {navigator, store} = this.props;
-
-
-    }
-
-    componentWillUnmount() {
-
     }
 
     getFormatedTime = (t) => {
@@ -127,10 +108,9 @@ export default class Services extends React.Component {
                     this.setState({set0Point2: store.Play.score.previousSets[0].player2});
                 }
 
-                if (store.Play.score.currentGame.player1 === "game" || store.Play.score.currentGame.player1 === "game") {
+                if (store.Play.score.currentGame.player1 === "game" || store.Play.score.currentGame.player2 === "game") {
                     store.setEndTimeMatch(this.endTime)
                     store.setWinnerPlayer(store.Play)
-
                     navigator.push({
                         screen: 'MatchResult',
                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -170,7 +150,7 @@ export default class Services extends React.Component {
                 store.setEndTimeMatch(this.endTime)
                 store.setWinnerPlayer(store.Play)
 
-                if (store.Play.score.currentGame.player1 === "game" || store.Play.score.currentGame.player1 === "game") {
+                if (store.Play.score.currentGame.player1 === "game" || store.Play.score.currentGame.player2 === "game") {
                     navigator.push({
                         screen: 'MatchResult',
                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -183,47 +163,44 @@ export default class Services extends React.Component {
         }
     }
 
+    onUndoPress = () => {
+        const {navigator, store} = this.props;
+
+        store.deleteLastPlay(store.Match.id)
+    }
+
     render() {
         const {navigator, store} = this.props;
 
         return (
             <View style={{flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
-                       style={{
-                           position: 'absolute',
-                           top: 0,
-                           bottom: 0,
-                           left: 0,
-                           right: 0
-                       }}/>
+                <BackImage/>
 
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                <View style={[UI.absoluteView,{
                     backgroundColor: 'rgba(0,0,0,0.8)'
-                }}/>
+                }]}/>
 
                 <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
                         leftBtnTitle={this.state.score11 === 0 ? 'Instellingen' : 'Corrigeer'}
                         onPressLeftBtn={() => {
-                            if (this.state.score11 <= 0) {
-                                navigator.push({
-                                    screen: 'SetUpWedstrijd',
-                                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                    animationType: 'fade',
-                                    passProps: {backTitle: 'kies partij'}
-                                })
-                            } else {
-                                this.setState({score11: this.state.score11 - 15})
-                            }
+                            // this.onUndoPress();
+                            // if (this.state.score11 <= 0) {
+                            //     navigator.push({
+                            //         screen: 'SetUpWedstrijd',
+                            //         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                            //         animationType: 'fade',
+                            //         passProps: {backTitle: 'kies partij'}
+                            //     })
+                            // } else {
+                            //     this.setState({score11: this.state.score11 - 15})
+                            // }
+                            navigator.pop();
 
                         }}/>
 
 
-                <ScrollView contentContainerStyle={{paddingBottom: 70}}>
+                <ScrollView contentContainerStyle={{paddingBottom: 70}} ref={ref => this.myScroll = ref}
+                            onLayout={ev => this.state.scrollHeight = ev.nativeEvent.layout.height}>
                     <View
                         style={{width: width, padding: 15, alignItems: 'center', marginTop: 5}}>
                         <View>
@@ -238,17 +215,16 @@ export default class Services extends React.Component {
                                     flex: 0.5,
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
+                                    padding: 5,
                                     width: (width - 30) / 2
                                 }}>
                                     <Text
-                                        style={{
-                                            fontFamily: UI.FONT.regular,
-                                            color: UI.COLORS_HEX.white,
+                                        style={[UI.regularWhiteText25,{
                                             fontSize: 20,
-                                            marginTop: -2
-                                        }}>{store.Match.player1}</Text>
+                                            marginTop: -2,
+                                            width: (width - 100) / 2
+
+                                        }]}>{store.Match.player1}</Text>
                                     {store.Service === 1 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
@@ -263,7 +239,6 @@ export default class Services extends React.Component {
                                     justifyContent: 'space-around',
                                     flexDirection: 'row',
                                     flex: 0.5
-
                                 }}>
                                     <View style={{
                                         width: (width - 40) / 8 - 4,
@@ -271,8 +246,6 @@ export default class Services extends React.Component {
                                         borderRadius: 3,
                                         justifyContent: 'center',
                                         alignItems: 'center'
-
-
                                     }}>
 
                                         <Text style={{
@@ -336,17 +309,16 @@ export default class Services extends React.Component {
                                     flex: 0.5,
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                    width: (width - 30) / 2
+                                    width: (width - 30) / 2,
+                                    padding: 5,
                                 }}>
                                     <Text
-                                        style={{
-                                            fontFamily: UI.FONT.regular,
-                                            color: UI.COLORS_HEX.white,
+                                        style={[UI.regularWhiteText25,{
                                             fontSize: 20,
-                                            marginTop: -2
-                                        }}>{store.Match.player2}</Text>
+                                            marginTop: -2,
+                                            width: (width - 100) / 2
+
+                                        }]}>{store.Match.player2}</Text>
                                     {store.Service === 2 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
@@ -429,12 +401,10 @@ export default class Services extends React.Component {
                             alignItems: 'center',
                         }}>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 15,
                                     marginTop: -3,
-                                }}>Partij duur: </Text>
+                                }]}>Partij duur: </Text>
                             <Stopwatch start={this.state.timerstart}
                                        options={options}
                                        getTime={this.getFormatedTime}/>
@@ -447,41 +417,27 @@ export default class Services extends React.Component {
                             justifyContent: 'center',
                             height: 30,
                             borderRadius: 5,
-                            marginTop: 15
                         }}>
                             {Platform.OS === 'IOS' ? <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>1<View style={{width: 10, height: 20}}><Text style={{
-                                fontSize: 14, fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                            }}>e</Text></View> Service</Text> : <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                }]}>1<View style={{width: 10, height: 20}}><Text style={[UI.regularWhiteText25,{
+                                fontSize: 14,
+                            }]}>e</Text></View> Service</Text> : <Text
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>1<Text style={{
-                                fontSize: 14, fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                            }}>e</Text> Service</Text>}
-                            {this.state.fault === 2 && <View style={{
+                                }]}>1<Text style={[UI.regularWhiteText25,{
+                                fontSize: 14,
+                            }]}>e</Text> Service</Text>}
+                            {this.state.fault === 2 && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
                                 borderRadius: 5,
 
-                            }}/>}
+                            }]}/>}
 
                         </View>
-
-
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'space-around',
@@ -502,6 +458,7 @@ export default class Services extends React.Component {
                                  selected={this.state.fault !== 2}/>
                             <Box title={'Fout'} colors={['#CD118C', '#EB008B', '#F074AC']}
                                  onPress={() => {
+                                     this.myScroll.scrollTo({y: this.state.scrollHeight/3});
                                      this.onPlayPress('FAULT');
                                  }}
                                  width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
@@ -511,7 +468,6 @@ export default class Services extends React.Component {
                                  fault={true}/>
                             <Box title={'In spel'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
                                  onPress={() => {
-
                                      navigator.push({
                                          screen: 'Winner',
                                          navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -546,34 +502,23 @@ export default class Services extends React.Component {
                             marginTop: 30
                         }}>
                             {Platform.OS === 'IOS' ? <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>2<View style={{width: 10, height: 20}}><Text style={{
-                                fontSize: 14, fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                            }}>e</Text></View> Service</Text> : <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                }]}>2<View style={{width: 10, height: 20}}><Text style={[UI.regularWhiteText25,{
+                                fontSize: 14,
+                            }]}>e</Text></View> Service</Text> : <Text
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>2<Text style={{
-                                fontSize: 14, fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                            }}>e</Text> Service</Text>}
-                            {this.state.fault === 1 && <View style={{
+                                }]}>2<Text style={[UI.regularWhiteText25,{
+                                fontSize: 14,
+                            }]}>e</Text> Service</Text>}
+                            {this.state.fault === 1 && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
                                 borderRadius: 5,
 
-                            }}/>}
+                            }]}/>}
                         </View>
 
 
@@ -581,23 +526,28 @@ export default class Services extends React.Component {
                             flexDirection: 'row',
                             justifyContent: 'space-around',
                             width: width - 20,
-
                         }}>
-
                             <Box title={'Ace'} colors={['#00914C', '#00A550', '#64C08A']}
-                                 onPress={() => this.onPlayPress('ACE')}
+                                 onPress={() => {
+                                     this.myScroll.scrollTo({y: 0});
+                                     this.onPlayPress('ACE')
+                                 }}
                                  width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
                                  topShadowHeight={32}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.fault !== 1}/>
                             <Box title={'Winner serve'} colors={['#666666', '#808080', '#999999']}
-                                 onPress={() => this.onPlayPress('WINNERSERVE ')}
+                                 onPress={() => {
+                                     this.myScroll.scrollTo({y: 0});
+                                     this.onPlayPress('WINNERSERVE ')
+                                 }}
                                  width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
                                  topShadowHeight={32}
                                  fontFamily={UI.FONT.bold}
                                  selected={this.state.fault !== 1}/>
                             <Box title={'Fout'} colors={['#CD118C', '#EB008B', '#F074AC']}
                                  onPress={() => {
+                                     this.myScroll.scrollTo({y: 0});
                                      this.onPlayPress('FAULT')
                                  }}
                                  width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
@@ -606,12 +556,22 @@ export default class Services extends React.Component {
                                  selected={this.state.fault !== 1}/>
                             <Box title={'In spel'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
                                  onPress={() => {
-                                     this.onPlayPress('IN_GAME ');
                                      navigator.push({
                                          screen: 'Winner',
                                          navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                          animationType: 'fade',
-                                         passProps: {backTitle: 'Undo'}
+                                         passProps: {
+                                             backTitle: 'Undo', puntPress: (player, scoreType, shott, shotType) => {
+                                                 console.log('+++punt player++')
+                                                 console.log(player)
+
+                                                 puntWinner = player;
+                                                 score_type = scoreType;
+                                                 shot = shott;
+                                                 shot_type = shotType;
+                                                 this.onPlayPress('IN_GAME');
+                                             }
+                                         }
                                      })
                                  }}
                                  width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}

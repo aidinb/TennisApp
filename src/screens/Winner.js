@@ -3,28 +3,17 @@ import {
     Text,
     View,
     ScrollView,
-    TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
-    Platform,
     Image,
-    TextInput,
-    Switch,
-    Picker
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
-
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
-import CButton from '../components/CButton';
-import CTextInput from '../components/CTextInput';
-import CCheckbox from '../components/CCheckbox'
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import PersonRow from "../components/PersonRow";
 import Box from "../components/Box";
+import BackImage from "../components/BackImage";
+
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class Winner extends React.Component {
@@ -32,67 +21,27 @@ export default class Winner extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameScore: {player1: 0, player2: 0, games: [{p1: 0, p2: 0}, {p1: 0, p2: 0}, {p1: 0, p2: 0}]},
             player1: {punt: true, winner: false, forced: false, unforced: false},
             player2: {punt: true, winner: false, forced: false, unforced: false},
             service1Disable: false,
             service2Disable: false,
-
-
+            scrollHeight: ''
         };
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
     }
-
-    onNavigatorEvent(event) {
-        const {store, navigator} = this.props;
-        switch (event.id) {
-            case 'willAppear':
-                break;
-            case 'didAppear':
-
-                break;
-            case 'willDisappear':
-                break;
-            case 'didDisappear':
-                break;
-        }
-    }
-
-    componentDidMount() {
-        const {navigator, store} = this.props;
-
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
 
     render() {
         const {navigator, store} = this.props;
         return (
             <View style={{flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
-                       style={{
-                           position: 'absolute',
-                           top: 0,
-                           bottom: 0,
-                           left: 0,
-                           right: 0
-                       }}/>
+                <BackImage/>
 
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                <View style={[UI.absoluteView,{
                     backgroundColor: 'rgba(0,0,0,0.8)'
-                }}/>
+                }]}/>
 
-                <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange} rightBtnTitle={'Bewerk'}
+                <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
+                        rightBtnTitle={'Bewerk'}
                         onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
@@ -100,7 +49,9 @@ export default class Winner extends React.Component {
                         })}/>
 
 
-                <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center'}}>
+                <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center'}}
+                            ref={ref => this.myScroll = ref}
+                            onLayout={ev => this.state.scrollHeight = ev.nativeEvent.layout.height}>
                     <View
                         style={{width: width, padding: 15, alignItems: 'center', marginTop: 5}}>
 
@@ -114,22 +65,15 @@ export default class Winner extends React.Component {
                             marginTop: 5
                         }}>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>Punt gewonnen door</Text>
-                            {this.state.service1Disable === true && <View style={{
+                                }]}>Punt gewonnen door</Text>
+                            {this.state.service1Disable === true && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
                                 borderRadius: 5,
 
-                            }}/>}
+                            }]}/>}
                         </View>
 
                         <View style={{
@@ -150,57 +94,48 @@ export default class Winner extends React.Component {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 flexDirection: 'row',
-                                paddingRight: 10,
                                 paddingLeft: 10,
-                                padding:5,
+                                padding: 5,
                             }}>
                                 <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.white,
+                                    style={[UI.regularWhiteText25,{
                                         fontSize: 17,
                                         marginTop: -3,
-                                    }}>{store.Match.player1}</Text>
+                                        width: (width - 150) / 2
+                                    }]}>{store.Match.player1}</Text>
                                 {store.Service === 1 && <Image source={require('../assets/images/ball.png')}
-                                                                           style={{
-                                                                               width: 18,
-                                                                               height: 18,
-                                                                               resizeMode: 'contain',
-                                                                           }}/>}
+                                                               style={{
+                                                                   width: 18,
+                                                                   height: 18,
+                                                                   resizeMode: 'contain',
+                                                               }}/>}
                             </View>
                             <View style={{
                                 width: (width - 70) / 2, justifyContent: 'space-between',
                                 alignItems: 'center',
                                 flexDirection: 'row',
-                                paddingRight: 10,
-                                paddingLeft: 10,
-                                padding:5,
+                                padding: 5,
+                                paddingLeft: 10
                             }}>
                                 <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.white,
+                                    style={[UI.regularWhiteText25,{
                                         fontSize: 17,
                                         marginTop: -3,
-                                    }}>{store.Match.player2}</Text>
+                                        width: (width - 150) / 2
+                                    }]}>{store.Match.player2}</Text>
                                 {store.Service === 2 && <Image source={require('../assets/images/ball.png')}
-                                                                          style={{
-                                                                              width: 18,
-                                                                              height: 18,
-                                                                              resizeMode: 'contain',
-                                                                          }}/>}
+                                                               style={{
+                                                                   width: 18,
+                                                                   height: 18,
+                                                                   resizeMode: 'contain',
+                                                               }}/>}
 
                             </View>
-                            {this.state.service1Disable === true && <View style={{
+                            {this.state.service1Disable === true && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
                                 borderRadius: 5,
 
-                            }}/>}
+                            }]}/>}
 
                         </View>
                         <View style={{
@@ -212,6 +147,7 @@ export default class Winner extends React.Component {
                             <Box title={'Punt'} colors={['#00914C', '#00A550', '#64C08A']}
                                  onPress={() => {
                                      if (store.HasWinner === true) {
+                                         this.myScroll.scrollTo({y: this.state.scrollHeight/3});
                                          this.setState({
                                              player1: {punt: true, winner: true, forced: false, unforced: false},
                                              player2: {punt: false, winner: false, forced: true, unforced: true},
@@ -228,6 +164,7 @@ export default class Winner extends React.Component {
                             <Box title={'Punt'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
                                  onPress={() => {
                                      if (store.HasWinner === true) {
+                                         this.myScroll.scrollTo({y: this.state.scrollHeight/3});
                                          this.setState({
                                              player1: {punt: false, winner: false, forced: true, unforced: true},
                                              player2: {punt: true, winner: true, forced: false, unforced: false},
@@ -248,27 +185,20 @@ export default class Winner extends React.Component {
                             backgroundColor: UI.COLORS_HEX.gray,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: 30,
                             borderRadius: 5,
-                            marginTop: 15
+                            marginTop: 15,
+                            padding: 5
                         }}>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>{store.Match.player1}</Text>
-                            {this.state.service1Disable === false && <View style={{
+                                }]}>{store.Match.player1}</Text>
+                            {this.state.service1Disable === false && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
                                 borderRadius: 5,
 
-                            }}/>}
+                            }]}/>}
 
                         </View>
 
@@ -285,10 +215,15 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'WINNER'}
+                                             passProps: {
+                                                 backTitle: 'Undo',
+                                                 puntPress: this.props.puntPress,
+                                                 playerPoint: this.state.player1.punt === true ? 1 : 2,
+                                                 forced: 'WINNER'
+                                             }
                                          })
                                      } else {
-                                         this.props.puntPress(this.state.player1.punt===true?1:2,'WINNER')
+                                         this.props.puntPress(this.state.player1.punt === true ? 1 : 2, 'WINNER')
                                          navigator.pop()
                                      }
 
@@ -304,10 +239,15 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'FORCED_ERROR'}
+                                             passProps: {
+                                                 backTitle: 'Undo',
+                                                 puntPress: this.props.puntPress,
+                                                 playerPoint: this.state.player1.punt === true ? 1 : 2,
+                                                 forced: 'FORCED_ERROR'
+                                             }
                                          })
                                      } else {
-                                         this.props.puntPress(this.state.player1.punt===true?1:2,'FORCED_ERROR')
+                                         this.props.puntPress(this.state.player1.punt === true ? 1 : 2, 'FORCED_ERROR')
                                          navigator.pop()
                                      }
                                  }}
@@ -322,10 +262,15 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'UNFORCED_ERROR'}
+                                             passProps: {
+                                                 backTitle: 'Undo',
+                                                 puntPress: this.props.puntPress,
+                                                 playerPoint: this.state.player1.punt === true ? 1 : 2,
+                                                 forced: 'UNFORCED_ERROR'
+                                             }
                                          })
                                      } else {
-                                         this.props.puntPress(this.state.player1.punt===true?1:2,'UNFORCED_ERROR')
+                                         this.props.puntPress(this.state.player1.punt === true ? 1 : 2, 'UNFORCED_ERROR')
                                          navigator.pop()
                                      }
                                  }}
@@ -340,27 +285,20 @@ export default class Winner extends React.Component {
                             backgroundColor: UI.COLORS_HEX.gray,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: 30,
                             borderRadius: 5,
-                            marginTop: 15
+                            marginTop: 15,
+                            padding: 5
                         }}>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>{store.Match.player2}</Text>
-                            {this.state.service2Disable === false && <View style={{
+                                }]}>{store.Match.player2}</Text>
+                            {this.state.service2Disable === false && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
                                 borderRadius: 5,
 
-                            }}/>}
+                            }]}/>}
 
                         </View>
 
@@ -377,10 +315,15 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'WINNER'}
+                                             passProps: {
+                                                 backTitle: 'Undo',
+                                                 puntPress: this.props.puntPress,
+                                                 playerPoint: this.state.player1.punt === true ? 1 : 2,
+                                                 forced: 'WINNER'
+                                             }
                                          })
                                      } else {
-                                         this.props.puntPress(this.state.player1.punt===true?1:2,'WINNER')
+                                         this.props.puntPress(this.state.player1.punt === true ? 1 : 2, 'WINNER')
                                          navigator.pop()
                                      }
                                  }}
@@ -395,10 +338,15 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'FORCED_ERROR'}
+                                             passProps: {
+                                                 backTitle: 'Undo',
+                                                 puntPress: this.props.puntPress,
+                                                 playerPoint: this.state.player1.punt === true ? 1 : 2,
+                                                 forced: 'FORCED_ERROR'
+                                             }
                                          })
                                      } else {
-                                         this.props.puntPress(this.state.player1.punt===true?1:2,'FORCED_ERROR')
+                                         this.props.puntPress(this.state.player1.punt === true ? 1 : 2, 'FORCED_ERROR')
                                          navigator.pop()
                                      }
                                  }}
@@ -413,10 +361,15 @@ export default class Winner extends React.Component {
                                              screen: 'SlagType',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Undo',puntPress:this.props.puntPress,playerPoint:this.state.player1.punt===true?1:2,forced:'UNFORCED_ERROR'}
+                                             passProps: {
+                                                 backTitle: 'Undo',
+                                                 puntPress: this.props.puntPress,
+                                                 playerPoint: this.state.player1.punt === true ? 1 : 2,
+                                                 forced: 'UNFORCED_ERROR'
+                                             }
                                          })
                                      } else {
-                                         this.props.puntPress(this.state.player1.punt===true?1:2,'UNFORCED_ERROR')
+                                         this.props.puntPress(this.state.player1.punt === true ? 1 : 2, 'UNFORCED_ERROR')
                                          navigator.pop()
                                      }
                                  }}

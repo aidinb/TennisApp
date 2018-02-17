@@ -5,25 +5,19 @@ import {
     ScrollView,
     TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
     Platform,
-    Image,
-    TextInput,
-    Switch,
-    Picker
+    StyleSheet,
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
-import CTextInput from '../components/CTextInput';
-import CCheckbox from '../components/CCheckbox'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
+import BackImage from "../components/BackImage";
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class SetUpWedstrijd extends React.Component {
@@ -36,40 +30,17 @@ export default class SetUpWedstrijd extends React.Component {
             kies2: true,
             ins: false,
         };
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
-    }
-
-    onNavigatorEvent(event) {
-        const {store, navigator} = this.props;
-        switch (event.id) {
-            case 'willAppear':
-                break;
-            case 'didAppear':
-
-                break;
-            case 'willDisappear':
-                break;
-            case 'didDisappear':
-                break;
-        }
     }
 
     componentDidMount() {
         const {navigator, store} = this.props;
-
         store.setService(1)
-
     }
 
-    componentWillUnmount() {
-
-    }
 
     onStartPress = () => {
         const {navigator, store} = this.props;
-
-        store.startMatch(store.Match.id);
+store.Play=[];
         // store.createMatch({
         //     category_id:store.Category.id,
         //     court_id:store.Court.id,
@@ -84,6 +55,7 @@ export default class SetUpWedstrijd extends React.Component {
         // })
 
         if (store.Court !== '') {
+            store.startMatch(store.Match.id);
             if (store.HasService === false) {
                 navigator.push({
                     screen: 'StartMatch',
@@ -108,52 +80,25 @@ export default class SetUpWedstrijd extends React.Component {
         const {navigator, store} = this.props;
         return (
             <View style={{flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
-                       style={{
-                           position: 'absolute',
-                           top: 0,
-                           bottom: 0,
-                           left: 0,
-                           right: 0
-                       }}/>
-
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                <BackImage/>
+                <View style={[UI.absoluteView,{
                     backgroundColor: 'rgba(0,0,0,0.8)'
-                }}/>
+                }]}/>
 
                 <Navbar title={'Partij instellingen'} leftBtnTitle={this.props.backTitle}
-                        onPressLeftBtn={() => navigator.push({
-                            screen: 'DamesEnkel',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'Categorie'}
-                        })}/>
+                        onPressLeftBtn={() => navigator.pop()}/>
                 <PersonRow title={store.TournamentByNumber.name}/>
 
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70}}>
                     <View
                         style={{width: width, padding: 15, flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
-
                         <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                                marginTop: -3,
-                                flex: 1
-                            }}>Categorie</Text>
-
+                            style={styles.titleText}>Categorie</Text>
                         <View
                             style={{
                                 width: width / 2 + 50,
                                 backgroundColor: UI.COLORS_HEX.white,
-                                height: 24,
                                 borderRadius: 6,
                                 borderColor: UI.COLORS_HEX.blue,
                                 borderWidth: 0.5,
@@ -161,7 +106,8 @@ export default class SetUpWedstrijd extends React.Component {
                                 shadowOffset: {width: 0, height: 0},
                                 shadowOpacity: 0.7,
                                 justifyContent: 'center',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                padding:3
                             }}>
                             <Text
                                 style={{
@@ -176,20 +122,13 @@ export default class SetUpWedstrijd extends React.Component {
                         style={{width: width, padding: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 5}}>
 
                         <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                                marginTop: -3,
-                                flex: 1
-                            }}>Spelers</Text>
+                            style={styles.titleText}>Spelers</Text>
                         <View style={{
                             shadowColor: UI.COLORS_HEX.blue,
                             shadowOffset: {width: 0, height: 0},
                             shadowOpacity: 0.7,
                             backgroundColor: 'transparent',
                             elevation: 5,
-
                         }}>
 
                             <View
@@ -204,7 +143,7 @@ export default class SetUpWedstrijd extends React.Component {
                                     flexDirection: 'row',
                                 }}>
                                 <View style={{
-                                    flex: 0.45,
+                                    flex: 0.50,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     padding: 5
@@ -219,7 +158,29 @@ export default class SetUpWedstrijd extends React.Component {
                                         }}>{store.Match.player1}</Text>
                                 </View>
                                 <View style={{
-                                    flex: 0.45,
+                                    width: 32,
+                                    height: 32,
+                                    borderRadius: 16,
+                                    backgroundColor: UI.COLORS_HEX.white,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderColor: UI.COLORS_HEX.blue,
+                                    borderWidth: 1,
+                                    shadowColor: UI.COLORS_HEX.gray,
+                                    shadowOffset: {width: 0, height: 0},
+                                    shadowOpacity: 0.3,
+                                    elevation: 5,
+                                }}>
+                                    <Text
+                                        style={{
+                                            fontFamily: UI.FONT.regular,
+                                            color: UI.COLORS_HEX.gray,
+                                            fontSize: 16,
+                                            marginTop: -3,
+                                        }}>vs</Text>
+                                </View>
+                                <View style={{
+                                    flex: 0.50,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     padding: 5
@@ -244,41 +205,12 @@ export default class SetUpWedstrijd extends React.Component {
                                     borderWidth: 0.5,
                                     justifyContent: 'center',
                                     alignItems: 'center'
-                                }}>
-
-                            </View>
-                            <View style={{
-                                width: 32,
-                                height: 32,
-                                borderRadius: 16,
-                                backgroundColor: UI.COLORS_HEX.white,
-                                position: 'absolute',
-                                top: 7,
-                                left: (width / 2 + 50) / 2 - 16,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderColor: UI.COLORS_HEX.blue,
-                                borderWidth: 1,
-                                shadowColor: UI.COLORS_HEX.gray,
-                                shadowOffset: {width: 0, height: 0},
-                                shadowOpacity: 0.3,
-                                elevation: 5,
-
-                            }}>
-                                <Text
-                                    style={{
-                                        fontFamily: UI.FONT.regular,
-                                        color: UI.COLORS_HEX.gray,
-                                        fontSize: 16,
-                                        marginTop: -3,
-                                    }}>vs</Text>
-                            </View>
+                                }}/>
                         </View>
                     </View>
 
 
                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
-
                         if (Platform.OS === 'ios') {
                             navigator.showLightBox({
                                 screen: 'KiesCat',
@@ -319,13 +251,7 @@ export default class SetUpWedstrijd extends React.Component {
                                       }}>
 
                         <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 17,
-                                marginTop: -3,
-                                flex: 1
-                            }}>Kies een baan</Text>
+                            style={styles.titleText}>Kies een baan</Text>
                         {store.Court !== '' && <Text style={{
                             fontFamily: UI.FONT.regular,
                             color: UI.COLORS_HEX.white,
@@ -340,16 +266,8 @@ export default class SetUpWedstrijd extends React.Component {
 
                     <View
                         style={{width: width, padding: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 5}}>
-
                         <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 16,
-                                marginTop: -3,
-                                flex: 1
-                            }}>Wie serveert</Text>
-
+                            style={styles.titleText}>Wie serveert</Text>
                         <View
                             style={{
                                 width: width / 2 + 50,
@@ -361,8 +279,8 @@ export default class SetUpWedstrijd extends React.Component {
                                 shadowOffset: {width: 0, height: 0},
                                 shadowOpacity: 0.7,
                                 justifyContent: 'center',
-                                alignItems: 'center',
-                                flexDirection: 'row'
+                                alignItems: 'stretch',
+                                flexDirection: 'row',
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                 this.setState({wie: true});
@@ -375,6 +293,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
                                 padding: 5,
+                                flex:1
                             }}>
                                 <Text
                                     style={{
@@ -388,7 +307,6 @@ export default class SetUpWedstrijd extends React.Component {
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                 this.setState({wie: false})
                                 store.setService(2);
-
                             }} style={{
                                 width: (width / 2 + 50) / 2,
                                 backgroundColor: this.state.wie === false ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
@@ -397,6 +315,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
                                 padding: 5,
+                                flex:1
                             }}>
                                 <Text
                                     style={{
@@ -415,13 +334,7 @@ export default class SetUpWedstrijd extends React.Component {
                         style={{width: width, padding: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 5}}>
 
                         <Text
-                            style={{
-                                fontFamily: UI.FONT.regular,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 16,
-                                marginTop: -3,
-                                flex: 1
-                            }}>Kies spelvorm</Text>
+                            style={styles.titleText}>Kies spelvorm</Text>
 
                         <View
                             style={{
@@ -569,3 +482,13 @@ export default class SetUpWedstrijd extends React.Component {
 
     }
 }
+
+const styles = StyleSheet.create({
+    titleText: {
+        fontFamily: UI.FONT.regular,
+        color: UI.COLORS_HEX.white,
+        fontSize: 16,
+        marginTop: -3,
+        flex: 1
+    },
+});

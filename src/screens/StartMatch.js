@@ -35,15 +35,11 @@ export default class StartMatch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameScore: {player1: 0, player2: 0, games: [{p1: 0, p2: 0}, {p1: 0, p2: 0}, {p1: 0, p2: 0}]},
-            score11: 0,
-            score12: 0,
-            score13: 0,
-            score14: 0,
-            score21: 0,
-            score22: 0,
-            score23: 0,
-            score24: 0,
+            set0Point1: '',
+            set0Point2: '',
+            set1Point1: '',
+            set1Point2: '',
+            scrollHeight: '',
             timerstart: true,
 
 
@@ -70,14 +66,47 @@ export default class StartMatch extends React.Component {
     componentDidMount() {
         const {navigator, store} = this.props;
 
-    }
-
-    componentWillUnmount() {
-
-    }
+    };
 
     getFormatedTime = (t) => {
-        this.endTime=t;
+        this.endTime = t;
+    };
+
+    onPlayPress = (player) => {
+        const {navigator, store} = this.props;
+        this.setState({timerstart: true})
+        store.addPlay({
+            match_id: store.Match.id,
+            player: player,
+            service: '',
+            score_type: '',
+            shot: '',
+            shot_type: '',
+            second_serve: '',
+        }).then(() => {
+            console.log(store.Play)
+            store.setService(store.Play.now_serving === 0 ? 1 : store.Play.now_serving)
+            store.setEndTimeMatch(this.endTime)
+            store.setWinnerPlayer(store.Play)
+            if (store.Play.score.previousSets.length > 1) {
+                this.setState({set1Point1: store.Play.score.previousSets[1].player1});
+                this.setState({set1Point2: store.Play.score.previousSets[1].player2});
+            }
+            if (store.Play.score.previousSets.length > 0) {
+                this.setState({set0Point1: store.Play.score.previousSets[0].player1});
+                this.setState({set0Point2: store.Play.score.previousSets[0].player2});
+            }
+            if (store.Play.score.currentGame.player1 === "game" || store.Play.score.currentGame.player2 === "game") {
+                navigator.push({
+                    screen: 'MatchResult',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                    animationType: 'fade',
+                    passProps: {backTitle: 'Terug'}
+                })
+            }
+
+        })
+
     }
 
     render() {
@@ -106,31 +135,18 @@ export default class StartMatch extends React.Component {
                 <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
                         leftBtnTitle={this.state.score11 === 0 ? 'Instellingen' : 'Corrigeer'}
                         onPressLeftBtn={() => {
-                            if (this.state.score11 <= 0) {
-                                navigator.push({
-                                    screen: 'SetUpWedstrijd',
-                                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                    animationType: 'fade',
-                                    passProps: {backTitle: 'kies partij'}
-                                })
-                            } else {
-                                if (this.state.score11 == 46) {
-
-                                    this.setState({
-                                        score11: 45,
-                                        score12: 0,
-                                        score13: 0,
-                                        score14: 0,
-                                        score21: 0,
-                                        score22: 0,
-                                        score23: 0,
-                                        score24: 0,
-                                    });
-
-                                } else {
-                                    this.setState({score11: this.state.score11 - 15})
-                                }
-                            }
+                            // this.onUndoPress();
+                            // if (this.state.score11 <= 0) {
+                            //     navigator.push({
+                            //         screen: 'SetUpWedstrijd',
+                            //         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                            //         animationType: 'fade',
+                            //         passProps: {backTitle: 'kies partij'}
+                            //     })
+                            // } else {
+                            //     this.setState({score11: this.state.score11 - 15})
+                            // }
+                            navigator.pop();
 
                         }}/>
                 <PersonRow title={store.TournamentByNumber.name}/>
@@ -139,18 +155,7 @@ export default class StartMatch extends React.Component {
                 <ScrollView contentContainerStyle={{paddingBottom: 70}}>
                     <View
                         style={{width: width, padding: 15, alignItems: 'center', marginTop: 5}}>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                            this.setState({
-                                score11: 40,
-                                score12: 6,
-                                score13: 3,
-                                score14: 5,
-                                score21: 15,
-                                score22: 4,
-                                score23: 6,
-                                score24: 2,
-                            })
-                        }}>
+                        <View>
                             <View style={{
                                 width: width - 30,
                                 flexDirection: 'row',
@@ -165,7 +170,7 @@ export default class StartMatch extends React.Component {
                                     paddingLeft: 10,
                                     paddingRight: 10,
                                     width: (width - 30) / 2,
-                                    padding:3
+                                    padding: 3
                                 }}>
                                     <Text
                                         style={{
@@ -174,7 +179,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 20,
                                             marginTop: -2
                                         }}>{store.Match.player1}</Text>
-                                    {store.Service === store.Match.player1 &&
+                                    {store.Service === 1 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
                                                width: 20,
@@ -204,7 +209,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
                                             color: UI.COLORS_HEX.orange,
-                                        }}>{this.state.score11 > 40 ? '40' : this.state.score11}</Text>
+                                        }}>{store.Play.score && store.Play.score.currentGame.player1 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player1 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player1 : 0}</Text>
                                     </View>
                                     <View style={{
                                         width: (width - 40) / 8 - 4,
@@ -217,8 +222,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.score12 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.score12}</Text>
+                                            color: store.Play.score && store.Play.score.currentSet.player1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? store.Play.score.currentSet.player1 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -230,8 +235,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.gameScore.games[1].p1 === 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.gameScore.games[1].p1}</Text>
+                                            color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 ? UI.COLORS_HEX.orange : this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -243,8 +248,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: UI.COLORS_HEX.white,
-                                        }}>{this.state.score14}</Text>
+                                            color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -264,7 +269,7 @@ export default class StartMatch extends React.Component {
                                     paddingLeft: 10,
                                     paddingRight: 10,
                                     width: (width - 30) / 2,
-                                    padding:3
+                                    padding: 3
                                 }}>
                                     <Text
                                         style={{
@@ -273,7 +278,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 20,
                                             marginTop: -2
                                         }}>{store.Match.player2}</Text>
-                                    {store.Service === store.Match.player2 &&
+                                    {store.Service === 2 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
                                                width: 20,
@@ -303,7 +308,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
                                             color: UI.COLORS_HEX.orange,
-                                        }}>{this.state.score21 > 40 ? '40' : this.state.score21}</Text>
+                                        }}>{store.Play.score && store.Play.score.currentGame.player2 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player2 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player2 : 0}</Text>
                                     </View>
                                     <View style={{
                                         width: (width - 40) / 8 - 4,
@@ -316,8 +321,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: UI.COLORS_HEX.white,
-                                        }}>{this.state.score22}</Text>
+                                            color: store.Play.score && store.Play.score.currentSet.player2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? store.Play.score.currentSet.player2 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -329,8 +334,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.score23 !== 0 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.score23}</Text>
+                                            color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -342,12 +347,12 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: UI.COLORS_HEX.white,
-                                        }}>{this.state.score24}</Text>
+                                            color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
                                     </View>
                                 </View>
                             </View>
-                        </TouchableOpacity>
+                        </View>
                         <View style={{
                             width: width - 30,
                             flexDirection: 'row',
@@ -403,7 +408,7 @@ export default class StartMatch extends React.Component {
                                 flexDirection: 'row',
                                 paddingRight: 10,
                                 paddingLeft: 10,
-                                padding:3
+                                padding: 3
                             }}>
                                 <Text
                                     style={{
@@ -412,12 +417,12 @@ export default class StartMatch extends React.Component {
                                         fontSize: 17,
                                         marginTop: -3,
                                     }}>{store.Match.player1}</Text>
-                                {store.Service === 'A. Kleijsen' && <Image source={require('../assets/images/ball.png')}
-                                                                           style={{
-                                                                               width: 18,
-                                                                               height: 18,
-                                                                               resizeMode: 'contain',
-                                                                           }}/>}
+                                {store.Service === 1 && <Image source={require('../assets/images/ball.png')}
+                                                               style={{
+                                                                   width: 18,
+                                                                   height: 18,
+                                                                   resizeMode: 'contain',
+                                                               }}/>}
                             </View>
                             <View style={{
                                 width: (width - 70) / 2, justifyContent: 'space-between',
@@ -425,7 +430,7 @@ export default class StartMatch extends React.Component {
                                 flexDirection: 'row',
                                 paddingRight: 10,
                                 paddingLeft: 10,
-                                padding:3
+                                padding: 3
                             }}>
                                 <Text
                                     style={{
@@ -434,12 +439,12 @@ export default class StartMatch extends React.Component {
                                         fontSize: 17,
                                         marginTop: -3,
                                     }}>{store.Match.player2}</Text>
-                                {store.Service === 'M. Luschen' && <Image source={require('../assets/images/ball.png')}
-                                                                          style={{
-                                                                              width: 18,
-                                                                              height: 18,
-                                                                              resizeMode: 'contain',
-                                                                          }}/>}
+                                {store.Service === 2 && <Image source={require('../assets/images/ball.png')}
+                                                               style={{
+                                                                   width: 18,
+                                                                   height: 18,
+                                                                   resizeMode: 'contain',
+                                                               }}/>}
                             </View>
 
 
@@ -451,36 +456,10 @@ export default class StartMatch extends React.Component {
 
                         }}>
                             <Box title={'Punt'} colors={['#00914C', '#00A550', '#64C08A']}
-                                 onPress={() => {
-                                     if (this.state.score21 === 15) {
-                                         store.setEndTimeMatch(this.endTime)
-                                         navigator.push({
-                                             screen: 'MatchResult',
-                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                             animationType: 'fade',
-                                             passProps: {backTitle: 'Terug'}
-                                         })
-                                     }
-                                     if (this.state.score11 > 40) {
-                                         this.setState({
-                                             score11: 46,
-                                             score12: 6,
-                                             score13: 3,
-                                             score14: 5,
-                                             score21: 15,
-                                             score22: 4,
-                                             score23: 6,
-                                             score24: 2,
-                                         });
-                                     } else {
-                                         this.setState({score11: this.state.score11 + 15})
-
-                                     }
-
-                                 }}
+                                 onPress={() => this.onPlayPress(1)}
                                  selected={true}/>
                             <Box title={'Punt'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
-                                 onPress={() => this.setState({score21:this.state.score21 + 15,timerstart: false})}
+                                 onPress={() => this.onPlayPress(2)}
                                  selected={true}/>
                         </View>
                     </View>

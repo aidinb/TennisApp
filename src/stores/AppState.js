@@ -355,6 +355,32 @@ class AppState {
         this.Play = data;
 
     }
+
+    async deleteLastPlay(matchId) {
+        console.log(matchId)
+        let {data} = await axios.get('/api/matches/'+matchId+'/lastplay').catch((e) => {
+            console.log(e.response)
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    'Server Error',
+                    'Please Try Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'Slow Connection',
+                    'please Try Again Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+        console.log("deleteLastPlay", data)
+        this.Play = data;
+    }
 }
 
 const state = new AppState();

@@ -502,7 +502,7 @@ export default class Statics extends React.Component {
                                 </Text>
                             </View>
                             <View style={{
-                                flex: 0.10,
+                                flex: 0.15,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 padding: 5

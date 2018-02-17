@@ -2,22 +2,16 @@ import React from 'react';
 import {
     Text,
     View,
-    ScrollView,
-    TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
-    Platform,
     Image,
-    TextInput,
-    Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
+import BackImage from "../components/BackImage";
 
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class Index extends React.Component {
@@ -25,81 +19,35 @@ export default class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
     }
-
-    onNavigatorEvent(event) {
-        const {store, navigator} = this.props;
-        switch (event.id) {
-            case 'willAppear':
-                break;
-            case 'didAppear':
-
-                break;
-            case 'willDisappear':
-                break;
-            case 'didDisappear':
-
-                break;
-        }
-    }
-
-    componentDidMount() {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
 
     render() {
         const {navigator, store} = this.props;
         return (
             <View style={{alignItems: 'center', justifyContent: 'space-around', flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
-                       style={{
-                           position: 'absolute',
-                           top: 0,
-                           bottom: 0,
-                           left: 0,
-                           right: 0
-                       }}/>
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                <BackImage/>
+                <View style={[UI.absoluteView, {
                     backgroundColor: 'rgba(0,0,0,0.6)'
-                }}/>
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
+                }]}/>
+                <View style={[UI.absoluteView, {
                     height: width / 2 - 40,
                     backgroundColor: 'transparent',
                     justifyContent: 'center',
                     alignItems: 'center'
-                }}>
+                }]}>
                     <View>
                         <Text
-                            style={{fontFamily: UI.FONT.regular, fontSize: 45, color: UI.COLORS_HEX.white}}>GameSet<Text
+                            style={[UI.regularWhiteText25,{fontSize: 45}]}>GameSet<Text
                             style={{
                                 fontFamily: UI.FONT.blackItalic,
                                 fontSize: 45,
                                 color: UI.COLORS_HEX.orange
                             }}>Stats</Text></Text>
                         <Text
-                            style={{
-                                fontFamily: UI.FONT.italic,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 26,
+                            style={[UI.regularWhiteText25, {
                                 marginTop: -10,
                                 paddingLeft: 6
-                            }}>Always
+                            }]}>Always
                             winning</Text>
                     </View>
                 </View>
@@ -110,34 +58,29 @@ export default class Index extends React.Component {
                     left: 0,
                     right: 0,
                     backgroundColor: 'transparent',
-                    flex:1
-
+                    flex: 1
                 }}>
                     <View style={{width: width, padding: 10}}>
                         <Text
-                            style={{fontFamily: UI.FONT.bold, fontSize: 25, color: UI.COLORS_HEX.white}}>Welkom bij
+                            style={UI.regularWhiteText25}>Welkom bij
                             GameSe<Text
-                                style={{
-                                    fontFamily: UI.FONT.bold,
-                                    fontSize: 25,
+                                style={[UI.regularWhiteText25, {
                                     color: UI.COLORS_HEX.orange
-                                }}>Stats</Text></Text>
+                                }]}>Stats</Text></Text>
                     </View>
 
                     <View style={{width: width, marginTop: 10, padding: 10}}>
                         <Text
-                            style={{
+                            style={[UI.regularWhiteText25, {
                                 paddingLeft: 0,
                                 padding: 20,
-                                fontFamily: UI.FONT.regular,
-                                fontSize: 25,
-                                color: UI.COLORS_HEX.white
-                            }}>Heb je nog
+                            }]}>Heb je nog
                             geen
                             account, registeer
                             je eerst als Supervisor en/of Log in.</Text>
                     </View>
-                    <View style={{width: width, flexDirection: 'row', justifyContent: 'space-around',marginBottom:20}}>
+                    <View
+                        style={{width: width, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20}}>
                         <CButton title={'Registreren'} backgroundColor={UI.COLORS_HEX.blue}/>
                         <CButton title={'Inloggen'} backgroundColor={UI.COLORS_HEX.white} color={UI.COLORS_HEX.black}
                                  onPress={() => {
@@ -145,7 +88,7 @@ export default class Index extends React.Component {
                                          screen: 'Login',
                                          navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                          animationType: 'fade',
-                                         passProps:{backTitle:'Registreren'}
+                                         passProps: {backTitle: 'Registreren'}
                                      })
                                  }}/>
                     </View>

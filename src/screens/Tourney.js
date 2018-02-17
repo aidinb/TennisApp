@@ -2,15 +2,8 @@ import React from 'react';
 import {
     Text,
     View,
-    ScrollView,
-    TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
-    Platform,
     Image,
-    TextInput,
-    Switch,
     KeyboardAvoidingView,
     Alert
 } from 'react-native';
@@ -19,12 +12,12 @@ import {inject, observer} from 'mobx-react/native';
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 import CTextInput from '../components/CTextInput';
-import CCheckbox from '../components/CCheckbox'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
 import Loading from '../components/Loading'
+import BackImage from '../components/BackImage'
 
 let {height, width} = Dimensions.get('window');
 
@@ -38,31 +31,6 @@ export default class Tourney extends React.Component {
             isLoading: false
 
         };
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
-    }
-
-    onNavigatorEvent(event) {
-        const {store, navigator} = this.props;
-        switch (event.id) {
-            case 'willAppear':
-                break;
-            case 'didAppear':
-
-                break;
-            case 'willDisappear':
-                break;
-            case 'didDisappear':
-                break;
-        }
-    }
-
-    componentDidMount() {
-
-    }
-
-    componentWillUnmount() {
-
     }
 
     onTourneyPress = () => {
@@ -121,22 +89,10 @@ export default class Tourney extends React.Component {
         const {navigator, store} = this.props;
         return (
             <View style={{flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
-                       style={{
-                           position: 'absolute',
-                           top: 0,
-                           bottom: 0,
-                           left: 0,
-                           right: 0
-                       }}/>
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                <BackImage/>
+                <View style={[UI.absoluteView,{
                     backgroundColor: 'rgba(0,0,0,0.8)'
-                }}/>
+                }]}/>
                 <Navbar title={'Zoek toernooi'} leftBtnTitle={this.props.backTitle}
                         onPressLeftBtn={() => navigator.push({
                             screen: 'Menu',
@@ -149,11 +105,9 @@ export default class Tourney extends React.Component {
                 <PersonRow title={store.User.name}/>
                 <View style={{width: width, padding: 20}}>
                     <Text
-                        style={{
-                            fontFamily: UI.FONT.regular,
-                            color: UI.COLORS_HEX.white,
+                        style={[UI.regularWhiteText25,{
                             fontSize: 16,
-                        }}>Voer hier het unieke toernooinummer in welke de toernooileiding je vertrekt heeft en klik op 'Ga verder'.</Text>
+                        }]}>Voer hier het unieke toernooinummer in welke de toernooileiding je vertrekt heeft en klik op 'Ga verder'.</Text>
                 </View>
 
                 <KeyboardAvoidingView behavior={'position'}
@@ -166,11 +120,9 @@ export default class Tourney extends React.Component {
                         padding: 15
                     }}>
                         <Text
-                            style={{
-                                fontFamily: UI.FONT.bold,
-                                color: UI.COLORS_HEX.white,
+                            style={[UI.regularWhiteText25,{
                                 fontSize: 16,
-                            }}>Toernooinummer</Text>
+                            }]}>Toernooinummer</Text>
                         <CTextInput keyboardType={'numeric'} borderRadius={13}
                                     placeholder={'Voer toernooinummer in'}
                                     onChangeText={(text) => this.setState({tourney: text})}
@@ -194,14 +146,10 @@ export default class Tourney extends React.Component {
                                      onPress={this.onTourneyPress}/>
                         </View>
                     </View>
-
-
                 </KeyboardAvoidingView>
 
                 <Footer/>
                 {this.state.isLoading && <Loading/>}
-
-
             </View>
         )
 

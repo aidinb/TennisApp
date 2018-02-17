@@ -1,4 +1,8 @@
-import {Platform} from 'react-native';
+let {height, width} = Dimensions.get('window');
+import {
+    Platform,
+    Dimensions,
+} from 'react-native';
 exports.COLORS_HEX = {
     white: '#FFFFFF',
     orange: '#F7931E',
@@ -8,8 +12,8 @@ exports.COLORS_HEX = {
     darkGray: 'rgba(255,255,255,0.8)',
     lightGray: 'rgba(255,255,255,0.5)',
     gray: '#4D4D4D',
-    boxGray:'#333333',
-    whiteBoxBlur:'rgba(255,255,255,0.85)'
+    boxGray: '#333333',
+    whiteBoxBlur: 'rgba(255,255,255,0.85)'
 
 };
 
@@ -21,6 +25,24 @@ exports.FONT = {
     italic: "dinpro-italic",
 
 };
+
+exports.regularWhiteText25 = {
+    fontFamily: "DINPro-Regular",
+    fontSize: 25,
+    color: '#FFFFFF'
+}
+
+exports.absoluteView = {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+}
+
+exports.defualtView = {
+    width: width, justifyContent: 'center', alignItems: 'center'
+}
 
 exports.NAVIGATION_STYLE = {
     navBarTextColor: '#404040',
