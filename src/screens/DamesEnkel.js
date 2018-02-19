@@ -31,8 +31,9 @@ export default class DamesEnkel extends React.Component {
     componentDidMount() {
         const {store, navigator} = this.props;
         this.setState({isLoading: true})
-        store.getMatches(store.TournamentId).then(() => {
+        store.getMatches(store.TournamentId,this.props.catId).then(() => {
             this.setState({isLoading: false})
+            console.log('====matches====')
             console.log(store.Matches)
         })
     }
@@ -66,7 +67,7 @@ export default class DamesEnkel extends React.Component {
                     style={[UI.regularWhiteText25,{
                         fontSize: 17,
                         width: width - 55
-                    }]}>{store.Category.name_short + ' ' + item.player1 + ' vs ' + item.player2}</Text>
+                    }]}>{store.Category.name_short + ' ' + item.player1.replace('+',' ') + ' vs ' + item.player2.replace('+',' ')}</Text>
                 <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
             </TouchableOpacity>
         )

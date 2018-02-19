@@ -33,6 +33,8 @@ class AppState {
     @observable Play;
     @observable WinnerPlayer;
     @observable TournamentId;
+    @observable MatcheDet;
+    @observable MatcheStatistics;
 
 
     constructor() {
@@ -56,6 +58,8 @@ class AppState {
         this.Play = [];
         this.WinnerPlayer = [];
         this.TournamentId = '';
+        this.MatcheDet = [];
+        this.MatcheStatistics = [];
 
 
     }
@@ -228,8 +232,8 @@ class AppState {
     }
 
 
-    async getMatches() {
-        let {data} = await axios.get('/api/matches').catch((e) => {
+    async getMatches(matchId,catId) {
+        let {data} = await axios.get('/api/tournaments/'+matchId+'/matches').catch((e) => {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
@@ -250,7 +254,10 @@ class AppState {
             }
         });
         console.log("getMatches", data)
-        this.Matches = data;
+        console.log("getMatches", catId)
+        if (data.matches.filter(m => m.category_id === catId).length > 0) {
+            this.Matches = data.matches;
+        }
 
     }
 
@@ -358,7 +365,7 @@ class AppState {
 
     async deleteLastPlay(matchId) {
         console.log(matchId)
-        let {data} = await axios.get('/api/matches/'+matchId+'/lastplay').catch((e) => {
+        let {data} = await axios.delete('/api/matches/'+matchId+'/lastplay').catch((e) => {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
@@ -379,7 +386,63 @@ class AppState {
             }
         });
         console.log("deleteLastPlay", data)
+        this.Play=[];
         this.Play = data;
+    }
+
+    async getMatcheDet(matchId) {
+        let {data} = await axios.get('/api/matches/'+matchId).catch((e) => {
+            console.log(e.response)
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    'Server Error',
+                    'Please Try Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'Slow Connection',
+                    'please Try Again Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+        console.log("getMatcheDet", data)
+            this.MatcheDet = data;
+
+
+    }
+
+
+    async getMatcheStatistics(matchId) {
+        let {data} = await axios.get('/api/statistics/match/'+matchId).catch((e) => {
+            console.log(e.response)
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    'Server Error',
+                    'Please Try Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'Slow Connection',
+                    'please Try Again Later',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+        console.log("MatcheStatistics", data)
+        this.MatcheStatistics = data;
+
+
     }
 }
 

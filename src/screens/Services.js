@@ -37,7 +37,7 @@ export default class Services extends React.Component {
             set0Point2: '',
             set1Point1: '',
             set1Point2: '',
-            scrollHeight:''
+            scrollHeight: ''
         }
         ;
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -176,26 +176,27 @@ export default class Services extends React.Component {
             <View style={{flex: 1}}>
                 <BackImage/>
 
-                <View style={[UI.absoluteView,{
+                <View style={[UI.absoluteView, {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }]}/>
 
                 <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
-                        leftBtnTitle={this.state.score11 === 0 ? 'Instellingen' : 'Corrigeer'}
+                        leftBtnTitle={store.Play.score&&(store.Play.score.currentGame.player1 === 0 && store.Play.score.currentGame.player2 === 0) &&
+                        (store.Play.score.currentSet.player1 === 0 && store.Play.score.currentSet.player2 === 0) &&
+                        store.Play.score.previousSets.length === 0
+                            ? 'Instellingen' : 'Corrigeer'}
                         onPressLeftBtn={() => {
-                            // this.onUndoPress();
-                            // if (this.state.score11 <= 0) {
-                            //     navigator.push({
-                            //         screen: 'SetUpWedstrijd',
-                            //         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            //         animationType: 'fade',
-                            //         passProps: {backTitle: 'kies partij'}
-                            //     })
-                            // } else {
-                            //     this.setState({score11: this.state.score11 - 15})
-                            // }
-                            navigator.pop();
+                            if (store.Play.score) {
+                                if ((store.Play.score.currentGame.player1 === 0 && store.Play.score.currentGame.player2 === 0) &&
+                                    (store.Play.score.currentSet.player1 === 0 && store.Play.score.currentSet.player2 === 0) &&
+                                    store.Play.score.previousSets.length === 0) {
+                                    navigator.pop();
 
+                                } else {
+                                    this.onUndoPress();
+
+                                }
+                            }
                         }}/>
 
 
@@ -219,12 +220,12 @@ export default class Services extends React.Component {
                                     width: (width - 30) / 2
                                 }}>
                                     <Text
-                                        style={[UI.regularWhiteText25,{
+                                        style={[UI.regularWhiteText25, {
                                             fontSize: 20,
                                             marginTop: -2,
                                             width: (width - 100) / 2
 
-                                        }]}>{store.Match.player1}</Text>
+                                        }]} numberOfLines={1}>{store.Match.player1.replace('+', ' ')}</Text>
                                     {store.Service === 1 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
@@ -313,12 +314,12 @@ export default class Services extends React.Component {
                                     padding: 5,
                                 }}>
                                     <Text
-                                        style={[UI.regularWhiteText25,{
+                                        style={[UI.regularWhiteText25, {
                                             fontSize: 20,
                                             marginTop: -2,
                                             width: (width - 100) / 2
 
-                                        }]}>{store.Match.player2}</Text>
+                                        }]} numberOfLines={1}>{store.Match.player2.replace('+', ' ')}</Text>
                                     {store.Service === 2 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
@@ -401,7 +402,7 @@ export default class Services extends React.Component {
                             alignItems: 'center',
                         }}>
                             <Text
-                                style={[UI.regularWhiteText25,{
+                                style={[UI.regularWhiteText25, {
                                     fontSize: 15,
                                     marginTop: -3,
                                 }]}>Partij duur: </Text>
@@ -419,19 +420,19 @@ export default class Services extends React.Component {
                             borderRadius: 5,
                         }}>
                             {Platform.OS === 'IOS' ? <Text
-                                style={[UI.regularWhiteText25,{
+                                style={[UI.regularWhiteText25, {
                                     fontSize: 18,
                                     marginTop: -3,
-                                }]}>1<View style={{width: 10, height: 20}}><Text style={[UI.regularWhiteText25,{
+                                }]}>1<View style={{width: 10, height: 20}}><Text style={[UI.regularWhiteText25, {
                                 fontSize: 14,
                             }]}>e</Text></View> Service</Text> : <Text
-                                style={[UI.regularWhiteText25,{
+                                style={[UI.regularWhiteText25, {
                                     fontSize: 18,
                                     marginTop: -3,
-                                }]}>1<Text style={[UI.regularWhiteText25,{
+                                }]}>1<Text style={[UI.regularWhiteText25, {
                                 fontSize: 14,
                             }]}>e</Text> Service</Text>}
-                            {this.state.fault === 2 && <View style={[UI.absoluteView,{
+                            {this.state.fault === 2 && <View style={[UI.absoluteView, {
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 borderRadius: 5,
 
@@ -458,7 +459,7 @@ export default class Services extends React.Component {
                                  selected={this.state.fault !== 2}/>
                             <Box title={'Fout'} colors={['#CD118C', '#EB008B', '#F074AC']}
                                  onPress={() => {
-                                     this.myScroll.scrollTo({y: this.state.scrollHeight/3});
+                                     this.myScroll.scrollTo({y: this.state.scrollHeight / 3});
                                      this.onPlayPress('FAULT');
                                  }}
                                  width={(width - 20) / 4 - 10} topShadowWidth={(width - 20) / 4 - 21}
@@ -502,19 +503,19 @@ export default class Services extends React.Component {
                             marginTop: 30
                         }}>
                             {Platform.OS === 'IOS' ? <Text
-                                style={[UI.regularWhiteText25,{
+                                style={[UI.regularWhiteText25, {
                                     fontSize: 18,
                                     marginTop: -3,
-                                }]}>2<View style={{width: 10, height: 20}}><Text style={[UI.regularWhiteText25,{
+                                }]}>2<View style={{width: 10, height: 20}}><Text style={[UI.regularWhiteText25, {
                                 fontSize: 14,
                             }]}>e</Text></View> Service</Text> : <Text
-                                style={[UI.regularWhiteText25,{
+                                style={[UI.regularWhiteText25, {
                                     fontSize: 18,
                                     marginTop: -3,
-                                }]}>2<Text style={[UI.regularWhiteText25,{
+                                }]}>2<Text style={[UI.regularWhiteText25, {
                                 fontSize: 14,
                             }]}>e</Text> Service</Text>}
-                            {this.state.fault === 1 && <View style={[UI.absoluteView,{
+                            {this.state.fault === 1 && <View style={[UI.absoluteView, {
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 borderRadius: 5,
 

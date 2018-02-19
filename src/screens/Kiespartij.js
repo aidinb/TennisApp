@@ -46,12 +46,13 @@ export default class Kiespartij extends React.Component {
         const {store, navigator} = this.props;
         return (
             <TouchableOpacity activeOpacity={0.7} onPress={() => {
-                store.setCategory(item)
+                store.setCategory(item);
+                store.Matches=[];
                 navigator.push({
                     screen: 'DamesEnkel',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
-                    passProps: {backTitle: 'Categorie',title:item.name}
+                    passProps: {backTitle: 'Categorie',title:item.name,catId:item.id}
                 })
             }} style={{
                 width: width,

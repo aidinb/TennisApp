@@ -17,6 +17,7 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
 import BackImage from "../components/BackImage";
+
 let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
@@ -40,7 +41,7 @@ export default class SetUpWedstrijd extends React.Component {
 
     onStartPress = () => {
         const {navigator, store} = this.props;
-store.Play=[];
+        store.Play = [];
         // store.createMatch({
         //     category_id:store.Category.id,
         //     court_id:store.Court.id,
@@ -55,22 +56,54 @@ store.Play=[];
         // })
 
         if (store.Court !== '') {
-            store.startMatch(store.Match.id);
-            if (store.HasService === false) {
-                navigator.push({
-                    screen: 'StartMatch',
-                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                    animationType: 'fade',
-                    passProps: {backTitle: 'Set up'}
-                })
-            } else {
-                navigator.push({
-                    screen: 'Services',
-                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                    animationType: 'fade',
-                    passProps: {backTitle: 'Set up'}
-                })
-            }
+            store.getMatcheDet(store.Match.id).then(()=>{
+                console.log(store.MatcheDet);
+                if(store.MatcheDet.start_time===null){
+                    store.startMatch(store.Match.id);
+                    if (store.HasService === false) {
+                        navigator.push({
+                            screen: 'StartMatch',
+                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                            animationType: 'fade',
+                            passProps: {backTitle: 'Set up'}
+                        })
+                    } else {
+                        navigator.push({
+                            screen: 'Services',
+                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                            animationType: 'fade',
+                            passProps: {backTitle: 'Set up'}
+                        })
+                    }
+                }else{
+                    if(store.MatcheDet.winner===0){
+                        store.Play=store.MatcheDet;
+                        if (store.HasService === false) {
+                            navigator.push({
+                                screen: 'StartMatch',
+                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                animationType: 'fade',
+                                passProps: {backTitle: 'Set up'}
+                            })
+                        } else {
+                            navigator.push({
+                                screen: 'Services',
+                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                animationType: 'fade',
+                                passProps: {backTitle: 'Set up'}
+                            })
+                        }
+                    }else {
+                        alert('Match Finished')
+                    }
+
+
+                }
+            })
+
+
+
+
         } else {
             alert('Please choose kies een baan')
         }
@@ -78,10 +111,14 @@ store.Play=[];
 
     render() {
         const {navigator, store} = this.props;
+        const player1 = store.Match.player1.split('+');
+        const player2 = store.Match.player2.split('+');
+        console.log(player1)
+
         return (
             <View style={{flex: 1}}>
                 <BackImage/>
-                <View style={[UI.absoluteView,{
+                <View style={[UI.absoluteView, {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }]}/>
 
@@ -107,7 +144,7 @@ store.Play=[];
                                 shadowOpacity: 0.7,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                padding:3
+                                padding: 3
                             }}>
                             <Text
                                 style={{
@@ -129,34 +166,46 @@ store.Play=[];
                             shadowOpacity: 0.7,
                             backgroundColor: 'transparent',
                             elevation: 5,
+                            flexDirection: 'row',
+                            borderColor: UI.COLORS_HEX.blue,
+                            borderWidth: 0.5,
+                            width: width / 2 + 50,
+                            borderRadius: 6,
                         }}>
+                            <View style={{
+                                flex: 0.40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 5,
+                                backgroundColor: UI.COLORS_HEX.white,
+                                borderTopLeftRadius: 6,
+                                borderBottomLeftRadius: 6,
+                            }}>
+                                <Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.gray,
+                                        fontSize: 14,
+                                        marginTop: -3,
+                                        textAlign: 'center',
+                                    }} numberOfLines={1}>{player1[0]}</Text>
+                                {player1.length>1&&<Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.gray,
+                                        fontSize: 14,
+                                        marginTop: -3,
+                                        textAlign: 'center'
+                                    }} numberOfLines={1}>{player1[1]}</Text>}
+                            </View>
+                            <View style={{
+                                flex: 0.20,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 5,
+                                backgroundColor: UI.COLORS_HEX.white,
 
-                            <View
-                                style={{
-                                    width: width / 2 + 50,
-                                    backgroundColor: UI.COLORS_HEX.white,
-                                    borderRadius: 6,
-                                    borderColor: UI.COLORS_HEX.blue,
-                                    borderWidth: 0.5,
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    flexDirection: 'row',
-                                }}>
-                                <View style={{
-                                    flex: 0.50,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: 5
-                                }}>
-                                    <Text
-                                        style={{
-                                            fontFamily: UI.FONT.regular,
-                                            color: UI.COLORS_HEX.gray,
-                                            fontSize: 14,
-                                            marginTop: -3,
-                                            textAlign: 'center'
-                                        }}>{store.Match.player1}</Text>
-                                </View>
+                            }}>
                                 <View style={{
                                     width: 32,
                                     height: 32,
@@ -179,33 +228,34 @@ store.Play=[];
                                             marginTop: -3,
                                         }}>vs</Text>
                                 </View>
-                                <View style={{
-                                    flex: 0.50,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: 5
-                                }}>
-                                    <Text
-                                        style={{
-                                            fontFamily: UI.FONT.regular,
-                                            color: UI.COLORS_HEX.gray,
-                                            fontSize: 14,
-                                            marginTop: -3,
-                                            textAlign: 'center'
-                                        }}>{store.Match.player2}</Text>
-                                </View>
                             </View>
-                            <View
-                                style={{
-                                    width: width / 2 + 50,
-                                    backgroundColor: UI.COLORS_HEX.white,
-                                    height: 24,
-                                    borderRadius: 6,
-                                    borderColor: UI.COLORS_HEX.blue,
-                                    borderWidth: 0.5,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}/>
+                            <View style={{
+                                flex: 0.40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: 5,
+                                backgroundColor: UI.COLORS_HEX.white,
+                                borderTopRightRadius: 6,
+                                borderBottomRightRadius: 6,
+                            }}>
+                                <Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.gray,
+                                        fontSize: 14,
+                                        marginTop: -3,
+                                        textAlign: 'center',
+                                    }} numberOfLines={1}>{player2[0]}</Text>
+                                {player2.length>1&&<Text
+                                    style={{
+                                        fontFamily: UI.FONT.regular,
+                                        color: UI.COLORS_HEX.gray,
+                                        fontSize: 14,
+                                        marginTop: -3,
+                                        textAlign: 'center',
+                                    }} numberOfLines={1}>{player2[1]}</Text>}
+                            </View>
+
                         </View>
                     </View>
 
@@ -293,7 +343,7 @@ store.Play=[];
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
                                 padding: 5,
-                                flex:1
+                                flex: 1
                             }}>
                                 <Text
                                     style={{
@@ -302,7 +352,7 @@ store.Play=[];
                                         fontSize: 14,
                                         backgroundColor: 'transparent',
                                         textAlign: 'center'
-                                    }}>{store.Match.player1}</Text>
+                                    }} numberOfLines={1}>{store.Match.player1.replace('+',' ')}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                 this.setState({wie: false})
@@ -315,7 +365,7 @@ store.Play=[];
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
                                 padding: 5,
-                                flex:1
+                                flex: 1
                             }}>
                                 <Text
                                     style={{
@@ -325,7 +375,7 @@ store.Play=[];
                                         backgroundColor: 'transparent',
                                         textAlign: 'center',
 
-                                    }}>{store.Match.player2}</Text>
+                                    }} numberOfLines={1}>{store.Match.player2.replace('+',' ')}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

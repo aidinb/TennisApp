@@ -109,6 +109,11 @@ export default class StartMatch extends React.Component {
 
     }
 
+    onUndoPress = () => {
+        const {navigator, store} = this.props;
+
+        store.deleteLastPlay(store.Match.id)
+    }
     render() {
         const {navigator, store} = this.props;
 
@@ -133,21 +138,22 @@ export default class StartMatch extends React.Component {
                 }}/>
 
                 <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
-                        leftBtnTitle={this.state.score11 === 0 ? 'Instellingen' : 'Corrigeer'}
+                        leftBtnTitle={store.Play.score&&(store.Play.score.currentGame.player1 === 0 && store.Play.score.currentGame.player2 === 0) &&
+                        (store.Play.score.currentSet.player1 === 0 && store.Play.score.currentSet.player2 === 0) &&
+                        store.Play.score.previousSets.length === 0
+                            ? 'Instellingen' : 'Corrigeer'}
                         onPressLeftBtn={() => {
-                            // this.onUndoPress();
-                            // if (this.state.score11 <= 0) {
-                            //     navigator.push({
-                            //         screen: 'SetUpWedstrijd',
-                            //         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            //         animationType: 'fade',
-                            //         passProps: {backTitle: 'kies partij'}
-                            //     })
-                            // } else {
-                            //     this.setState({score11: this.state.score11 - 15})
-                            // }
-                            navigator.pop();
+                            if (store.Play.score) {
+                                if ((store.Play.score.currentGame.player1 === 0 && store.Play.score.currentGame.player2 === 0) &&
+                                    (store.Play.score.currentSet.player1 === 0 && store.Play.score.currentSet.player2 === 0) &&
+                                    store.Play.score.previousSets.length === 0) {
+                                    navigator.pop();
 
+                                } else {
+                                    this.onUndoPress();
+
+                                }
+                            }
                         }}/>
                 <PersonRow title={store.TournamentByNumber.name}/>
 
@@ -178,7 +184,7 @@ export default class StartMatch extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>{store.Match.player1}</Text>
+                                        }} numberOfLines={1}>{store.Match.player1.replace('+',' ')}</Text>
                                     {store.Service === 1 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
@@ -277,7 +283,7 @@ export default class StartMatch extends React.Component {
                                             color: UI.COLORS_HEX.white,
                                             fontSize: 20,
                                             marginTop: -2
-                                        }}>{store.Match.player2}</Text>
+                                        }} numberOfLines={1}>{store.Match.player2.replace('+',' ')}</Text>
                                     {store.Service === 2 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{

@@ -12,6 +12,7 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
 import BackImage from "../components/BackImage";
+import lstore from 'react-native-simple-store';
 
 let {height, width} = Dimensions.get('window');
 
@@ -64,12 +65,14 @@ export default class Menu extends React.Component {
                 <View style={[UI.absoluteView,{
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }]}/>
-                <Navbar title={'Home'} rightBtnTitle={'Logout'} onPressRightBtn={() => navigator.push({
+                <Navbar title={'Home'} rightBtnTitle={'Logout'} onPressRightBtn={() => {
+                    lstore.delete("profile");
+                    navigator.push({
                     screen: 'Login',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
                     passProps:{backTitle:'Registration'}
-                })}/>
+                })}}/>
 
                <PersonRow title={store.User.name}/>
 

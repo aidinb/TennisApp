@@ -3,28 +3,17 @@ import {
     Text,
     View,
     ScrollView,
-    TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
-    Platform,
     Image,
-    TextInput,
-    Switch,
-    Picker
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
-
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
-import CButton from '../components/CButton';
-import CTextInput from '../components/CTextInput';
-import CCheckbox from '../components/CCheckbox'
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import PersonRow from "../components/PersonRow";
 import Box from "../components/Box";
+import BackImage from "../components/BackImage";
+
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class SlagType extends React.Component {
@@ -43,57 +32,17 @@ export default class SlagType extends React.Component {
 
 
         };
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
     }
-
-    onNavigatorEvent(event) {
-        const {store, navigator} = this.props;
-        switch (event.id) {
-            case 'willAppear':
-                break;
-            case 'didAppear':
-
-                break;
-            case 'willDisappear':
-                break;
-            case 'didDisappear':
-                break;
-        }
-    }
-
-    componentDidMount() {
-        const {navigator, store} = this.props;
-
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
 
     render() {
         const {navigator, store} = this.props;
         return (
             <View style={{flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
-                       style={{
-                           position: 'absolute',
-                           top: 0,
-                           bottom: 0,
-                           left: 0,
-                           right: 0
-                       }}/>
+           <BackImage/>
 
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                <View style={[UI.absoluteView,{
                     backgroundColor: 'rgba(0,0,0,0.8)'
-                }}/>
+                }]}/>
 
                 <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
                         rightBtnTitle={'Bewerk'}
@@ -102,7 +51,6 @@ export default class SlagType extends React.Component {
                             animated: true,
                             animationType: 'fade',
                         })}/>
-
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center'}}>
                     <View
@@ -118,22 +66,14 @@ export default class SlagType extends React.Component {
                             marginTop: 5
                         }}>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>Slag</Text>
-                            {this.state.slag === false && <View style={{
+                                }]}>Slag</Text>
+                            {this.state.slag === false && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
                                 borderRadius: 5,
-
-                            }}/>}
+                            }]}/>}
                         </View>
 
                         <View style={{
@@ -190,8 +130,6 @@ export default class SlagType extends React.Component {
                                              passProps: {backTitle: 'Set up'}
                                          })
                                      }
-
-
                                  }}
                                  selected={this.state.backHand}/>
                         </View>
@@ -207,22 +145,18 @@ export default class SlagType extends React.Component {
                             marginTop: 5
                         }}>
                             <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: UI.COLORS_HEX.white,
+                                style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }}>Type Slag</Text>
+                                }]}>Type Slag</Text>
                         </View>
                         <View style={{
                             width: width - 60,
                             flexDirection: 'row',
                             justifyContent: 'space-around'
-
                         }}>
                             <View style={{
                                 justifyContent: 'space-between',
-
                             }}>
                                 <Box title={'Drop-\nshot'} colors={['#FAAC18', '#FFCA05', '#FFE7A3']}
                                      onPress={() => {
@@ -250,7 +184,6 @@ export default class SlagType extends React.Component {
                             <View style={{
                                 justifyContent: 'center',
                                 alignItems: 'center'
-
                             }}>
                                 <Box title={'Ground-\nstroke'} colors={['#666666', '#808080', '#999999']}
                                      onPress={() => {
