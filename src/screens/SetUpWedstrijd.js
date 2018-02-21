@@ -42,24 +42,19 @@ export default class SetUpWedstrijd extends React.Component {
     onStartPress = () => {
         const {navigator, store} = this.props;
         store.Play = [];
-        // store.createMatch({
-        //     category_id:store.Category.id,
-        //     court_id:store.Court.id,
-        //     player1:store.Match.player1,
-        //     player2:store.Match.player2,
-        //     server:store.Service===store.Match.player1?1:2,
-        //     short_game:!this.state.kies1,
-        //     super_tie_break:!this.state.kies2,
-        //     clock:0,
-        // }).then(() => {
-        //     console.log(store.CreateMatch)
-        // })
 
         if (store.Court !== '') {
             store.getMatcheDet(store.Match.id).then(()=>{
                 console.log(store.MatcheDet);
                 if(store.MatcheDet.start_time===null){
-                    store.startMatch(store.Match.id);
+                    store.startMatch(store.Match.id,{
+                        player1: store.Match.player1,
+                        player2: store.Match.player2,
+                        server: store.Service===store.Match.player1?1:2,
+                        court_id:store.Court.id,
+                        short_game:!this.state.kies1,
+                        super_tie_break:!this.state.kies2,
+                    });
                     if (store.HasService === false) {
                         navigator.push({
                             screen: 'StartMatch',

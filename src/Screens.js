@@ -19,6 +19,7 @@ import Statics from './screens/Statics';
 import Services from './screens/Services';
 import Winner from './screens/Winner';
 import SlagType from './screens/SlagType';
+import EditScore from './screens/EditScore';
 
 
 
@@ -43,5 +44,6 @@ export function registerScreens() {
     Navigation.registerComponent('Services', () => Services, store, Provider);
     Navigation.registerComponent('Winner', () => Winner, store, Provider);
     Navigation.registerComponent('SlagType', () => SlagType, store, Provider);
+    Navigation.registerComponent('EditScore', () => EditScore, store, Provider);
 
 }

@@ -31,29 +31,34 @@ export default class Menu extends React.Component {
 
     componentDidMount() {
         const {navigator, store} = this.props;
-
         store.setServices(false)
         this.setState({isLoading:true});
         store.getListSettings().then(() => {
-            if (store.ListSettings.service && store.ListSettings.service == 1) {
+            if (store.ListSettings.service && store.ListSettings.service === "1") {
                 store.setHasService(true)
             } else {
                 store.setHasService(false)
             }
-            if (store.ListSettings.shot && store.ListSettings.shot == 1) {
+            if (store.ListSettings.score_type && store.ListSettings.score_type === "1") {
                 store.setHasWinner(true)
             } else {
                 store.setHasWinner(false)
             }
-            // if (store.ListSettings.kaas && store.ListSettings.kaas == 1) {
-            //     store.setHasStroke(true)
-            // } else {
-            //     store.setHasStroke(true)
-            // }
+            if (store.ListSettings.shot && store.ListSettings.shot === "1") {
+                store.setHasStroke(true)
+            } else {
+                store.setHasStroke(false)
+            }
+            if (store.ListSettings.shot_type && store.ListSettings.shot_type === "1") {
+                store.setHasStrokeType(true)
+            } else {
+                store.setHasStrokeType(false)
+            }
 
             this.setState({isLoading:false});
 
         })
+
     }
 
 

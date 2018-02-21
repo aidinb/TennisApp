@@ -113,6 +113,28 @@ export default class StartMatch extends React.Component {
         const {navigator, store} = this.props;
 
         store.deleteLastPlay(store.Match.id)
+    };
+
+    onScorePress = (player,type) => {
+        const {navigator, store} = this.props;
+        if (Platform.OS === 'ios') {
+            navigator.showLightBox({
+                screen: 'EditScore',
+                style: {
+                    backgroundBlur: "dark",
+                    tapBackgroundToDismiss: true,
+                },
+                passProps: {player:player,type:type}
+            })
+        } else {
+            navigator.showModal({
+                screen: 'EditScore',
+                animationType: 'slide-up',
+                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                passProps: {player:player,type:type}
+
+            });
+        }
     }
     render() {
         const {navigator, store} = this.props;
@@ -201,7 +223,7 @@ export default class StartMatch extends React.Component {
                                     flex: 0.5
 
                                 }}>
-                                    <View style={{
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(1,"currentGame")} style={{
                                         width: (width - 40) / 8 - 4,
                                         backgroundColor: UI.COLORS_HEX.gray,
                                         borderRadius: 3,
@@ -216,22 +238,21 @@ export default class StartMatch extends React.Component {
                                             fontFamily: UI.FONT.bold,
                                             color: UI.COLORS_HEX.orange,
                                         }}>{store.Play.score && store.Play.score.currentGame.player1 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player1 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player1 : 0}</Text>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(1,"currentSet")} style={{
                                         width: (width - 40) / 8 - 4,
                                         backgroundColor: UI.COLORS_HEX.gray,
                                         borderRadius: 3,
                                         justifyContent: 'center',
                                         alignItems: 'center'
-
                                     }}>
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
                                             color: store.Play.score && store.Play.score.currentSet.player1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
                                         }}>{store.Play.score ? store.Play.score.currentSet.player1 : 0}</Text>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(1,'prev1')}} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -243,8 +264,8 @@ export default class StartMatch extends React.Component {
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 ? UI.COLORS_HEX.orange : this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
                                         }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(1,'prev0')}} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -256,7 +277,7 @@ export default class StartMatch extends React.Component {
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
                                         }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
 
@@ -300,7 +321,7 @@ export default class StartMatch extends React.Component {
                                     flex: 0.5
 
                                 }}>
-                                    <View style={{
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(2,"currentGame")} style={{
                                         width: (width - 40) / 8 - 4,
                                         backgroundColor: UI.COLORS_HEX.gray,
                                         borderRadius: 3,
@@ -315,8 +336,8 @@ export default class StartMatch extends React.Component {
                                             fontFamily: UI.FONT.bold,
                                             color: UI.COLORS_HEX.orange,
                                         }}>{store.Play.score && store.Play.score.currentGame.player2 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player2 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player2 : 0}</Text>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(2,"currentSet")} style={{
                                         width: (width - 40) / 8 - 4,
                                         backgroundColor: UI.COLORS_HEX.gray,
                                         borderRadius: 3,
@@ -329,8 +350,8 @@ export default class StartMatch extends React.Component {
                                             fontFamily: UI.FONT.bold,
                                             color: store.Play.score && store.Play.score.currentSet.player2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
                                         }}>{store.Play.score ? store.Play.score.currentSet.player2 : 0}</Text>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(2,'prev1')}} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -342,8 +363,8 @@ export default class StartMatch extends React.Component {
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
                                         }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
-                                    </View>
-                                    <View style={{
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(1,'prev0')}} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -355,7 +376,7 @@ export default class StartMatch extends React.Component {
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
                                         }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>

@@ -38,11 +38,11 @@ export default class Setting extends React.Component {
 
         store.setSettings({
             service: store.HasService === true ? 1 : 0,
-            shot: store.HasWinner === true ? 1 : 0,
-            kaas: store.HasStroke === true ? 1 : 0,
+            score_type: store.HasWinner === true ? 1 : 0,
+            shot: store.HasStroke === true ? 1 : 0,
+            shot_type: store.HasStrokeType === true ? 1 : 0,
         }).then(() => {
             this.setState({isLoading: false});
-
             navigator.push({
                 screen: 'Menu',
                 navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},

@@ -54,9 +54,7 @@ export default class Statics extends React.Component {
             this.setState({set0Point2: store.WinnerPlayer.score.previousSets[0].player2});
         }
 
-        store.getMatcheStatistics(store.Match.id).then(() => {
-            console.log(store.MatcheStatistics)
-        })
+        store.getMatcheStatistics(store.Match.id);
     }
 
 
@@ -116,7 +114,7 @@ export default class Statics extends React.Component {
                     color: UI.COLORS_HEX.white,
                     fontSize: 21,
                 }}>
-                    {item.player1}
+                    {item.value.player1}
                 </Text>
                 <View style={{
                     justifyContent: 'center',
@@ -134,7 +132,7 @@ export default class Statics extends React.Component {
                         color: UI.COLORS_HEX.white,
                         fontSize: 14,
                     }}>
-                        {index}
+                        {item.key}
                     </Text>
                 </View>
                 <Text style={{
@@ -142,7 +140,7 @@ export default class Statics extends React.Component {
                     color: UI.COLORS_HEX.white,
                     fontSize: 21,
                 }}>
-                    {item.player2}
+                    {item.value.player2}
                 </Text>
             </View>
         )
