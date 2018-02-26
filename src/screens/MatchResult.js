@@ -25,6 +25,7 @@ export default class MatchResult extends React.Component {
             set0Point2: '',
             set1Point1: '',
             set1Point2: '',
+            endTime:''
         };
     }
 
@@ -38,6 +39,19 @@ export default class MatchResult extends React.Component {
             this.setState({set0Point1: store.WinnerPlayer.score.previousSets[0].player1});
             this.setState({set0Point2: store.WinnerPlayer.score.previousSets[0].player2});
         }
+
+        let start = new Date(store.Play.start_time);
+        let finish = new Date(store.Play.end_time);
+        console.log(start);
+        console.log(finish);
+        let diff = finish - start;
+        let h = parseInt(Math.abs(diff) / (1000 * 60 * 60) % 24);
+        let m = parseInt(Math.abs(diff) / (1000 * 60) % 60);
+        let s = parseInt(Math.abs(diff) / (1000) % 60);
+this.setState({endTime:h+':'+m+':'+s})
+        console.log(h)
+        console.log(m)
+        console.log(s)
     }
 
     render() {
@@ -78,7 +92,7 @@ export default class MatchResult extends React.Component {
                                         style={[UI.regularWhiteText25, {
                                             fontSize: 20,
                                             marginTop: -2
-                                        }]} numberOfLines={1}>{store.Match.player1.replace('+',' ')}</Text>
+                                        }]} numberOfLines={1}>{store.Match.player1.replace('+', ' / ')}</Text>
                                 </View>
                                 <View style={{
                                     paddingLeft: 10,
@@ -94,23 +108,11 @@ export default class MatchResult extends React.Component {
                                         justifyContent: 'center',
                                         alignItems: 'center'
                                     }}>
-                                        {/*<TextInput style={{*/}
-                                        {/*flex: 1, justifyContent: 'center',*/}
-                                        {/*alignItems: 'center',*/}
-                                        {/*fontSize:22,*/}
-                                        {/*fontFamily: UI.FONT.bold,*/}
-                                        {/*color:UI.COLORS_HEX.white,*/}
-                                        {/*}}*/}
-                                        {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
-                                        {/*autoCapitalize={'none'}*/}
-                                        {/*onChangeText={(text) => this.setState({score11: text})}*/}
-                                        {/*value={this.state.score11}/>*/}
-
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.WinnerPlayer.score.currentSet.player1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.WinnerPlayer.score.currentSet.player1}</Text>
+                                            color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6&&parseInt(this.state.set1Point1)>parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange :this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
                                     </View>
                                     <View style={{
                                         width: (width - 40) / 8 - 4,
@@ -123,8 +125,8 @@ export default class MatchResult extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 ? UI.COLORS_HEX.orange : this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                            color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.WinnerPlayer.score.currentSet.player1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point1 !== '' ? this.state.set0Point1 : store.WinnerPlayer.score.currentSet.player1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -136,8 +138,8 @@ export default class MatchResult extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                            color: this.state.set1Point1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
                                     </View>
 
                                 </View>
@@ -163,7 +165,7 @@ export default class MatchResult extends React.Component {
                                         style={[UI.regularWhiteText25, {
                                             fontSize: 20,
                                             marginTop: -2
-                                        }]} numberOfLines={1}>{store.Match.player2.replace('+',' ')}</Text>
+                                        }]} numberOfLines={1}>{store.Match.player2.replace('+', ' / ')}</Text>
                                 </View>
                                 <View style={{
                                     paddingLeft: 10,
@@ -179,25 +181,11 @@ export default class MatchResult extends React.Component {
                                         justifyContent: 'center',
                                         alignItems: 'center'
                                     }}>
-                                        {/*<TextInput style={{*/}
-                                        {/*flex: 1, justifyContent: 'center',*/}
-                                        {/*alignItems: 'center',*/}
-                                        {/*fontSize:22,*/}
-                                        {/*fontFamily: UI.FONT.bold,*/}
-                                        {/*color:UI.COLORS_HEX.white,*/}
-
-
-                                        {/*}}*/}
-                                        {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
-                                        {/*autoCapitalize={'none'}*/}
-                                        {/*onChangeText={(text) => this.setState({score11: text})}*/}
-                                        {/*value={this.state.score11}/>*/}
-
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.WinnerPlayer.score.currentSet.player2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.WinnerPlayer.score.currentSet.player2}</Text>
+                                            color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6&&parseInt(this.state.set1Point2)>parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange :this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
                                     </View>
                                     <View style={{
                                         width: (width - 40) / 8 - 4,
@@ -210,8 +198,8 @@ export default class MatchResult extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
+                                            color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.WinnerPlayer.score.currentSet.player2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point2 !== '' ? this.state.set0Point2 : store.WinnerPlayer.score.currentSet.player2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -223,8 +211,8 @@ export default class MatchResult extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
+                                            color: this.state.set1Point2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -244,7 +232,7 @@ export default class MatchResult extends React.Component {
                                 style={[UI.regularWhiteText25, {
                                     fontSize: 15,
                                     marginTop: -3,
-                                }]}>{store.EndTimeMatch} </Text>
+                                }]}>{this.state.endTime} </Text>
 
                         </View>
                         <Text
@@ -253,7 +241,7 @@ export default class MatchResult extends React.Component {
                                 color: UI.COLORS_HEX.white,
                                 fontSize: 32,
                                 marginTop: 15,
-                            }}>{store.WinnerPlayer.winner === 1 ? store.WinnerPlayer.player1 : store.WinnerPlayer.player2}</Text>
+                            }}>{store.WinnerPlayer.winner === 1 ? store.WinnerPlayer.player1.replace('+', ' / ') : store.WinnerPlayer.player2.replace('+', ' / ')}</Text>
                         <Text
                             style={{
                                 fontFamily: UI.FONT.blackItalic,
@@ -277,7 +265,7 @@ export default class MatchResult extends React.Component {
                                              screen: 'Statics',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Registreren'}
+                                             passProps: {backTitle: 'Registreren',endTime:this.state.endTime}
                                          })
                                      }}/>
                         </View>

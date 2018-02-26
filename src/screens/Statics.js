@@ -113,6 +113,7 @@ export default class Statics extends React.Component {
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
                     fontSize: 21,
+                    width:width/9
                 }}>
                     {item.value.player1}
                 </Text>
@@ -139,6 +140,7 @@ export default class Statics extends React.Component {
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
                     fontSize: 21,
+                    width:width/9
                 }}>
                     {item.value.player2}
                 </Text>
@@ -198,7 +200,7 @@ export default class Statics extends React.Component {
                                     style={[UI.regularWhiteText25, {
                                         fontSize: 20,
                                         marginTop: -2
-                                    }]} numberOfLines={1}>{store.Match.player1.replace('+', ' ')}</Text>
+                                    }]} numberOfLines={1}>{store.Match.player1.replace('+', ' / ')}</Text>
                             </View>
                             <View style={{
                                 paddingLeft: 10,
@@ -214,25 +216,11 @@ export default class Statics extends React.Component {
                                     justifyContent: 'center',
                                     alignItems: 'center'
                                 }}>
-                                    {/*<TextInput style={{*/}
-                                    {/*flex: 1, justifyContent: 'center',*/}
-                                    {/*alignItems: 'center',*/}
-                                    {/*fontSize:22,*/}
-                                    {/*fontFamily: UI.FONT.bold,*/}
-                                    {/*color:UI.COLORS_HEX.white,*/}
-
-
-                                    {/*}}*/}
-                                    {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
-                                    {/*autoCapitalize={'none'}*/}
-                                    {/*onChangeText={(text) => this.setState({score11: text})}*/}
-                                    {/*value={this.state.score11}/>*/}
-
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.WinnerPlayer.score.currentSet.player1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{store.WinnerPlayer.score.currentSet.player1}</Text>
+                                        color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6&&parseInt(this.state.set1Point1)>parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange :this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,
@@ -244,8 +232,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 ? UI.COLORS_HEX.orange : this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                        color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.WinnerPlayer.score.currentSet.player1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point1 !== '' ? this.state.set0Point1 : store.WinnerPlayer.score.currentSet.player1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
                                 </View>
                                 <View style={{
                                     justifyContent: 'center',
@@ -257,8 +245,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                        color: this.state.set1Point1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
                                 </View>
 
                             </View>
@@ -284,7 +272,7 @@ export default class Statics extends React.Component {
                                     style={[UI.regularWhiteText25, {
                                         fontSize: 20,
                                         marginTop: -2
-                                    }]} numberOfLines={1}>{store.Match.player2.replace('+', ' ')}</Text>
+                                    }]} numberOfLines={1}>{store.Match.player2.replace('+', ' / ')}</Text>
                             </View>
                             <View style={{
                                 paddingLeft: 10,
@@ -300,25 +288,11 @@ export default class Statics extends React.Component {
                                     justifyContent: 'center',
                                     alignItems: 'center'
                                 }}>
-                                    {/*<TextInput style={{*/}
-                                    {/*flex: 1, justifyContent: 'center',*/}
-                                    {/*alignItems: 'center',*/}
-                                    {/*fontSize:22,*/}
-                                    {/*fontFamily: UI.FONT.bold,*/}
-                                    {/*color:UI.COLORS_HEX.white,*/}
-
-
-                                    {/*}}*/}
-                                    {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
-                                    {/*autoCapitalize={'none'}*/}
-                                    {/*onChangeText={(text) => this.setState({score11: text})}*/}
-                                    {/*value={this.state.score11}/>*/}
-
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.WinnerPlayer.score.currentSet.player2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{store.WinnerPlayer.score.currentSet.player2}</Text>
+                                        color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6&&parseInt(this.state.set1Point2)>parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange :this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,
@@ -331,8 +305,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
+                                        color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.WinnerPlayer.score.currentSet.player2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point2 !== '' ? this.state.set0Point2 : store.WinnerPlayer.score.currentSet.player2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
                                 </View>
                                 <View style={{
                                     justifyContent: 'center',
@@ -344,8 +318,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
+                                        color: this.state.set1Point2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                    }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
                                 </View>
 
                             </View>
@@ -366,7 +340,7 @@ export default class Statics extends React.Component {
                             style={[UI.regularWhiteText25, {
                                 fontSize: 15,
                                 marginTop: -3,
-                            }]}>{store.EndTimeMatch} </Text>
+                            }]}>{this.props.endTime} </Text>
 
                     </View>
                     <View
@@ -379,7 +353,7 @@ export default class Statics extends React.Component {
                             justifyContent: 'center',
                             alignItems: 'center',
                             flexDirection: 'row',
-                            marginTop: 10,
+                            marginTop: 5,
                             height: 30
                         }}>
                         <TouchableOpacity activeOpacity={0.8} onPress={() => {
@@ -467,13 +441,14 @@ export default class Statics extends React.Component {
                                 }}>Set 3</Text>
                         </TouchableOpacity>
                     </View>
-                    <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center', marginTop: 15}}>
+
 
                         <View style={{
                             width: width - 30,
                             borderRadius: 6,
                             justifyContent: 'space-around',
-                            flexDirection: 'row'
+                            flexDirection: 'row',
+                            marginTop:10,
                         }}>
                             <LinearGradient
                                 start={{x: 0.5, y: 0}}
@@ -501,9 +476,9 @@ export default class Statics extends React.Component {
                                 <Text style={{
                                     fontFamily: UI.FONT.bold,
                                     color: UI.COLORS_HEX.white,
-                                    fontSize: 20,
-                                }}>
-                                    {store.Match.player1}
+                                    fontSize: 18,
+                                }} numberOfLines={2}>
+                                    {store.Match.player1.replace('+', ' / ')}
                                 </Text>
                             </View>
                             <View style={{
@@ -529,82 +504,25 @@ export default class Statics extends React.Component {
                                 <Text style={{
                                     fontFamily: UI.FONT.bold,
                                     color: UI.COLORS_HEX.white,
-                                    fontSize: 20,
-                                }}>
-                                    {store.Match.player2}
+                                    fontSize: 18,
+                                }} numberOfLines={2}>
+                                    {store.Match.player2.replace('+', ' / ')}
                                 </Text>
                             </View>
                         </View>
+
                         {store.MatcheStatistics && <FlatList data={store.MatcheStatistics}
                                                     keyExtractor={(item, index) => 'Match' + index}
                                                     renderItem={this.renderItem}
-                                                    contentContainerStyle={{paddingBottom: 40}}
+
+
+
                         />}
 
 
-                        <View style={{
-                            width: width - 30,
-                            height: 35,
-                            borderRadius: 6,
-                            justifyContent: 'space-around',
-                            flexDirection: 'row',
-                            marginTop: 5
-                        }}>
-                            <LinearGradient
-                                start={{x: 0.5, y: 0}}
-                                end={{x: 0.5, y: 1}}
-                                locations={[0, 0.45]}
-                                colors={["#999999", "#000000"]}
-                                style={{
-                                    width: width - 30,
-                                    borderRadius: 6, height: 35,
-                                    shadowColor: 'black',
-                                    shadowOffset: {width: 0, height: 0},
-                                    shadowOpacity: 0.7,
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0
-                                }}/>
-                            <Text style={{
-                                fontFamily: UI.FONT.bold,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 21,
-                            }}>
-                                80
-                            </Text>
-                            <View style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: (width - 30) / 2 + 20,
-                                backgroundColor: UI.COLORS_HEX.boxGray,
-                                height: 35,
-                                borderRadius: 20,
-                                shadowColor: UI.COLORS_HEX.black,
-                                shadowOffset: {width: 3, height: 3},
-                                shadowOpacity: 0.7,
-                            }}>
-                                <Text style={{
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 14,
-                                }}>
-                                    % Punt op service
-                                </Text>
-                            </View>
-                            <Text style={{
-                                fontFamily: UI.FONT.bold,
-                                color: UI.COLORS_HEX.white,
-                                fontSize: 21,
-                            }}>
-                                77
-                            </Text>
-                        </View>
-                    </ScrollView>
 
                 </View>
-                <Footer/>
+                <Footer image={store.SponserImage}/>
 
                 {this.state.isLoading && <Loading/>}
 

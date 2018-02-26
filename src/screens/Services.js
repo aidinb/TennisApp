@@ -38,7 +38,9 @@ export default class Services extends React.Component {
             set0Point2: '',
             set1Point1: '',
             set1Point2: '',
-            scrollHeight: ''
+            scrollHeight: '',
+            timeReset: false,
+
         }
         ;
         this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -61,7 +63,6 @@ export default class Services extends React.Component {
                 }
                 break;
             case 'didAppear':
-
                 break;
             case 'willDisappear':
                 break;
@@ -70,13 +71,30 @@ export default class Services extends React.Component {
         }
     }
 
+
+    setScoreSets = () => {
+        const {navigator, store} = this.props;
+
+        if (store.Play.score) {
+            if (store.Play.score.previousSets.length > 1) {
+                this.setState({set1Point1: store.Play.score.previousSets[1].player1});
+                this.setState({set1Point2: store.Play.score.previousSets[1].player2});
+            }
+            if (store.Play.score.previousSets.length > 0) {
+                this.setState({set0Point1: store.Play.score.previousSets[0].player1});
+                this.setState({set0Point2: store.Play.score.previousSets[0].player2});
+            }
+        }
+    }
     getFormatedTime = (t) => {
         this.endTime = t;
     }
 
     onPlayPress = (serviceType) => {
         const {navigator, store} = this.props;
-        console.log('+++serviceType++')
+        store.setUpdate(false)
+
+        console.log('+++serviceType++');
         console.log(serviceType)
         this.setState({timerstart: true})
 
@@ -109,7 +127,7 @@ export default class Services extends React.Component {
                     this.setState({set0Point2: store.Play.score.previousSets[0].player2});
                 }
 
-                if (store.Play.score.currentGame.player1 === "game" || store.Play.score.currentGame.player2 === "game") {
+                if (store.Play.winner !== 0) {
                     store.setEndTimeMatch(this.endTime)
                     store.setWinnerPlayer(store.Play)
                     navigator.push({
@@ -119,9 +137,12 @@ export default class Services extends React.Component {
                         passProps: {backTitle: 'Terug', play: store.Play,}
                     })
                 }
+                this.setState({timerstart: false, timeReset: true})
+                this.setState({timerstart: true, timeReset: false})
             })
         } else {
             console.log('----333333-----')
+
             console.log(puntWinner)
             store.addPlay({
                 match_id: store.Match.id,
@@ -151,7 +172,7 @@ export default class Services extends React.Component {
                 store.setEndTimeMatch(this.endTime)
                 store.setWinnerPlayer(store.Play)
 
-                if (store.Play.score.currentGame.player1 === "game" || store.Play.score.currentGame.player2 === "game") {
+                if (store.Play.winner !== 0) {
                     navigator.push({
                         screen: 'MatchResult',
                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -160,6 +181,8 @@ export default class Services extends React.Component {
                     })
                 }
 
+                this.setState({timerstart: false, timeReset: true})
+                this.setState({timerstart: true, timeReset: false})
             })
         }
     }
@@ -169,25 +192,33 @@ export default class Services extends React.Component {
         store.deleteLastPlay(store.Match.id)
     };
 
-    onScorePress = (player,type) => {
+    onScorePress = (player, type) => {
         const {navigator, store} = this.props;
-        if (Platform.OS === 'ios') {
-            navigator.showLightBox({
-                screen: 'EditScore',
-                style: {
-                    backgroundBlur: "dark",
-                    tapBackgroundToDismiss: true,
-                },
-                passProps: {player:player,type:type}
-            })
-        } else {
-            navigator.showModal({
-                screen: 'EditScore',
-                animationType: 'slide-up',
-                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                passProps: {player:player,type:type}
+        if (type === 0) {
+            alert('Not allow to update')
+        } else if (type === 'prev1' || type === 'prev0') {
+            alert('Not allow to update')
+        }
+        else {
+            if (Platform.OS === 'ios') {
+                navigator.showLightBox({
+                    screen: 'EditScore',
+                    style: {
+                        backgroundBlur: "dark",
+                        tapBackgroundToDismiss: true,
+                    },
+                    passProps: {player: player, type: type, setScoreSets: this.setScoreSets}
+                })
+            } else {
+                navigator.showModal({
+                    screen: 'EditScore',
+                    animationType: 'slide-up',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                    passProps: {player: player, type: type, setScoreSets: this.setScoreSets}
 
-            });
+                });
+            }
+
         }
     }
 
@@ -203,6 +234,39 @@ export default class Services extends React.Component {
                 }]}/>
 
                 <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
+                        rightBtnTitle={store.Update === false ? "Stop" : "Update"}
+                        onPressRightBtn={() => {
+                            if (store.Update === false) {
+                                // navigator.push({
+                                //     screen: 'Statics',
+                                //     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                //     animationType: 'fade',
+                                // })
+                                alert('Stop');
+
+                            } else {
+                                delete store.Play.score.currentGame.tie_break;
+                                delete store.Play.score.currentGame.finished;
+                                delete store.Play.score.currentSet.super_tie_break;
+                                delete store.Play.score.currentSet.finished;
+                                if (store.Play.score.previousSets[0]) {
+                                    delete store.Play.score.previousSets[0].super_tie_break;
+                                    delete store.Play.score.previousSets[0].finished;
+                                }
+                                if (store.Play.score.previousSets[1]) {
+                                    delete store.Play.score.previousSets[1].super_tie_break;
+                                    delete store.Play.score.previousSets[1].finished;
+                                }
+                                store.setMatchScore(store.Match.id, store.Play.score).then(() => {
+                                    console.log(store.Play)
+                                    this.setState({timerstart: false, timeReset: true});
+                                    this.setState({timerstart: true, timeReset: false});
+                                    store.setUpdate(false);
+
+
+                                })
+                            }
+                        }}
                         leftBtnTitle={store.Play.score && (store.Play.score.currentGame.player1 === 0 && store.Play.score.currentGame.player2 === 0) &&
                         (store.Play.score.currentSet.player1 === 0 && store.Play.score.currentSet.player2 === 0) &&
                         store.Play.score.previousSets.length === 0
@@ -247,7 +311,7 @@ export default class Services extends React.Component {
                                             marginTop: -2,
                                             width: (width - 100) / 2
 
-                                        }]} numberOfLines={1}>{store.Match.player1.replace('+', ' ')}</Text>
+                                        }]} numberOfLines={1}>{store.Match.player1.replace('+', ' / ')}</Text>
                                     {store.Service === 1 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
@@ -263,7 +327,8 @@ export default class Services extends React.Component {
                                     flexDirection: 'row',
                                     flex: 0.5
                                 }}>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(1,"currentGame")} style={{
+                                    <TouchableOpacity activeOpacity={0.8}
+                                                      onPress={() => this.onScorePress(1, "currentGame")} style={{
                                         width: (width - 40) / 8 - 4,
                                         backgroundColor: UI.COLORS_HEX.gray,
                                         borderRadius: 3,
@@ -277,21 +342,25 @@ export default class Services extends React.Component {
                                             color: UI.COLORS_HEX.orange,
                                         }}>{store.Play.score && store.Play.score.currentGame.player1 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player1 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player1 : 0}</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(1,"currentSet")} style={{
-                                        width: (width - 40) / 8 - 4,
-                                        backgroundColor: UI.COLORS_HEX.gray,
-                                        borderRadius: 3,
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
+                                    <TouchableOpacity activeOpacity={0.8}
+                                                      onPress={() => this.onScorePress(1, store.Play.score ? this.state.set1Point1 !== '' ? "prev1" : this.state.set0Point1 !== '' ? "prev0" : store.Play.score.currentSet.player1 ? "currentSet" : "currentSet" : 0)}
+                                                      style={{
+                                                          width: (width - 40) / 8 - 4,
+                                                          backgroundColor: UI.COLORS_HEX.gray,
+                                                          borderRadius: 3,
+                                                          justifyContent: 'center',
+                                                          alignItems: 'center'
 
-                                    }}>
+                                                      }}>
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score && store.Play.score.currentSet.player1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? store.Play.score.currentSet.player1 : 0}</Text>
+                                            color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 && parseInt(this.state.set1Point1) > parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : store.Play.score.currentSet.player1 && store.Play.score.currentSet.player1 : 0}</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(1,'prev1')}} style={{
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                        this.onScorePress(1, store.Play.score ? this.state.set0Point1 !== '' && this.state.set1Point1 !== '' ? "prev0" : this.state.set0Point1 !== '' ? "currentSet" : 0 : 0)
+                                    }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -301,10 +370,12 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 ? UI.COLORS_HEX.orange : this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                            color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set0Point1 !== '' && this.state.set1Point1 !== '' ? this.state.set0Point1 : this.state.set0Point1 !== '' && store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(1,'prev0')}} style={{
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                        this.onScorePress(1, this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score && store.Play.score.currentSet.player1 !== '' ? "currentSet" : 0 : 0)
+                                    }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -314,8 +385,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                            color: UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -341,7 +412,7 @@ export default class Services extends React.Component {
                                             marginTop: -2,
                                             width: (width - 100) / 2
 
-                                        }]} numberOfLines={1}>{store.Match.player2.replace('+', ' ')}</Text>
+                                        }]} numberOfLines={1}>{store.Match.player2.replace('+', ' / ')}</Text>
                                     {store.Service === 2 &&
                                     <Image source={require('../assets/images/ball.png')}
                                            style={{
@@ -358,7 +429,8 @@ export default class Services extends React.Component {
                                     flex: 0.5
 
                                 }}>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(2,"currentGame")} style={{
+                                    <TouchableOpacity activeOpacity={0.8}
+                                                      onPress={() => this.onScorePress(2, "currentGame")} style={{
                                         width: (width - 40) / 8 - 4,
                                         backgroundColor: UI.COLORS_HEX.gray,
                                         borderRadius: 3,
@@ -374,21 +446,25 @@ export default class Services extends React.Component {
                                             color: UI.COLORS_HEX.orange,
                                         }}>{store.Play.score && store.Play.score.currentGame.player2 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player2 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player2 : 0}</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => this.onScorePress(2,"currentSet")} style={{
-                                        width: (width - 40) / 8 - 4,
-                                        backgroundColor: UI.COLORS_HEX.gray,
-                                        borderRadius: 3,
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
+                                    <TouchableOpacity activeOpacity={0.8}
+                                                      onPress={() => this.onScorePress(2, store.Play.score ? this.state.set1Point2 !== '' ? "prev1" : this.state.set0Point2 !== '' ? "prev0" : store.Play.score.currentSet.player2 ? "currentSet" : "currentSet" : 0)}
+                                                      style={{
+                                                          width: (width - 40) / 8 - 4,
+                                                          backgroundColor: UI.COLORS_HEX.gray,
+                                                          borderRadius: 3,
+                                                          justifyContent: 'center',
+                                                          alignItems: 'center'
 
-                                    }}>
+                                                      }}>
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score && store.Play.score.currentSet.player2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? store.Play.score.currentSet.player2 : 0}</Text>
+                                            color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 && parseInt(this.state.set1Point2) > parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : store.Play.score.currentSet.player2 : 0}</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(2,'prev1')}} style={{
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                        this.onScorePress(2, store.Play.score ? this.state.set0Point2 !== '' && this.state.set1Point2 !== '' ? "prev0" : this.state.set0Point2 !== '' ? "currentSet" : 0 : 0)
+                                    }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -398,10 +474,12 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
+                                            color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set0Point2 !== '' && this.state.set1Point2 !== '' ? this.state.set0Point2 : this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {this.onScorePress(1,'prev0')}} style={{
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                        this.onScorePress(2, this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score && store.Play.score.currentSet.player2 !== '' ? "currentSet" : 0 : 0)
+                                    }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         width: (width - 40) / 8 - 4,
@@ -411,8 +489,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
+                                            color: UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -430,7 +508,8 @@ export default class Services extends React.Component {
                                 }]}>Partij duur: </Text>
                             <Stopwatch start={this.state.timerstart}
                                        options={options}
-                                       getTime={this.getFormatedTime}/>
+                                       reset={this.state.timeReset}/>
+
 
                         </View>
                         <View style={{
@@ -604,7 +683,7 @@ export default class Services extends React.Component {
                         </View>
                     </View>
                 </ScrollView>
-                <Footer/>
+                <Footer image={store.SponserImage}/>
 
             </View>
         )

@@ -141,7 +141,7 @@ export default class Setting extends React.Component {
                                 value={store.HasStrokeType}/>
                     </View>
                 </ScrollView>
-                <Footer/>
+                <Footer image={store.SponserImage}/>
 
                 {this.state.isLoading && <Loading/>}
 

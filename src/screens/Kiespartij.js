@@ -86,7 +86,7 @@ export default class Kiespartij extends React.Component {
                 }]}/>
                 <Navbar title={'Kies Categorie'} rightBtnColor={UI.COLORS_HEX.orange}
                         leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.pop()}/>
-                <PersonRow title={store.TournamentByNumber.name}/>
+                <PersonRow title={store.TournamentByNumber.name} url={store.TournomentImage}/>
 
                 <View style={{
                     borderColor: UI.COLORS_HEX.gray,
@@ -101,7 +101,7 @@ export default class Kiespartij extends React.Component {
 
                 </View>
 
-                <Footer/>
+                <Footer image={store.SponserImage}/>
                 {this.state.isLoading && <Loading/>}
 
             </View>

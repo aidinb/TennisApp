@@ -103,35 +103,38 @@ export default class Tourney extends React.Component {
 
 
                 <PersonRow title={store.User.name}/>
+
                 <View style={{width: width, padding: 20}}>
                     <Text
                         style={[UI.regularWhiteText25,{
                             fontSize: 16,
-                        }]}>Voer hier het unieke toernooinummer in welke de toernooileiding je vertrekt heeft en klik op 'Ga verder'.</Text>
+                        }]}>Voer hier het unieke toernooicode in welke de toernooileiding je vertrekt heeft en klik op 'Ga verder'.</Text>
                 </View>
-
                 <KeyboardAvoidingView behavior={'position'}
                                       style={{width: width, justifyContent: 'center', alignItems: 'center'}}>
+
                     <View style={{
                         borderRadius: 15,
                         width: width - 60,
                         backgroundColor: UI.COLORS_HEX.lightBlack,
                         height: 160,
-                        padding: 15
+                        padding: 15,
+                        alignSelf:'center'
                     }}>
                         <Text
                             style={[UI.regularWhiteText25,{
                                 fontSize: 16,
-                            }]}>Toernooinummer</Text>
-                        <CTextInput keyboardType={'numeric'} borderRadius={13}
-                                    placeholder={'Voer toernooinummer in'}
+                            }]}>Toernooicode</Text>
+                        <CTextInput borderRadius={13}
+                                    placeholder={'Voer toernooicode in'}
                                     onChangeText={(text) => this.setState({tourney: text})}
                                     value={this.state.tourney} style={{
                             marginTop: 10, shadowColor: UI.COLORS_HEX.black,
                             shadowOffset: {width: 0, height: 0},
                             shadowOpacity: 0.7, color: UI.COLORS_HEX.white, paddingLeft: 30
                         }} width={width - 85}
-                                    backgroundColor={UI.COLORS_HEX.gray}/>
+                                    backgroundColor={UI.COLORS_HEX.gray}
+                                    autoCapitalize={'characters'}/>
                         <Ionicons style={{position: 'absolute', top: 55, left: 22}} name="md-search" size={20}
                                   color={'silver'}/>
                         <View style={{
@@ -148,7 +151,7 @@ export default class Tourney extends React.Component {
                     </View>
                 </KeyboardAvoidingView>
 
-                <Footer/>
+                <Footer image={store.SponserImage}/>
                 {this.state.isLoading && <Loading/>}
             </View>
         )

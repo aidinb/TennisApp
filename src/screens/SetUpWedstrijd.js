@@ -7,6 +7,7 @@ import {
     Dimensions,
     Platform,
     StyleSheet,
+    Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 
@@ -27,8 +28,8 @@ export default class SetUpWedstrijd extends React.Component {
         super(props);
         this.state = {
             wie: true,
-            kies1: false,
-            kies2: true,
+            kies1: 0,
+            kies2: 0,
             ins: false,
         };
     }
@@ -36,6 +37,7 @@ export default class SetUpWedstrijd extends React.Component {
     componentDidMount() {
         const {navigator, store} = this.props;
         store.setService(1)
+        this.setState({kies1:store.Match.short_game,kies2:store.Match.super_tie_break})
     }
 
 
@@ -50,10 +52,10 @@ export default class SetUpWedstrijd extends React.Component {
                     store.startMatch(store.Match.id,{
                         player1: store.Match.player1,
                         player2: store.Match.player2,
-                        server: store.Service===store.Match.player1?1:2,
+                        server: store.Service,
                         court_id:store.Court.id,
-                        short_game:!this.state.kies1,
-                        super_tie_break:!this.state.kies2,
+                        short_game:this.state.kies1,
+                        super_tie_break:this.state.kies2,
                     });
                     if (store.HasService === false) {
                         navigator.push({
@@ -100,7 +102,13 @@ export default class SetUpWedstrijd extends React.Component {
 
 
         } else {
-            alert('Please choose kies een baan')
+            Alert.alert(
+                '',
+                'Kies eerst een baan',
+                [
+                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                ],
+            )
         }
     }
 
@@ -139,7 +147,9 @@ export default class SetUpWedstrijd extends React.Component {
                                 shadowOpacity: 0.7,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                padding: 3
+                                padding: 3,
+                                height:28
+
                             }}>
                             <Text
                                 style={{
@@ -159,7 +169,7 @@ export default class SetUpWedstrijd extends React.Component {
                             shadowColor: UI.COLORS_HEX.blue,
                             shadowOffset: {width: 0, height: 0},
                             shadowOpacity: 0.7,
-                            backgroundColor: 'transparent',
+                            backgroundColor: 'white',
                             elevation: 5,
                             flexDirection: 'row',
                             borderColor: UI.COLORS_HEX.blue,
@@ -183,15 +193,17 @@ export default class SetUpWedstrijd extends React.Component {
                                         fontSize: 14,
                                         marginTop: -3,
                                         textAlign: 'center',
+                                        flex: 0.15,
                                     }} numberOfLines={1}>{player1[0]}</Text>
-                                {player1.length>1&&<Text
+                                {player1.length>1&&<View><Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
                                         color: UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         marginTop: -3,
-                                        textAlign: 'center'
-                                    }} numberOfLines={1}>{player1[1]}</Text>}
+                                        textAlign: 'center',
+                                        flex: 0.15,
+                                    }} numberOfLines={1}>{player1[1]}</Text></View>}
                             </View>
                             <View style={{
                                 flex: 0.20,
@@ -199,7 +211,6 @@ export default class SetUpWedstrijd extends React.Component {
                                 alignItems: 'center',
                                 padding: 5,
                                 backgroundColor: UI.COLORS_HEX.white,
-
                             }}>
                                 <View style={{
                                     width: 32,
@@ -240,6 +251,8 @@ export default class SetUpWedstrijd extends React.Component {
                                         fontSize: 14,
                                         marginTop: -3,
                                         textAlign: 'center',
+                                        flex: 0.15,
+
                                     }} numberOfLines={1}>{player2[0]}</Text>
                                 {player2.length>1&&<Text
                                     style={{
@@ -248,6 +261,8 @@ export default class SetUpWedstrijd extends React.Component {
                                         fontSize: 14,
                                         marginTop: -3,
                                         textAlign: 'center',
+                                        flex: 0.15,
+
                                     }} numberOfLines={1}>{player2[1]}</Text>}
                             </View>
 
@@ -326,6 +341,8 @@ export default class SetUpWedstrijd extends React.Component {
                                 justifyContent: 'center',
                                 alignItems: 'stretch',
                                 flexDirection: 'row',
+                                height:28
+
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                 this.setState({wie: true});
@@ -338,7 +355,8 @@ export default class SetUpWedstrijd extends React.Component {
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
                                 padding: 5,
-                                flex: 1
+                                height:28
+
                             }}>
                                 <Text
                                     style={{
@@ -360,7 +378,8 @@ export default class SetUpWedstrijd extends React.Component {
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
                                 padding: 5,
-                                flex: 1
+                                height:28
+
                             }}>
                                 <Text
                                     style={{
@@ -385,7 +404,6 @@ export default class SetUpWedstrijd extends React.Component {
                             style={{
                                 width: width / 2 + 50,
                                 backgroundColor: UI.COLORS_HEX.white,
-                                height: 24,
                                 borderRadius: 6,
                                 borderColor: UI.COLORS_HEX.blue,
                                 borderWidth: 0.5,
@@ -394,45 +412,48 @@ export default class SetUpWedstrijd extends React.Component {
                                 shadowOpacity: 0.7,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
+                                height:28
+
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                this.setState({kies1: true})
+                                this.setState({kies1: 0})
 
                             }} style={{
                                 width: (width / 2 + 50) / 2,
-                                backgroundColor: this.state.kies1 === true ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                                backgroundColor: this.state.kies1 === 0 ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
-                                height: 24
+                                height:28
+
                             }}>
                                 <Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
-                                        color: this.state.kies1 === true ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                        color: this.state.kies1 === 0 ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         backgroundColor: 'transparent'
                                     }}>Deuce</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
 
-                                this.setState({kies1: false})
+                                this.setState({kies1: 1})
 
                             }} style={{
                                 width: (width / 2 + 50) / 2,
-                                backgroundColor: this.state.kies1 === false ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                                backgroundColor: this.state.kies1 === 1 ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
-                                height: 24
+                                height:28
                             }}>
                                 <Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
-                                        color: this.state.kies1 === false ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                        color: this.state.kies1 === 1 ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         backgroundColor: 'transparent'
 
@@ -440,23 +461,18 @@ export default class SetUpWedstrijd extends React.Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-
-
                     <View style={{
                         width: width,
                         padding: 15,
                         flexDirection: 'row',
                         alignItems: 'center',
-                        paddingTop: 5,
+                        paddingTop: 0,
                         justifyContent: 'flex-end'
                     }}>
-
-
                         <View
                             style={{
                                 width: width / 2 + 50,
                                 backgroundColor: UI.COLORS_HEX.white,
-                                height: 24,
                                 borderRadius: 6,
                                 borderColor: UI.COLORS_HEX.blue,
                                 borderWidth: 0.5,
@@ -465,44 +481,48 @@ export default class SetUpWedstrijd extends React.Component {
                                 shadowOpacity: 0.7,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                flexDirection: 'row'
+                                flexDirection: 'row',
+                                height:28
+
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                this.setState({kies2: true})
+                                this.setState({kies2: 0})
 
                             }} style={{
                                 width: (width / 2 + 50) / 2,
-                                backgroundColor: this.state.kies2 === true ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                                backgroundColor: this.state.kies2 === 0 ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
-                                height: 24
+                                height:28
+
                             }}>
                                 <Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
-                                        color: this.state.kies2 === true ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                        color: this.state.kies2 === 0 ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         backgroundColor: 'transparent'
                                     }}>Derde set</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                this.setState({kies2: false})
+                                this.setState({kies2: 1})
 
                             }} style={{
                                 width: (width / 2 + 50) / 2,
-                                backgroundColor: this.state.kies2 === false ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                                backgroundColor: this.state.kies2 === 1 ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
-                                height: 24
+                                height:28
+
                             }}>
                                 <Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
-                                        color: this.state.kies2 === false ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                        color: this.state.kies2 === 1 ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
                                         fontSize: 14,
                                         backgroundColor: 'transparent'
 
@@ -519,7 +539,6 @@ export default class SetUpWedstrijd extends React.Component {
                     </View>
 
                 </ScrollView>
-                <Footer/>
 
             </View>
         )

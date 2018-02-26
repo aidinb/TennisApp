@@ -31,7 +31,11 @@ export default class Menu extends React.Component {
 
     componentDidMount() {
         const {navigator, store} = this.props;
-        store.setServices(false)
+        store.getSponser().then(()=>{
+            console.log(store.Sponser)
+        });
+
+        store.setServices(false);
         this.setState({isLoading:true});
         store.getListSettings().then(() => {
             if (store.ListSettings.service && store.ListSettings.service === "1") {
@@ -121,7 +125,7 @@ export default class Menu extends React.Component {
                         }]}>Stap 2: Zoek toernooi en start</Text>
                     <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
                 </TouchableOpacity>
-               <Footer/>
+               <Footer image={store.SponserImage}/>
             </View>
         )
 

@@ -31,13 +31,14 @@ export default class CButton extends Component {
                 paddingLeft: 15
             },this.props.style]}
                        underlineColorAndroid='rgba(0,0,0,0)'
-                       autoCapitalize={'none'}
+                       autoCapitalize={this.props.autoCapitalize?this.props.autoCapitalize:'none'}
                        secureTextEntry={!!this.props.secureTextEntry}
                        keyboardType={this.props.keyboardType?this.props.keyboardType:'default'}
                        onChangeText={(text) => this.props.onChangeText(text)}
                        value={this.props.value ? this.props.value : ''}
                        placeholder={this.props.placeholder}
-                       placeholderTextColor={this.props.placeholderColor?this.props.placeholderColor:'silver'}/>
+                       placeholderTextColor={this.props.placeholderColor?this.props.placeholderColor:'silver'}
+            />
 
         );
     }

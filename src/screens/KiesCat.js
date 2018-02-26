@@ -52,16 +52,21 @@ export default class KiesCat extends Component {
 
         return (
 
-            <View>
-                {store.TournamentCourts && <FlatList data={store.TournamentCourts}
-                                                     keyExtractor={(item, index) => 'Court'+item.id}
-                                                     renderItem={this.renderItem}
-                                                     contentContainerStyle={{alignItems: 'center'}}
-                                                     style={{
-                                                         width: Platform.OS === 'ios' ? width - 30 : width,
-                                                         padding: 10,
-                                                     }}
-                />}
+            <View style={{
+                height:height,
+                paddingTop:20,
+                paddingBottom:20,
+            }}>
+                    {store.TournamentCourts && <FlatList data={store.TournamentCourts}
+                                                         keyExtractor={(item, index) => 'Court_' + item.id}
+                                                         renderItem={this.renderItem}
+                                                         contentContainerStyle={{alignItems: 'center'}}
+                                                         style={{
+                                                             width: Platform.OS === 'ios' ? width - 30 : width,
+                                                             padding: 10,
+                                                         }}
+                    />}
+
             </View>
 
         );

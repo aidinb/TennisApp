@@ -44,9 +44,7 @@ export default class SlagType extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }]}/>
 
-                <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
-                        rightBtnTitle={'Bewerk'}
-                        onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
+                <Navbar title={'Wedstrijd ' + store.Court.name} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.pop({
                             animated: true,
                             animationType: 'fade',
@@ -227,7 +225,7 @@ export default class SlagType extends React.Component {
                         </View>
                     </View>}
                 </ScrollView>
-                <Footer/>
+                <Footer image={store.SponserImage}/>
 
             </View>
         )

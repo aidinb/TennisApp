@@ -40,13 +40,7 @@ export default class Winner extends React.Component {
                     backgroundColor: 'rgba(0,0,0,0.8)'
                 }]}/>
 
-                <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
-                        rightBtnTitle={'Bewerk'}
-                        onPressRightBtn={() => alert('Start')} leftBtnTitle={'Undo'}
-                        onPressLeftBtn={() => navigator.pop({
-                            animated: true,
-                            animationType: 'fade',
-                        })}/>
+                <Navbar title={'Wedstrijd ' + store.Court.name}/>
 
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center'}}
@@ -102,7 +96,7 @@ export default class Winner extends React.Component {
                                         fontSize: 17,
                                         marginTop: -3,
                                         width: (width - 150) / 2
-                                    }]} numberOfLines={1}>{store.Match.player1.replace('+',' ')}</Text>
+                                    }]} numberOfLines={1}>{store.Match.player1.replace('+',' / ')}</Text>
                                 {store.Service === 1 && <Image source={require('../assets/images/ball.png')}
                                                                style={{
                                                                    width: 18,
@@ -122,7 +116,7 @@ export default class Winner extends React.Component {
                                         fontSize: 17,
                                         marginTop: -3,
                                         width: (width - 150) / 2
-                                    }]} numberOfLines={1}>{store.Match.player2.replace('+',' ')}</Text>
+                                    }]} numberOfLines={1}>{store.Match.player2.replace('+',' / ')}</Text>
                                 {store.Service === 2 && <Image source={require('../assets/images/ball.png')}
                                                                style={{
                                                                    width: 18,
@@ -380,7 +374,7 @@ export default class Winner extends React.Component {
                         </View>
                     </View>}
                 </ScrollView>
-                <Footer/>
+                <Footer image={store.SponserImage}/>
 
             </View>
         )

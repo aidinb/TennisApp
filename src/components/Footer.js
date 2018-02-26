@@ -23,11 +23,11 @@ export default class Footer extends Component {
                 left: 0,
                 right: 0,
                 height: 40,
-                backgroundColor: UI.COLORS_HEX.lightBlack,
+                backgroundColor: UI.COLORS_HEX.white,
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-                <Image source={require('../assets/images/logo.png')}
+                <Image source={{uri: this.props.image}}
                        style={{
                            width: width - 120,
                            height: 60,

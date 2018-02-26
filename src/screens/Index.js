@@ -20,6 +20,7 @@ export default class Index extends React.Component {
         super(props);
         this.state = {};
     }
+   
 
     render() {
         const {navigator, store} = this.props;
@@ -63,7 +64,7 @@ export default class Index extends React.Component {
                     <View style={{width: width, padding: 10}}>
                         <Text
                             style={UI.regularWhiteText25}>Welkom bij
-                            GameSe<Text
+                            GameSet<Text
                                 style={[UI.regularWhiteText25, {
                                     color: UI.COLORS_HEX.orange
                                 }]}>Stats</Text></Text>
@@ -76,13 +77,12 @@ export default class Index extends React.Component {
                                 padding: 20,
                             }]}>Heb je nog
                             geen
-                            account, registeer
+                            account, registreer
                             je eerst als Supervisor en/of Log in.</Text>
                     </View>
                     <View
                         style={{width: width, flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20}}>
-                        <CButton title={'Registreren'} backgroundColor={UI.COLORS_HEX.blue}/>
-                        <CButton title={'Inloggen'} backgroundColor={UI.COLORS_HEX.white} color={UI.COLORS_HEX.black}
+                        <CButton title={'Inloggen'} backgroundColor={UI.COLORS_HEX.blue} color={UI.COLORS_HEX.black}
                                  onPress={() => {
                                      navigator.push({
                                          screen: 'Login',
