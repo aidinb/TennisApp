@@ -22,6 +22,7 @@ export default class EditScore extends Component {
     }
 
 
+
     onScorePress = (score) => {
         const {store, navigator} = this.props;
         store.setUpdate(true)

@@ -88,7 +88,15 @@ export default class StartMatch extends React.Component {
     onPlayPress = (player) => {
         const {navigator, store} = this.props;
         store.setUpdate(false)
-        this.setState({timerstart: true})
+        this.setState({timerstart: true});
+        if (store.Play.winner&&store.Play.winner !== 0) {
+            navigator.push({
+                screen: 'MatchResult',
+                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                animationType: 'fade',
+                passProps: {backTitle: 'Terug'}
+            })
+        }else{
         store.addPlay({
             match_id: store.Match.id,
             player: player,
@@ -99,7 +107,7 @@ export default class StartMatch extends React.Component {
             second_serve: '',
         }).then(() => {
             console.log(store.Play)
-            store.setService(store.Play.now_serving === 0 ? 1 : store.Play.now_serving)
+            store.setService(store.Play.now_serving)
             store.setEndTimeMatch(this.endTime)
             store.setWinnerPlayer(store.Play)
             if (store.Play.score.previousSets.length > 1) {
@@ -118,9 +126,8 @@ export default class StartMatch extends React.Component {
                     passProps: {backTitle: 'Terug'}
                 })
             }
-            this.setState({timerstart: false, timeReset: true})
-            this.setState({timerstart: true, timeReset: false})
-        })
+
+        })}
 
     }
 
@@ -133,9 +140,9 @@ export default class StartMatch extends React.Component {
     onScorePress = (player, type) => {
         const {navigator, store} = this.props;
         if (type === 0) {
-            alert('Not allow to update')
+            alert('Niet toegestaan om te wijzigen')
         } else if (type === 'prev1' || type === 'prev0') {
-            alert('Not allow to update')
+            alert('Niet toegestaan om te wijzigen')
         }
         else {
             if (Platform.OS === 'ios') {
@@ -209,11 +216,15 @@ export default class StartMatch extends React.Component {
                                 }
                                 store.setMatchScore(store.Match.id, store.Play.score).then(() => {
                                     console.log(store.Play)
-                                    this.setState({timerstart: false, timeReset: true});
-                                    this.setState({timerstart: true, timeReset: false});
                                     store.setUpdate(false);
-
-
+                                    if (store.Play.winner !== 0) {
+                                        navigator.push({
+                                            screen: 'MatchResult',
+                                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                            animationType: 'fade',
+                                            passProps: {backTitle: 'Terug'}
+                                        })
+                                    }
                                 })
                             }
                         }}
@@ -309,7 +320,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 && parseInt(this.state.set1Point1) > parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : store.Play.score.currentSet.player1 && store.Play.score.currentSet.player1 : 0}</Text>
+                                        }}>{store.Play.score ? this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set1Point1 === ''&&this.state.set0Point1 !== '' ? this.state.set0Point1 : this.state.set1Point1 === ''&&this.state.set0Point1 === ''&& store.Play.score.currentSet.player1 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(1, store.Play.score ? this.state.set0Point1 !== '' && this.state.set1Point1 !== '' ? "prev0" : this.state.set0Point1 !== '' ? "currentSet" : 0 : 0)
@@ -324,7 +335,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? this.state.set0Point1 !== '' && this.state.set1Point1 !== '' ? this.state.set0Point1 : this.state.set0Point1 !== '' && store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
+                                        }}>{store.Play.score ? this.state.set0Point1 !== '' && this.state.set1Point1 !== '' ? this.state.set0Point1 : this.state.set1Point1 === ''&&this.state.set0Point1 !== '' && store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(1, this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score && store.Play.score.currentSet.player1 !== '' ? "currentSet" : 0 : 0)
@@ -338,7 +349,7 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: UI.COLORS_HEX.white,
+                                            color: store.Play.score ? this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score.currentSet.player1 !== '' &&store.Play.winner===1&&parseInt(store.Play.score.currentSet.player1)>parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
                                         }}>{store.Play.score ? this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -418,7 +429,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 && parseInt(this.state.set1Point2) > parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : store.Play.score.currentSet.player2 : 0}</Text>
+                                        }}>{store.Play.score ? this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set1Point2 === ''&&this.state.set0Point2 !== '' ? this.state.set0Point2 : this.state.set1Point2 === ''&&this.state.set0Point2 === ''&& store.Play.score.currentSet.player2 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(2, store.Play.score ? this.state.set0Point2 !== '' && this.state.set1Point2 !== '' ? "prev0" : this.state.set0Point2 !== '' ? "currentSet" : 0 : 0)
@@ -433,7 +444,7 @@ export default class StartMatch extends React.Component {
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
                                             color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? this.state.set0Point2 !== '' && this.state.set1Point2 !== '' ? this.state.set0Point2 : this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
+                                        }}>{store.Play.score ? this.state.set0Point2 !== '' && this.state.set1Point2 !== '' ? this.state.set0Point2 : this.state.set1Point2 === ''&&this.state.set0Point2 !== '' && store.Play.score.currentSet.player2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(2, this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score && store.Play.score.currentSet.player2 !== '' ? "currentSet" : 0 : 0)
@@ -447,7 +458,7 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: UI.COLORS_HEX.white,
+                                            color: store.Play.score ? this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 !== '' &&parseInt(store.Play.score.currentSet.player2)>parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
                                         }}>{store.Play.score ? this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -518,7 +529,7 @@ export default class StartMatch extends React.Component {
                                         fontSize: 17,
                                         marginTop: -3,
                                         flex: 0.85
-                                    }}>{store.Match.player1}</Text>
+                                    }}>{store.Match.player1.replace('+',' / ')}</Text>
                                 {store.Service === 1 && <Image source={require('../assets/images/ball.png')}
                                                                style={{
                                                                    width: 18,
@@ -542,7 +553,7 @@ export default class StartMatch extends React.Component {
                                         fontSize: 17,
                                         marginTop: -3,
                                         flex: 0.85
-                                    }}>{store.Match.player2}</Text>
+                                    }}>{store.Match.player2.replace('+', ' / ')}</Text>
                                 {store.Service === 2 && <Image source={require('../assets/images/ball.png')}
                                                                style={{
                                                                    width: 18,

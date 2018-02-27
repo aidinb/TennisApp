@@ -30,7 +30,7 @@ export default class Footer extends Component {
                 <Image source={{uri: this.props.image}}
                        style={{
                            width: width - 120,
-                           height: 60,
+                           height: 35,
                            resizeMode: 'contain'
                        }}/>
             </View>

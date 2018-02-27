@@ -187,7 +187,7 @@ export default class Winner extends React.Component {
                                 style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }]}>{store.Match.player1}</Text>
+                                }]}>{store.Match.player1.replace('+', ' / ')}</Text>
                             {this.state.service1Disable === false && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 borderRadius: 5,
@@ -287,7 +287,7 @@ export default class Winner extends React.Component {
                                 style={[UI.regularWhiteText25,{
                                     fontSize: 18,
                                     marginTop: -3,
-                                }]}>{store.Match.player2}</Text>
+                                }]}>{store.Match.player2.replace('+', ' / ')}</Text>
                             {this.state.service2Disable === false && <View style={[UI.absoluteView,{
                                 backgroundColor: UI.COLORS_HEX.whiteBoxBlur,
                                 borderRadius: 5,

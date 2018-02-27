@@ -66,16 +66,16 @@ export default class LandingPage extends React.Component {
 
                     if (e.response && e.response.status) {
                         Alert.alert(
-                            'Authentication Failed',
-                            'Please check your username or password',
+                            'Inloggen is mislukt',
+                            'Controleer je gebruikersnaam en wachtwoord',
                             [
                                 {text: 'OK', onPress: () => console.log('OK Pressed')},
                             ],
                         )
                     } else {
                         Alert.alert(
-                            'common.slowConnection',
-                            'common.pleaseTryAgainLater',
+                            'Trage verbinding',
+                            'Probeer het later opnieuw',
                             [
                                 {text: 'OK', onPress: () => console.log('OK Pressed')},
                             ],

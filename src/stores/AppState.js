@@ -57,7 +57,7 @@ class AppState {
         this.Category = [];
         this.Match = [];
         this.EndTimeMatch = '';
-        this.Play = [];
+        this.Play = [{score:{currentGame:{player1:0,player2:0}}}];
         this.WinnerPlayer = [];
         this.TournamentId = '';
         this.MatcheDet = [];
@@ -161,16 +161,16 @@ class AppState {
         let {data} = await axios.get('/api/settings').catch((e) => {
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -193,16 +193,16 @@ class AppState {
         let {data} = await axios.post('/api/settings', JSON.stringify(params)).catch((e) => {
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -225,16 +225,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -255,16 +255,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -293,16 +293,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -329,16 +329,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -347,6 +347,8 @@ class AppState {
         });
         console.log("addPlay", data)
         this.Play = data;
+        this.Service=data.now_serving;
+
 
     }
 
@@ -356,16 +358,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -375,6 +377,8 @@ class AppState {
         console.log("deleteLastPlay", data)
         this.Play = [];
         this.Play = data;
+        this.Service=data.now_serving;
+
     }
 
     async getMatcheDet(matchId) {
@@ -382,16 +386,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -410,16 +414,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -436,16 +440,16 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -454,6 +458,7 @@ class AppState {
         });
         console.log("getLastScore", data)
         this.Play = data;
+        this.Service=data.now_serving;
     }
     async setMatchScore(matchId, score) {
         let params={
@@ -462,27 +467,19 @@ class AppState {
         console.log(JSON.stringify(params));
         let {data} = await axios.put('/api/matches/' + matchId + '/score', params).catch((e) => {
             console.log(e.response)
-            if(e.response.status === 406){
+            if (e.response && e.response.status) {
                 Alert.alert(
-                    'Server Error',
-                    e.request._response,
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
                 this.getLastScore(matchId);
-            } else if (e.response && e.response.status) {
-                Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
-                    [
-                        {text: 'OK', onPress: () => console.log('OK Pressed')},
-                    ],
-                )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -492,23 +489,24 @@ class AppState {
         console.log("setMatchScore", data)
         this.Play = [];
         this.Play = data;
+        this.Service=data.now_serving;
     }
 
     async getSponser() {
-        let {data} = await axios.get('/api/sponsors').catch((e) => {
+        let {data} = await axios.get('/api/sponsors/main').catch((e) => {
             console.log(e.response)
              if (e.response && e.response.status) {
-                Alert.alert(
-                    'Server Error',
-                    'Please Try Later',
-                    [
-                        {text: 'OK', onPress: () => console.log('OK Pressed')},
-                    ],
-                )
+                 Alert.alert(
+                     e.response.status.toString(),
+                     JSON.parse(e.request._response).error[0],
+                     [
+                         {text: 'OK', onPress: () => console.log('OK Pressed')},
+                     ],
+                 )
             } else {
                 Alert.alert(
-                    'Slow Connection',
-                    'please Try Again Later',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -517,7 +515,7 @@ class AppState {
         });
         console.log("getSponser", data)
         this.Sponser = data;
-        this.SponserImage = data[0].image;
+        this.SponserImage = data.image;
     }
 }
 

@@ -44,6 +44,7 @@ export default class SetUpWedstrijd extends React.Component {
     onStartPress = () => {
         const {navigator, store} = this.props;
         store.Play = [];
+        store.MatcheDet = [];
 
         if (store.Court !== '') {
             store.getMatcheDet(store.Match.id).then(()=>{
@@ -75,6 +76,7 @@ export default class SetUpWedstrijd extends React.Component {
                 }else{
                     if(store.MatcheDet.winner===0){
                         store.Play=store.MatcheDet;
+                        this.Service=store.MatcheDet.now_serving;
                         if (store.HasService === false) {
                             navigator.push({
                                 screen: 'StartMatch',
@@ -91,7 +93,7 @@ export default class SetUpWedstrijd extends React.Component {
                             })
                         }
                     }else {
-                        alert('Match Finished')
+                        alert('Wedstrijd is al gespeeld')
                     }
 
 
@@ -156,7 +158,7 @@ export default class SetUpWedstrijd extends React.Component {
                                     fontFamily: UI.FONT.bold,
                                     color: UI.COLORS_HEX.gray,
                                     fontSize: 16,
-                                }}>{store.Category.name}</Text>
+                                }}>{this.props.category}</Text>
                         </View>
                     </View>
 

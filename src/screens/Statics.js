@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import UI from '../assets/UI';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import {captureRef, captureScreen} from "react-native-view-shot";
+import  {captureScreen} from "react-native-view-shot";
 import Loading from '../components/Loading';
 import BackImage from '../components/BackImage';
 
@@ -27,7 +27,7 @@ export default class Statics extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showSeg: 'Partij',
+            showSeg: 'match',
             isLoading: false,
             value: {
                 format: "png",
@@ -39,6 +39,7 @@ export default class Statics extends React.Component {
             set0Point2: '',
             set1Point1: '',
             set1Point2: '',
+            statValue: []
         };
     }
 
@@ -53,8 +54,16 @@ export default class Statics extends React.Component {
             this.setState({set0Point1: store.WinnerPlayer.score.previousSets[0].player1});
             this.setState({set0Point2: store.WinnerPlayer.score.previousSets[0].player2});
         }
+        this.setState({isLoading: true})
+        store.getMatcheStatistics(store.Match.id).then(() => {
+            let arr = [];
+            Object.keys(store.MatcheStatistics[0].value).map(key => arr.push({
+                key: key,
+                value: store.MatcheStatistics[0].value[key]
+            }));
+            this.setState({statValue: arr, isLoading: false})
 
-        store.getMatcheStatistics(store.Match.id);
+        });
     }
 
 
@@ -68,7 +77,7 @@ export default class Statics extends React.Component {
 
                     Alert.alert(
                         '',
-                        'Screen Shot Successfully Added To Camera Roll',
+                        'Statistieken zijn toevoegd aan je foto\'s',
                         [
                             {text: 'OK', onPress: () => console.log('OK Pressed')},
                         ],
@@ -112,15 +121,15 @@ export default class Statics extends React.Component {
                 <Text style={{
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
-                    fontSize: 21,
-                    width:width/9
+                    fontSize: 18,
+                    width: width / 7
                 }}>
                     {item.value.player1}
                 </Text>
                 <View style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: (width - 30) / 2 + 20,
+                    width: (width - 30) / 2,
                     backgroundColor: UI.COLORS_HEX.boxGray,
                     height: 35,
                     borderRadius: 20,
@@ -139,8 +148,8 @@ export default class Statics extends React.Component {
                 <Text style={{
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
-                    fontSize: 21,
-                    width:width/9
+                    fontSize: 18,
+                    width: width / 7
                 }}>
                     {item.value.player2}
                 </Text>
@@ -167,21 +176,21 @@ export default class Statics extends React.Component {
                                 'U gaat de partij verlaten, weet u het zeker?',
                                 [
                                     {
-                                        text: 'Yes', onPress: () => navigator.push({
+                                        text: 'Ja', onPress: () => navigator.push({
                                         screen: 'Menu',
                                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                         animationType: 'fade',
                                         passProps: {backTitle: 'Kies Categorie'}
                                     })
                                     },
-                                    {text: 'Cancel', onPress: () => console.log('OK Pressed')},
+                                    {text: 'Annuleren', onPress: () => console.log('OK Pressed')},
                                 ],
                             )
                         }}/>
 
 
                 <View
-                    style={{width: width, padding: 15, alignItems: 'center', marginTop: 5}}>
+                    style={{width: width, padding: 15, alignItems: 'center', paddingTop: 10,flex:1}}>
                     <View>
                         <View style={{
                             width: width - 30,
@@ -219,8 +228,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6&&parseInt(this.state.set1Point1)>parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange :this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                        color: store.Play.score?this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 && parseInt(this.state.set1Point1) > parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
+                                    }}>{store.Play.score?this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0:0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,
@@ -232,8 +241,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.WinnerPlayer.score.currentSet.player1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point1 !== '' ? this.state.set0Point1 : store.WinnerPlayer.score.currentSet.player1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
+                                        color: store.Play.score?this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.Play.score.currentSet.player1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange :UI.COLORS_HEX.white: UI.COLORS_HEX.white,
+                                    }}>{store.Play.score?this.state.set1Point1 !== '' ? this.state.set0Point1 : store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 :0: 0}</Text>
                                 </View>
                                 <View style={{
                                     justifyContent: 'center',
@@ -245,8 +254,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
+                                        color: store.Play.score?this.state.set1Point1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
+                                    }}>{store.Play.score?this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0:0}</Text>
                                 </View>
 
                             </View>
@@ -291,8 +300,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6&&parseInt(this.state.set1Point2)>parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange :this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
+                                        color: store.Play.score?this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 && parseInt(this.state.set1Point2) > parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
+                                    }}>{store.Play.score?this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0:0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,
@@ -305,8 +314,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.WinnerPlayer.score.currentSet.player2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point2 !== '' ? this.state.set0Point2 : store.WinnerPlayer.score.currentSet.player2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
+                                        color: store.Play.score?this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.Play.score.currentSet.player2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
+                                    }}>{store.Play.score?this.state.set1Point2 !== '' ? this.state.set0Point2 : store.Play.score.currentSet.player2 !== '' ? store.Play.score.currentSet.player2 : 0:0}</Text>
                                 </View>
                                 <View style={{
                                     justifyContent: 'center',
@@ -318,8 +327,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: this.state.set1Point2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                    }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
+                                        color: store.Play.score?this.state.set1Point2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
+                                    }}>{store.Play.score?this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0:0}</Text>
                                 </View>
 
                             </View>
@@ -345,7 +354,7 @@ export default class Statics extends React.Component {
                     </View>
                     <View
                         style={{
-                            width: width - 40,
+
                             backgroundColor: UI.COLORS_HEX.white,
                             borderRadius: 6,
                             borderColor: UI.COLORS_HEX.blue,
@@ -356,173 +365,119 @@ export default class Statics extends React.Component {
                             marginTop: 5,
                             height: 30
                         }}>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                            this.setState({showSeg: 'Partij'})
+                        {store.MatcheStatistics.map((s, index) => {
+                            return (
+                                <TouchableOpacity key={'stat' + index} activeOpacity={0.8} onPress={() => {
+                                    let arr = [];
+                                    Object.keys(s.value).map(key => arr.push({key: key, value: s.value[key]}));
+                                    this.setState({showSeg: s.key, statValue: arr})
 
-                        }} style={{
-                            width: (width - 39) / 4,
-                            backgroundColor: this.state.showSeg === 'Partij' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderColor: UI.COLORS_HEX.blue,
-                            borderRightWidth: 1,
-                            height: 30,
-                            borderTopLeftRadius: 6,
-                            borderBottomLeftRadius: 6,
+                                }} style={{
+                                    width: (width - 39) / 4,
+                                    backgroundColor: this.state.showSeg === s.key ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderColor: UI.COLORS_HEX.blue,
+                                    borderRightWidth: index === store.MatcheStatistics.length - 1 ? 0 : 1,
+                                    height: 30,
+                                    borderTopLeftRadius: index === 0 ? 6 : 0,
+                                    borderBottomLeftRadius: index === 0 ? 6 : 0,
+                                    borderTopRightRadius: index === store.MatcheStatistics.length - 1 ? 6 : 0,
+                                    borderBottomRightRadius: index === store.MatcheStatistics.length - 1 ? 6 : 0,
 
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: this.state.showSeg === 'Partij' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
-                                    fontSize: 14,
-                                    backgroundColor: 'transparent'
-                                }}>Partij</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                            this.setState({showSeg: 'set1'})
-                        }} style={{
-                            width: (width - 39) / 4,
-                            backgroundColor: this.state.showSeg === 'set1' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderColor: UI.COLORS_HEX.blue,
-                            borderRightWidth: 1,
-                            height: 30
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: this.state.showSeg === 'set1' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
-                                    fontSize: 14,
-                                    backgroundColor: 'transparent'
-
-                                }}>Set 1</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                            this.setState({showSeg: 'set2'})
-                        }} style={{
-                            width: (width - 39) / 4,
-                            backgroundColor: this.state.showSeg === 'set2' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderColor: UI.COLORS_HEX.blue,
-                            borderRightWidth: 1,
-                            height: 30
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: this.state.showSeg === 'set2' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
-                                    fontSize: 14,
-                                    backgroundColor: 'transparent'
-
-                                }}>Set 2</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                            this.setState({showSeg: 'set3'})
-                        }} style={{
-                            width: (width - 39) / 4,
-                            backgroundColor: this.state.showSeg === 'set3' ? UI.COLORS_HEX.blue : UI.COLORS_HEX.white,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: 30,
-                            borderTopRightRadius: 6,
-                            borderBottomRightRadius: 6,
-
-                        }}>
-                            <Text
-                                style={{
-                                    fontFamily: UI.FONT.regular,
-                                    color: this.state.showSeg === 'set3' ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
-                                    fontSize: 14,
-                                    backgroundColor: 'transparent'
-
-                                }}>Set 3</Text>
-                        </TouchableOpacity>
+                                }}>
+                                    <Text
+                                        style={{
+                                            fontFamily: UI.FONT.regular,
+                                            color: this.state.showSeg === s.key ? UI.COLORS_HEX.white : UI.COLORS_HEX.gray,
+                                            fontSize: 14,
+                                            backgroundColor: 'transparent'
+                                        }}>{s.key.toUpperCase()}</Text>
+                                </TouchableOpacity>
+                            )
+                        })}
                     </View>
 
 
+                    <View style={{
+                        width: width - 30,
+                        borderRadius: 6,
+                        justifyContent: 'space-around',
+                        flexDirection: 'row',
+                        marginTop: 10,
+                    }}>
+                        <LinearGradient
+                            start={{x: 0.5, y: 0}}
+                            end={{x: 0.5, y: 1}}
+                            locations={[0, 0.45]}
+                            colors={["#999999", "#000000"]}
+                            style={{
+                                width: width - 30,
+                                borderRadius: 6,
+                                shadowColor: 'black',
+                                shadowOffset: {width: 0, height: 0},
+                                shadowOpacity: 0.7,
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0
+                            }}/>
                         <View style={{
-                            width: width - 30,
-                            borderRadius: 6,
-                            justifyContent: 'space-around',
-                            flexDirection: 'row',
-                            marginTop:10,
+                            flex: 0.42,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: 5
                         }}>
-                            <LinearGradient
-                                start={{x: 0.5, y: 0}}
-                                end={{x: 0.5, y: 1}}
-                                locations={[0, 0.45]}
-                                colors={["#999999", "#000000"]}
-                                style={{
-                                    width: width - 30,
-                                    borderRadius: 6,
-                                    shadowColor: 'black',
-                                    shadowOffset: {width: 0, height: 0},
-                                    shadowOpacity: 0.7,
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0
-                                }}/>
-                            <View style={{
-                                flex: 0.42,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                padding: 5
-                            }}>
-                                <Text style={{
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 18,
-                                }} numberOfLines={2}>
-                                    {store.Match.player1.replace('+', ' / ')}
-                                </Text>
-                            </View>
-                            <View style={{
-                                flex: 0.15,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                padding: 5
-                            }}>
-                                <Text style={{
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 24,
-                                }}>
-                                    VS
-                                </Text>
-                            </View>
-                            <View style={{
-                                flex: 0.42,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                padding: 5
-                            }}>
-                                <Text style={{
-                                    fontFamily: UI.FONT.bold,
-                                    color: UI.COLORS_HEX.white,
-                                    fontSize: 18,
-                                }} numberOfLines={2}>
-                                    {store.Match.player2.replace('+', ' / ')}
-                                </Text>
-                            </View>
+                            <Text style={{
+                                fontFamily: UI.FONT.bold,
+                                color: UI.COLORS_HEX.white,
+                                fontSize: 18,
+                            }} numberOfLines={2}>
+                                {store.Match.player1.replace('+', ' / ')}
+                            </Text>
                         </View>
+                        <View style={{
+                            flex: 0.15,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: 5
+                        }}>
+                            <Text style={{
+                                fontFamily: UI.FONT.bold,
+                                color: UI.COLORS_HEX.white,
+                                fontSize: 24,
+                            }}>
+                                VS
+                            </Text>
+                        </View>
+                        <View style={{
+                            flex: 0.42,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: 5
+                        }}>
+                            <Text style={{
+                                fontFamily: UI.FONT.bold,
+                                color: UI.COLORS_HEX.white,
+                                fontSize: 18,
+                            }} numberOfLines={2}>
+                                {store.Match.player2.replace('+', ' / ')}
+                            </Text>
+                        </View>
+                    </View>
 
-                        {store.MatcheStatistics && <FlatList data={store.MatcheStatistics}
-                                                    keyExtractor={(item, index) => 'Match' + index}
-                                                    renderItem={this.renderItem}
+                        {this.state.statValue && <FlatList data={this.state.statValue}
+                                                           keyExtractor={(item, index) => 'Match' + index}
+                                                           renderItem={this.renderItem}
+
 
 
 
                         />}
 
 
-
                 </View>
-                <Footer image={store.SponserImage}/>
 
                 {this.state.isLoading && <Loading/>}
 

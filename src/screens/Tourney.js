@@ -58,16 +58,16 @@ export default class Tourney extends React.Component {
                 console.log(e.response)
                 if (e.response && e.response.status) {
                     Alert.alert(
-                        'Error',
-                        'Tournament not found',
+                        'Fout',
+                        'Toernooi niet gevonden',
                         [
                             {text: 'OK', onPress: () => console.log('OK Pressed')},
                         ],
                     )
                 } else {
                     Alert.alert(
-                        'Slow Connection',
-                        'please Try Again Later',
+                        'Trage verbinding',
+                        'Probeer het later opnieuw',
                         [
                             {text: 'OK', onPress: () => console.log('OK Pressed')},
                         ],
@@ -76,8 +76,8 @@ export default class Tourney extends React.Component {
             });
         } else {
             Alert.alert(
-                'Error',
-                'Please Enter the tournament number',
+                'Fout',
+                'Voer een toernooicode in',
                 [
                     {text: 'OK', onPress: () => console.log('OK Pressed')},
                 ],
@@ -104,22 +104,22 @@ export default class Tourney extends React.Component {
 
                 <PersonRow title={store.User.name}/>
 
-                <View style={{width: width, padding: 20}}>
-                    <Text
-                        style={[UI.regularWhiteText25,{
-                            fontSize: 16,
-                        }]}>Voer hier het unieke toernooicode in welke de toernooileiding je vertrekt heeft en klik op 'Ga verder'.</Text>
-                </View>
+
                 <KeyboardAvoidingView behavior={'position'}
                                       style={{width: width, justifyContent: 'center', alignItems: 'center'}}>
-
+                    <View style={{width: width, padding: 20}}>
+                        <Text
+                            style={[UI.regularWhiteText25,{
+                                fontSize: 16,
+                            }]}>Voer hier het unieke toernooicode in welke de toernooileiding je vertrekt heeft en klik op 'Ga verder'.</Text>
+                    </View>
                     <View style={{
                         borderRadius: 15,
                         width: width - 60,
                         backgroundColor: UI.COLORS_HEX.lightBlack,
                         height: 160,
                         padding: 15,
-                        alignSelf:'center'
+                        alignSelf:'center',
                     }}>
                         <Text
                             style={[UI.regularWhiteText25,{

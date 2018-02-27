@@ -48,7 +48,7 @@ export default class DamesEnkel extends React.Component {
                     screen: 'SetUpWedstrijd',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
-                    passProps: {backTitle: 'kies partij'}
+                    passProps: {backTitle: 'kies partij',category:item.subcategory}
                 })
             }} style={{
                 width: width,
@@ -84,7 +84,7 @@ export default class DamesEnkel extends React.Component {
                 <Navbar title={this.props.title} leftBtnTitle={this.props.backTitle}
                         onPressLeftBtn={() => navigator.pop()}/>
 
-                <PersonRow title={store.TournamentByNumber.name}/>
+                <PersonRow title={store.TournamentByNumber.name} url={store.TournomentImage}/>
 
                 {store.Matches && <FlatList data={store.Matches}
                                             keyExtractor={(item, index) => 'Match' + item.id}

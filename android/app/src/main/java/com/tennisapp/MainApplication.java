@@ -30,7 +30,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     public List<ReactPackage> createAdditionalReactPackages() {
         return Arrays.<ReactPackage>asList(
                 new LinearGradientPackage(),
-                new VectorIconsPackage()
+                new VectorIconsPackage(),
+                new RNViewShotPackage()
         );
     }
 

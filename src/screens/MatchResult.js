@@ -11,7 +11,7 @@ import UI from '../assets/UI';
 import CButton from '../components/CButton';
 import Navbar from '../components/Navbar';
 import BackImage from '../components/BackImage';
-
+import moment from 'moment';
 
 let {height, width} = Dimensions.get('window');
 
@@ -25,33 +25,24 @@ export default class MatchResult extends React.Component {
             set0Point2: '',
             set1Point1: '',
             set1Point2: '',
-            endTime:''
+            endTime: ''
         };
     }
 
     componentDidMount() {
         const {store, navigator} = this.props;
         if (store.Play.score.previousSets.length > 1) {
-            this.setState({set1Point1: store.WinnerPlayer.score.previousSets[1].player1});
-            this.setState({set1Point2: store.WinnerPlayer.score.previousSets[1].player2});
+            this.setState({set1Point1: store.Play.score.previousSets[1].player1});
+            this.setState({set1Point2: store.Play.score.previousSets[1].player2});
         }
         if (store.Play.score.previousSets.length > 0) {
-            this.setState({set0Point1: store.WinnerPlayer.score.previousSets[0].player1});
-            this.setState({set0Point2: store.WinnerPlayer.score.previousSets[0].player2});
+            this.setState({set0Point1: store.Play.score.previousSets[0].player1});
+            this.setState({set0Point2: store.Play.score.previousSets[0].player2});
         }
 
-        let start = new Date(store.Play.start_time);
-        let finish = new Date(store.Play.end_time);
-        console.log(start);
-        console.log(finish);
-        let diff = finish - start;
-        let h = parseInt(Math.abs(diff) / (1000 * 60 * 60) % 24);
-        let m = parseInt(Math.abs(diff) / (1000 * 60) % 60);
-        let s = parseInt(Math.abs(diff) / (1000) % 60);
-this.setState({endTime:h+':'+m+':'+s})
-        console.log(h)
-        console.log(m)
-        console.log(s)
+        let diff = moment.duration(moment(store.Play.end_time).diff(moment(store.Play.start_time)));
+         this.setState({endTime: diff._data.hours + ':' + diff._data.minutes + ':' + diff._data.seconds})
+
     }
 
     render() {
@@ -65,10 +56,16 @@ this.setState({endTime:h+':'+m+':'+s})
 
                 <Navbar title={'Wedstrijd ' + store.Court.name} rightBtnColor={UI.COLORS_HEX.orange}
                         leftBtnTitle={'Terug'}
-                        onPressLeftBtn={() => navigator.pop({
-                            animated: true,
-                            animationType: 'fade',
-                        })}/>
+                        onPressLeftBtn={() => {
+                            store.getMatcheDet(store.Match.id).then(() => {
+                                store.Play = store.MatcheDet;
+                                store.Service = store.MatcheDet.server;
+                                navigator.pop({
+                                    animated: true,
+                                    animationType: 'fade',
+                                })
+                            });
+                        }}/>
 
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70}}>
@@ -111,8 +108,8 @@ this.setState({endTime:h+':'+m+':'+s})
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point1 !== '' && this.state.set1Point1 >= 6&&parseInt(this.state.set1Point1)>parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange :this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0}</Text>
+                                            color: store.Play.score ? this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 && parseInt(this.state.set1Point1) > parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0 : 0}</Text>
                                     </View>
                                     <View style={{
                                         width: (width - 40) / 8 - 4,
@@ -125,8 +122,8 @@ this.setState({endTime:h+':'+m+':'+s})
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 &&parseInt(this.state.set0Point1)>parseInt(this.state.set0Point2)? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.WinnerPlayer.score.currentSet.player1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point1 !== '' ? this.state.set0Point1 : store.WinnerPlayer.score.currentSet.player1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
+                                            color: store.Play.score ? this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.Play.score.currentSet.player1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point1 !== '' ? this.state.set0Point1 : store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -138,8 +135,8 @@ this.setState({endTime:h+':'+m+':'+s})
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point1 !== '' && store.WinnerPlayer.score.currentSet.player1 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player1)>parseInt(store.WinnerPlayer.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.WinnerPlayer.score.currentSet.player1 : 0}</Text>
+                                            color: store.Play.score ? this.state.set1Point1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </View>
 
                                 </View>
@@ -184,7 +181,7 @@ this.setState({endTime:h+':'+m+':'+s})
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6&&parseInt(this.state.set1Point2)>parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange :this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
+                                            color: this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 && parseInt(this.state.set1Point2) > parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
                                         }}>{this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0}</Text>
                                     </View>
                                     <View style={{
@@ -198,8 +195,8 @@ this.setState({endTime:h+':'+m+':'+s})
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 &&parseInt(this.state.set0Point2)>parseInt(this.state.set0Point1)? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.WinnerPlayer.score.currentSet.player2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point2 !== '' ? this.state.set0Point2 : store.WinnerPlayer.score.currentSet.player2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
+                                            color: store.Play.score ? this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.Play.score.currentSet.player2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point2 !== '' ? this.state.set0Point2 : store.Play.score.currentSet.player2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </View>
                                     <View style={{
                                         justifyContent: 'center',
@@ -211,8 +208,8 @@ this.setState({endTime:h+':'+m+':'+s})
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: this.state.set1Point2 !== '' && store.WinnerPlayer.score.currentSet.player2 >= 6 && parseInt(store.WinnerPlayer.score.currentSet.player2)>parseInt(store.WinnerPlayer.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white,
-                                        }}>{this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.WinnerPlayer.score.currentSet.player2 : 0}</Text>
+                                            color: store.Play.score ? this.state.set1Point2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -265,7 +262,7 @@ this.setState({endTime:h+':'+m+':'+s})
                                              screen: 'Statics',
                                              navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                                              animationType: 'fade',
-                                             passProps: {backTitle: 'Registreren',endTime:this.state.endTime}
+                                             passProps: {backTitle: 'Registreren', endTime: this.state.endTime}
                                          })
                                      }}/>
                         </View>

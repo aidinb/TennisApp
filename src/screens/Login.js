@@ -50,19 +50,19 @@ export default class Login extends React.Component {
             })
         }).catch((e) => {
             this.setState({isLoading: false})
-
+            store.Authenticate = [];
             if (e.response && e.response.status) {
                 Alert.alert(
-                    'Authentication Failed',
-                    'Please check your username or password',
+                    'Inloggen is mislukt',
+                    'Controleer je gebruikersnaam en wachtwoord',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
                 )
             } else {
                 Alert.alert(
-                    'common.slowConnection',
-                    'common.pleaseTryAgainLater',
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -88,116 +88,116 @@ export default class Login extends React.Component {
                 })}/>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}>
                     <KeyboardAvoidingView behavior={'position'} contentContainerStyle={{paddingBottom: 80}}>
-                            <View style={{
-                                flexDirection: 'row',
-                                padding: 10,
-                                alignSelf: 'center',
-                                width: width - 60,
-                                alignItems: 'center',
-                                paddingLeft: 5,
-                                marginTop:10
-                            }}>
-                                <Image source={require('../assets/images/emailIcon.png')}
-                                       style={{
-                                           width: 24,
-                                           height: 14,
-                                           resizeMode: 'contain'
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 10,
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                            paddingLeft: 5,
+                            marginTop: 10
+                        }}>
+                            <Image source={require('../assets/images/emailIcon.png')}
+                                   style={{
+                                       width: 24,
+                                       height: 14,
+                                       resizeMode: 'contain'
 
-                                       }}/>
+                                   }}/>
+                            <Text
+                                style={[UI.regularWhiteText25, {
+                                    fontSize: 17,
+                                    marginLeft: 5
+                                }]}>Email</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                        }}>
+                            <CTextInput placeholder={'Voer je email adres in'}
+                                        keyboardType={'email-address'}
+                                        onChangeText={(text) => this.setState({email: text})}
+                                        value={this.state.email}/>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 10,
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                            marginTop: 0,
+                            paddingLeft: 5
+                        }}>
+                            <Image source={require('../assets/images/passIcon.png')}
+                                   style={{
+                                       width: 40,
+                                       height: 20,
+                                       resizeMode: 'contain',
+                                       marginLeft: -13
+                                   }}/>
+                            <Text
+                                style={[UI.regularWhiteText25, {
+                                    fontSize: 17,
+                                    marginLeft: -5
+                                }]}>Wachtwoord</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                        }}>
+                            <CTextInput placeholder={'Voer je wachtwoord in'}
+                                        secureTextEntry={true}
+                                        onChangeText={(text) => this.setState({pass: text})}
+                                        value={this.state.pass}/>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 10,
+                            alignSelf: 'center',
+                            width: width - 60,
+                            alignItems: 'center',
+                            marginTop: 10,
+                            paddingLeft: 5,
+                            paddingRight: 5,
+                            justifyContent: 'space-between'
+                        }}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                                <CCheckbox checked={this.state.checked}
+                                           onPress={() => this.state.checked === true ? this.setState({checked: false}) : this.setState({checked: true})}/>
+
                                 <Text
                                     style={[UI.regularWhiteText25, {
-                                        fontSize: 17,
+                                        fontSize: 12,
                                         marginLeft: 5
-                                    }]}>Email</Text>
+                                    }]}>Aangemeld blijven</Text>
                             </View>
-
                             <View style={{
-                                flexDirection: 'row',
-                                alignSelf: 'center',
-                                width: width - 60,
+                                borderBottomWidth: 0.5,
+                                borderColor: UI.COLORS_HEX.white,
+                                justifyContent: 'center',
                                 alignItems: 'center',
+                                paddingBottom: 1
                             }}>
-                                <CTextInput placeholder={'Voer je email adres in'}
-                                            keyboardType={'email-address'}
-                                            onChangeText={(text) => this.setState({email: text})}
-                                            value={this.state.email}/>
-                            </View>
-
-                            <View style={{
-                                flexDirection: 'row',
-                                padding: 10,
-                                alignSelf: 'center',
-                                width: width - 60,
-                                alignItems: 'center',
-                                marginTop: 0,
-                                paddingLeft: 5
-                            }}>
-                                <Image source={require('../assets/images/passIcon.png')}
-                                       style={{
-                                           width: 40,
-                                           height: 20,
-                                           resizeMode: 'contain',
-                                           marginLeft: -13
-                                       }}/>
                                 <Text
                                     style={[UI.regularWhiteText25, {
-                                        fontSize: 17,
-                                        marginLeft: -5
-                                    }]}>Wachtwoord</Text>
+                                        fontSize: 12,
+                                    }]}>Wachtwoord vergeten</Text>
                             </View>
+                        </View>
 
-                            <View style={{
-                                flexDirection: 'row',
-                                alignSelf: 'center',
-                                width: width - 60,
-                                alignItems: 'center',
-                            }}>
-                                <CTextInput placeholder={'Voer je wachtwoord in'}
-                                            secureTextEntry={true}
-                                            onChangeText={(text) => this.setState({pass: text})}
-                                            value={this.state.pass}/>
-                            </View>
-
-                            <View style={{
-                                flexDirection: 'row',
-                                padding: 10,
-                                alignSelf: 'center',
-                                width: width - 60,
-                                alignItems: 'center',
-                                marginTop: 10,
-                                paddingLeft: 5,
-                                paddingRight: 5,
-                                justifyContent: 'space-between'
-                            }}>
-                                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                                    <CCheckbox checked={this.state.checked}
-                                               onPress={() => this.state.checked === true ? this.setState({checked: false}) : this.setState({checked: true})}/>
-
-                                    <Text
-                                        style={[UI.regularWhiteText25, {
-                                            fontSize: 12,
-                                            marginLeft: 5
-                                        }]}>Aangemeld blijven</Text>
-                                </View>
-                                <View style={{
-                                    borderBottomWidth: 0.5,
-                                    borderColor: UI.COLORS_HEX.white,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    paddingBottom: 1
-                                }}>
-                                    <Text
-                                        style={[UI.regularWhiteText25, {
-                                            fontSize: 12,
-                                        }]}>Wachtwoord vergeten</Text>
-                                </View>
-                            </View>
-
-                            <View style={{width: width, alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
-                                <CButton title={'Inloggen'} backgroundColor={UI.COLORS_HEX.blue}
-                                         color={UI.COLORS_HEX.black}
-                                         onPress={this.onLogin}/>
-                            </View>
+                        <View style={{width: width, alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
+                            <CButton title={'Inloggen'} backgroundColor={UI.COLORS_HEX.blue}
+                                     color={UI.COLORS_HEX.black}
+                                     onPress={this.onLogin}/>
+                        </View>
 
                     </KeyboardAvoidingView>
                 </ScrollView>
