@@ -26,9 +26,11 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: 'rob@socialbrothers.nl',
-            pass: 'wachtwoord',
-            checked: true,
+            // email: 'rob@socialbrothers.nl',
+            //  pass: 'wachtwoord',
+            email: '',
+            pass: '',
+            checked: false,
             isLoading: false
         };
     }
@@ -39,7 +41,7 @@ export default class Login extends React.Component {
         store.getAuthenticate({
             email: this.state.email,
             pass: this.state.pass,
-        }).then(() => {
+        },this.state.checked).then(() => {
             this.setState({isLoading: false})
             navigator.push({
                 screen: 'Menu',
@@ -78,9 +80,7 @@ export default class Login extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <BackImage/>
-                <View style={[UI.absoluteView, {
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
+
                 <Navbar title={'Login'} leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
                     screen: 'Index',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -178,18 +178,6 @@ export default class Login extends React.Component {
                                         fontSize: 12,
                                         marginLeft: 5
                                     }]}>Aangemeld blijven</Text>
-                            </View>
-                            <View style={{
-                                borderBottomWidth: 0.5,
-                                borderColor: UI.COLORS_HEX.white,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                paddingBottom: 1
-                            }}>
-                                <Text
-                                    style={[UI.regularWhiteText25, {
-                                        fontSize: 12,
-                                    }]}>Wachtwoord vergeten</Text>
                             </View>
                         </View>
 

@@ -18,6 +18,7 @@ export default class CButton extends Component {
 
     render() {
         return (
+
             <TouchableOpacity activeOpacity={0.9} style={{
                 width: 20,
                 height: 20,

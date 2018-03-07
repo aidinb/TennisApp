@@ -31,6 +31,7 @@ export default class DamesEnkel extends React.Component {
     componentDidMount() {
         const {store, navigator} = this.props;
         this.setState({isLoading: true})
+        store.Matches=[];
         store.getMatches(this.props.catId).then(() => {
             this.setState({isLoading: false})
             console.log('====matches====')
@@ -78,9 +79,7 @@ export default class DamesEnkel extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <BackImage/>
-                <View style={[UI.absoluteView,{
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
+
                 <Navbar title={this.props.title} leftBtnTitle={this.props.backTitle}
                         onPressLeftBtn={() => navigator.pop()}/>
 

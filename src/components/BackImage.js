@@ -18,8 +18,8 @@ export default class BackImage extends Component {
 
     render() {
         return (
-                <Image source={require('../assets/images/436417.png')}
-                       style={UI.absoluteView}/>
+                <Image source={require('../assets/images/BackImage.png')}
+                       style={[UI.absoluteView,{resizeMode: 'cover',width:width,height:height}]}/>
 
         );
     }

@@ -38,6 +38,7 @@ export default class SetUpWedstrijd extends React.Component {
         const {navigator, store} = this.props;
         store.setService(1)
         this.setState({kies1:store.Match.short_game,kies2:store.Match.super_tie_break})
+        store.Court='';
     }
 
 
@@ -58,6 +59,7 @@ export default class SetUpWedstrijd extends React.Component {
                         short_game:this.state.kies1,
                         super_tie_break:this.state.kies2,
                     });
+                    store.Play=[];
                     if (store.HasService === false) {
                         navigator.push({
                             screen: 'StartMatch',
@@ -123,9 +125,7 @@ export default class SetUpWedstrijd extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <BackImage/>
-                <View style={[UI.absoluteView, {
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
+
 
                 <Navbar title={'Partij instellingen'} leftBtnTitle={this.props.backTitle}
                         onPressLeftBtn={() => navigator.pop()}/>

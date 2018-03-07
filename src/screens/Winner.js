@@ -36,9 +36,6 @@ export default class Winner extends React.Component {
             <View style={{flex: 1}}>
                 <BackImage/>
 
-                <View style={[UI.absoluteView,{
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
 
                 <Navbar title={'Wedstrijd ' + store.Court.name}/>
 

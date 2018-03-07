@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>TennisApp</string>
+	<string>GameSetStats</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,11 +19,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -40,13 +40,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>requires access to your phone’s photo gallery.</string>
+	<string>Wilt u GameSetStats toegang geven tot uw foto's?</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>requires access to your phone’s photo gallery.</string>
+	<string>Wilt u GameSetStats toegang geven tot uw foto's?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>requires access to your phone’s photo gallery.</string>
+	<string>Wilt u GameSetStats toegang geven tot uw foto's?</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -63,7 +63,6 @@
 		<string>DINPro-Medium.ttf</string>
 		<string>DINPro-Regular.ttf</string>
 		<string>DINPro-Bold.ttf</string>
-		<string>DINBlackItalic.ttf</string>
 		<string>dinpro-italic.ttf</string>
 		<string>dinpro-blackitalic.ttf</string>
 	</array>

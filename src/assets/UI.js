@@ -51,12 +51,13 @@ exports.NAVIGATION_STYLE = {
     navBarButtonColor: '#404040',
     navBarTitleTextCentered: true,
     topBarElevationShadowEnabled: false,
-    statusBarColor: 'black',
+    statusBarColor: '#000000',
     navBarNoBorder: true,
     navBarTransparent: true,
     drawUnderNavBar: true,
     navBarTranslucent: Platform.OS === 'ios',
     drawUnderTabBar: true,
     statusBarTextColorScheme: 'light',
-    screenBackgroundColor: 'black',
+    screenBackgroundColor: 'transparent',
+    rootBackgroundImageName:'BackImage'
 };

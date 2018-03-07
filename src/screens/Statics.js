@@ -8,18 +8,35 @@ import {
     Image,
     Alert,
     CameraRoll,
-    FlatList
+    FlatList,
+    PermissionsAndroid,
+    Platform
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import LinearGradient from 'react-native-linear-gradient';
 import UI from '../assets/UI';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import  {captureScreen} from "react-native-view-shot";
+import {captureScreen} from "react-native-view-shot";
 import Loading from '../components/Loading';
 import BackImage from '../components/BackImage';
 
 let {height, width} = Dimensions.get('window');
+
+const stat={
+    aces:'Aces',
+    double_faults:'Dubbele fouten',
+    first_serve:'1e service %',
+    forced_errors:'Forced errors',
+    point_first_serve:'% gewonnen op 1e service',
+    point_second_serve:'% gewonnen op 2e service',
+    unforced_errors:'Unforced errors',
+    winners:'Winners',
+    winner_serve:'Winner serve',
+    break_points:'Breakpunten'
+
+
+}
 
 @inject("store") @observer
 export default class Statics extends React.Component {
@@ -47,12 +64,12 @@ export default class Statics extends React.Component {
         const {store, navigator} = this.props;
 
         if (store.Play.score.previousSets.length > 1) {
-            this.setState({set1Point1: store.WinnerPlayer.score.previousSets[1].player1});
-            this.setState({set1Point2: store.WinnerPlayer.score.previousSets[1].player2});
+            this.setState({set1Point1: store.Play.score.previousSets[1].player1});
+            this.setState({set1Point2: store.Play.score.previousSets[1].player2});
         }
         if (store.Play.score.previousSets.length > 0) {
-            this.setState({set0Point1: store.WinnerPlayer.score.previousSets[0].player1});
-            this.setState({set0Point2: store.WinnerPlayer.score.previousSets[0].player2});
+            this.setState({set0Point1: store.Play.score.previousSets[0].player1});
+            this.setState({set0Point2: store.Play.score.previousSets[0].player2});
         }
         this.setState({isLoading: true})
         store.getMatcheStatistics(store.Match.id).then(() => {
@@ -66,11 +83,9 @@ export default class Statics extends React.Component {
         });
     }
 
-
     snapshot = () => {
         captureScreen(this.state.value).then(
             res => {
-                console.log(res)
                 this.setState({isLoading: true})
                 CameraRoll.saveToCameraRoll(res, 'photo').then(() => {
                     this.setState({isLoading: false})
@@ -84,15 +99,41 @@ export default class Statics extends React.Component {
                     )
                 })
             })
-            .catch(
-                error => (
-                    console.warn(error)
-                )
-            );
+
     };
+    requestCameraPermission = () => {
+        if (Platform.OS !== 'ios') {
+            if (Platform.Version >= 23) {
+                PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
+                    .then((hasPermission) => {
+                        if (!hasPermission) {
+                            PermissionsAndroid.request(
+                                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
+                                    'title': '',
+                                    'message': 'Wilt u GameSetStats toegang geven tot uw foto\'s?'
+                                })
+                                .then((didAccept) => {
+                                    if (!didAccept) {
+                                        console.error('User refused');
+                                    } else {
+                                        this.snapshot()
+                                    }
+                                });
+                        } else {
+                            this.snapshot()
+                        }
+                    });
+            } else {
+                this.snapshot();
+            }
+        }
+        this.snapshot();
+    }
+
 
     renderItem = ({item, index}) => {
         const {store, navigator} = this.props;
+        const Key = item.key;
         return (
             <View style={{
                 width: width - 30,
@@ -121,15 +162,15 @@ export default class Statics extends React.Component {
                 <Text style={{
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
-                    fontSize: 18,
-                    width: width / 7
+                    fontSize: 17,
+                    width: width / 8
                 }}>
                     {item.value.player1}
                 </Text>
                 <View style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: (width - 30) / 2,
+                    width: (width - 10) / 2,
                     backgroundColor: UI.COLORS_HEX.boxGray,
                     height: 35,
                     borderRadius: 20,
@@ -142,14 +183,15 @@ export default class Statics extends React.Component {
                         color: UI.COLORS_HEX.white,
                         fontSize: 14,
                     }}>
-                        {item.key}
+                        {stat[Key]}
                     </Text>
                 </View>
                 <Text style={{
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
-                    fontSize: 18,
-                    width: width / 7
+                    fontSize: 17,
+                    width: width / 8,
+                    textAlign: 'right'
                 }}>
                     {item.value.player2}
                 </Text>
@@ -163,13 +205,10 @@ export default class Statics extends React.Component {
             <View style={{flex: 1}}>
                 <BackImage/>
 
-                <View style={[UI.absoluteView, {
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
 
                 <Navbar title={'Statistieken'} rightBtnColor={UI.COLORS_HEX.orange}
                         rightBtnTitle={'Deel'}
-                        onPressRightBtn={() => this.snapshot()} leftBtnTitle={'Home'}
+                        onPressRightBtn={() => this.requestCameraPermission()} leftBtnTitle={'Home'}
                         onPressLeftBtn={() => {
                             Alert.alert(
                                 '',
@@ -190,7 +229,7 @@ export default class Statics extends React.Component {
 
 
                 <View
-                    style={{width: width, padding: 15, alignItems: 'center', paddingTop: 10,flex:1}}>
+                    style={{width: width, padding: 15, alignItems: 'center', paddingTop: 10, flex: 1}}>
                     <View>
                         <View style={{
                             width: width - 30,
@@ -228,8 +267,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score?this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 && parseInt(this.state.set1Point1) > parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                    }}>{store.Play.score?this.state.set1Point1 !== '' ? this.state.set1Point1 : this.state.set0Point1 !== '' ? this.state.set0Point1 : 0:0}</Text>
+                                        color: store.Play.score ?  this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ?  this.state.set0Point1 !== '' ? this.state.set0Point1 : 0 : 0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,
@@ -237,12 +276,13 @@ export default class Statics extends React.Component {
                                     borderRadius: 3,
                                     justifyContent: 'center',
                                     alignItems: 'center'
+
                                 }}>
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score?this.state.set1Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.Play.score.currentSet.player1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange :UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                    }}>{store.Play.score?this.state.set1Point1 !== '' ? this.state.set0Point1 : store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 :0: 0}</Text>
+                                        color: store.Play.score ? this.state.set1Point1 !== '' && this.state.set1Point1 >= 6 && parseInt(this.state.set1Point1) > parseInt(this.state.set1Point2) ? UI.COLORS_HEX.orange : this.state.set1Point1 === '' && store.Play.score.currentSet.player1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ? this.state.set1Point1 !== '' ? this.state.set1Point1 : store.Play.score.currentSet.player1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                 </View>
                                 <View style={{
                                     justifyContent: 'center',
@@ -254,8 +294,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score?this.state.set1Point1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                    }}>{store.Play.score?this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0:0}</Text>
+                                        color: store.Play.score ? this.state.set1Point1 !== '' && store.Play.score.currentSet.player1 >= 6 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ? this.state.set1Point1 !== '' && this.state.set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                 </View>
 
                             </View>
@@ -300,8 +340,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score?this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 && parseInt(this.state.set1Point2) > parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                    }}>{store.Play.score?this.state.set1Point2 !== '' ? this.state.set1Point2 : this.state.set0Point2 !== '' ? this.state.set0Point2 : 0:0}</Text>
+                                        color: store.Play.score ?  this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ?  this.state.set0Point2 !== '' ? this.state.set0Point2 : 0 : 0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,
@@ -314,8 +354,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score?this.state.set1Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.Play.score.currentSet.player2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                    }}>{store.Play.score?this.state.set1Point2 !== '' ? this.state.set0Point2 : store.Play.score.currentSet.player2 !== '' ? store.Play.score.currentSet.player2 : 0:0}</Text>
+                                        color: store.Play.score ? this.state.set1Point2 !== '' && this.state.set1Point2 >= 6 && parseInt(this.state.set1Point2) > parseInt(this.state.set1Point1) ? UI.COLORS_HEX.orange : this.state.set1Point2 === '' && store.Play.score.currentSet.player2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ? this.state.set1Point2 !== '' ? this.state.set1Point2 : store.Play.score.currentSet.player2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                 </View>
                                 <View style={{
                                     justifyContent: 'center',
@@ -327,10 +367,9 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score?this.state.set1Point2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                    }}>{store.Play.score?this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0:0}</Text>
+                                        color: store.Play.score ? this.state.set1Point2 !== '' && store.Play.score.currentSet.player2 >= 6 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ? this.state.set1Point2 !== '' && this.state.set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                 </View>
-
                             </View>
                         </View>
                     </View>
@@ -467,14 +506,12 @@ export default class Statics extends React.Component {
                         </View>
                     </View>
 
-                        {this.state.statValue && <FlatList data={this.state.statValue}
-                                                           keyExtractor={(item, index) => 'Match' + index}
-                                                           renderItem={this.renderItem}
+                    {this.state.statValue && <FlatList data={this.state.statValue}
+                                                       keyExtractor={(item, index) => 'Match' + index}
+                                                       renderItem={this.renderItem}
 
 
-
-
-                        />}
+                    />}
 
 
                 </View>

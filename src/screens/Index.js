@@ -27,9 +27,7 @@ export default class Index extends React.Component {
         return (
             <View style={{alignItems: 'center', justifyContent: 'space-around', flex: 1}}>
                 <BackImage/>
-                <View style={[UI.absoluteView, {
-                    backgroundColor: 'rgba(0,0,0,0.6)'
-                }]}/>
+
                 <View style={[UI.absoluteView, {
                     height: width / 2 - 40,
                     backgroundColor: 'transparent',

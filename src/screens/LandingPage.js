@@ -48,7 +48,7 @@ export default class LandingPage extends React.Component {
 
     componentDidMount() {
         const {navigator, store} = this.props;
-        lstore.get("profile").then(user=> {
+        lstore.get("profile").then(user => {
             if (user) {
                 const {store, navigator} = this.props;
                 store.getAuthenticate({
@@ -82,7 +82,7 @@ export default class LandingPage extends React.Component {
                         )
                     }
                 });
-            }else{
+            } else {
                 navigator.push({
                     screen: 'Index',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -93,27 +93,24 @@ export default class LandingPage extends React.Component {
         })
     }
 
-    componentWillUnmount() {
-
-    }
-
 
     render() {
         const {navigator, store} = this.props;
         return (
-            <View style={{alignItems: 'center', justifyContent: 'space-around', flex: 1}}>
-                <Image source={require('../assets/images/436417.png')}
+            <View style={{alignItems: 'center', justifyContent: 'space-around', flex: 1,backgroundColor:UI.COLORS_HEX.black}}>
+                <Image source={require('../assets/images/BackImage.png')}
                        style={{
                            position: 'absolute',
                            top: 0,
                            bottom: 0,
                            left: 0,
-                           right: 0
+                           right: 0,
+                           resizeMode: 'contain', width: width, height: height,
                        }}/>
 
             </View>
-        )
+    )
 
 
     }
-}
+    }

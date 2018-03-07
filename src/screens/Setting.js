@@ -59,9 +59,7 @@ export default class Setting extends React.Component {
         return (
             <View style={{flex: 1}}>
                <BackImage/>
-                <View style={[UI.absoluteView,{
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
+
                 <Navbar title={'Statistieken instellingen'} rightBtnTitle={'Opslaan'} onPressRightBtn={this.onSavePress}
                         leftBtnTitle={this.props.backTitle} onPressLeftBtn={() => navigator.push({
                     screen: 'Menu',

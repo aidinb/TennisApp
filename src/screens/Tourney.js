@@ -90,9 +90,7 @@ export default class Tourney extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <BackImage/>
-                <View style={[UI.absoluteView,{
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
+
                 <Navbar title={'Zoek toernooi'} leftBtnTitle={this.props.backTitle}
                         onPressLeftBtn={() => navigator.push({
                             screen: 'Menu',

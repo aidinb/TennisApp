@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tennisapp"
+    package="nl.gamesetstats.GameSetStats"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -11,14 +11,15 @@
         android:targetSdkVersion="22" />
 
     <application
-      android:name=".MainApplication"
+      android:name="nl.gamesetstats.GameSetStats.MainApplication"
       android:allowBackup="true"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:theme="@style/AppTheme">
       <activity
-        android:name=".MainActivity"
+        android:name="nl.gamesetstats.GameSetStats.MainActivity"
         android:label="@string/app_name"
+        android:theme="@style/AppTheme"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:windowSoftInputMode="adjustResize">
         <intent-filter>

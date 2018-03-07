@@ -71,11 +71,10 @@ export default class Menu extends React.Component {
         return (
             <View style={{flex: 1}}>
                 <BackImage/>
-                <View style={[UI.absoluteView,{
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
+
                 <Navbar title={'Home'} rightBtnTitle={'Logout'} onPressRightBtn={() => {
                     lstore.delete("profile");
+                    store.deleteToken();
                     navigator.push({
                     screen: 'Login',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},

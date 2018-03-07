@@ -66,7 +66,6 @@
 		D9955A6820206FF4007B6F44 /* DINPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9955A6620206FF4007B6F44 /* DINPro-Regular.ttf */; };
 		D9955A6920206FF4007B6F44 /* DINPro-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9955A6720206FF4007B6F44 /* DINPro-Medium.ttf */; };
 		D9955A902020718E007B6F44 /* DINPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9955A8F2020718E007B6F44 /* DINPro-Bold.ttf */; };
-		D9955A9320207240007B6F44 /* DINBlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9955A9120207240007B6F44 /* DINBlackItalic.ttf */; };
 		D9955A9A20207368007B6F44 /* dinpro-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9955A9920207368007B6F44 /* dinpro-italic.ttf */; };
 		D9955A9C202074B0007B6F44 /* dinpro-blackitalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9955A9B202074B0007B6F44 /* dinpro-blackitalic.ttf */; };
 		E653C877A9F7416182329445 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE2B39F7221E48A2B4D990A5 /* MaterialCommunityIcons.ttf */; };
@@ -1367,7 +1366,6 @@
 				D9955A6820206FF4007B6F44 /* DINPro-Regular.ttf in Resources */,
 				D9955A6920206FF4007B6F44 /* DINPro-Medium.ttf in Resources */,
 				D9955A902020718E007B6F44 /* DINPro-Bold.ttf in Resources */,
-				D9955A9320207240007B6F44 /* DINBlackItalic.ttf in Resources */,
 				D9955A9A20207368007B6F44 /* dinpro-italic.ttf in Resources */,
 				D9955A9C202074B0007B6F44 /* dinpro-blackitalic.ttf in Resources */,
 			);
@@ -1571,9 +1569,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nl.gamesetstats.TennisApp;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.gamesetstats.GameSetStats;
 				PRODUCT_NAME = TennisApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1599,9 +1598,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nl.gamesetstats.TennisApp;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.gamesetstats.GameSetStats;
 				PRODUCT_NAME = TennisApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

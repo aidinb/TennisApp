@@ -40,9 +40,7 @@ export default class SlagType extends React.Component {
             <View style={{flex: 1}}>
            <BackImage/>
 
-                <View style={[UI.absoluteView,{
-                    backgroundColor: 'rgba(0,0,0,0.8)'
-                }]}/>
+
 
                 <Navbar title={'Wedstrijd ' + store.Court.name} leftBtnTitle={'Undo'}
                         onPressLeftBtn={() => navigator.pop({

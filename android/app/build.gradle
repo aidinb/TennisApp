@@ -98,7 +98,7 @@ android {
     buildToolsVersion '27.0.1'
 
     defaultConfig {
-        applicationId "com.tennisapp"
+        applicationId "nl.gamesetstats.GameSetStats"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
@@ -118,10 +118,10 @@ android {
     signingConfigs {
             release {
 
-                     storeFile file("my-release-key.keystore")
-                     storePassword "123456"
+                     storeFile file("GameSetStats.keystore")
+                     storePassword "GameSetStats"
                      keyAlias "aidin"
-                     keyPassword "123456"
+                     keyPassword "GameSetStats"
 
                        }
 

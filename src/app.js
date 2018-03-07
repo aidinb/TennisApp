@@ -22,6 +22,7 @@ function startApp() {
             screen: 'LandingPage',
             navigatorStyle: {...UI.NAVIGATION_STYLE,navBarHidden: true},
         },
+        animationType: 'none'
     });
 }
 

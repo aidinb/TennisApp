@@ -22,17 +22,17 @@ export default class Footer extends Component {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: 40,
-                backgroundColor: UI.COLORS_HEX.white,
+                backgroundColor: 'transparent',
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
                 <Image source={{uri: this.props.image}}
                        style={{
-                           width: width - 120,
-                           height: 35,
+                           width: width,
+                           height: width/10,
                            resizeMode: 'contain'
                        }}/>
+
             </View>
 
         );

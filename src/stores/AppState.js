@@ -38,6 +38,7 @@ class AppState {
     @observable TournomentImage;
     @observable Sponser;
     @observable SponserImage;
+    @observable PauseMatch;
 
 
     constructor() {
@@ -57,7 +58,7 @@ class AppState {
         this.Category = [];
         this.Match = [];
         this.EndTimeMatch = '';
-        this.Play = [{score:{currentGame:{player1:0,player2:0}}}];
+        this.Play = [{score: {currentGame: {player1: 0, player2: 0}}}];
         this.WinnerPlayer = [];
         this.TournamentId = '';
         this.MatcheDet = [];
@@ -66,6 +67,7 @@ class AppState {
         this.TournomentImage = '';
         this.Sponser = [];
         this.SponserImage = '';
+        this.PauseMatch = '';
 
 
     }
@@ -137,8 +139,12 @@ class AppState {
         this.Update = update;
     }
 
+    @action
+    deleteToken() {
+        axios.defaults.headers.common['Authorization'] = '';
+    }
 
-    async getAuthenticate(opt) {
+    async getAuthenticate(opt, remember) {
         let params = {
             email: opt.email,
             password: opt.pass,
@@ -146,10 +152,14 @@ class AppState {
         console.log(params)
         let {data} = await axios.post('/auth', JSON.stringify(params));
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
-        lstore.save('profile', {
-            email: opt.email,
-            password: opt.pass
-        }).then(() => this.setUser(data.user))
+        if (remember === true) {
+            lstore.save('profile', {
+                email: opt.email,
+                password: opt.pass
+            }).then(() => this.setUser(data.user))
+        } else {
+            this.setUser(data.user)
+        }
 
 
         console.log("Authenticate", data.token)
@@ -272,7 +282,7 @@ class AppState {
             }
         });
         console.log("getMatches", data)
-            this.Matches = data.matches;
+        this.Matches = data.matches;
 
 
     }
@@ -347,7 +357,7 @@ class AppState {
         });
         console.log("addPlay", data)
         this.Play = data;
-        this.Service=data.now_serving;
+        this.Service = data.now_serving;
 
 
     }
@@ -358,8 +368,8 @@ class AppState {
             console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
-                    e.response.status.toString(),
-                    JSON.parse(e.request._response).error[0],
+                    'Let op',
+                    'Je kan niet verder terug',
                     [
                         {text: 'OK', onPress: () => console.log('OK Pressed')},
                     ],
@@ -377,7 +387,7 @@ class AppState {
         console.log("deleteLastPlay", data)
         this.Play = [];
         this.Play = data;
-        this.Service=data.now_serving;
+        this.Service = data.now_serving;
 
     }
 
@@ -430,11 +440,12 @@ class AppState {
                 )
             }
         });
-        let arr=[];
-        Object.keys(data).map(key => arr.push({key:key,value:data[key]}));
+        let arr = [];
+        Object.keys(data).map(key => arr.push({key: key, value: data[key]}));
         console.log("MatcheStatistics", arr)
         this.MatcheStatistics = arr;
     }
+
     async getLastScore(matchId) {
         let {data} = await axios.get('/api/matches/' + matchId).catch((e) => {
             console.log(e.response)
@@ -458,11 +469,12 @@ class AppState {
         });
         console.log("getLastScore", data)
         this.Play = data;
-        this.Service=data.now_serving;
+        this.Service = data.now_serving;
     }
+
     async setMatchScore(matchId, score) {
-        let params={
-            score:score
+        let params = {
+            score: score
         }
         console.log(JSON.stringify(params));
         let {data} = await axios.put('/api/matches/' + matchId + '/score', params).catch((e) => {
@@ -489,20 +501,20 @@ class AppState {
         console.log("setMatchScore", data)
         this.Play = [];
         this.Play = data;
-        this.Service=data.now_serving;
+        this.Service = data.now_serving;
     }
 
     async getSponser() {
         let {data} = await axios.get('/api/sponsors/main').catch((e) => {
             console.log(e.response)
-             if (e.response && e.response.status) {
-                 Alert.alert(
-                     e.response.status.toString(),
-                     JSON.parse(e.request._response).error[0],
-                     [
-                         {text: 'OK', onPress: () => console.log('OK Pressed')},
-                     ],
-                 )
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
             } else {
                 Alert.alert(
                     'Trage verbinding',
@@ -516,6 +528,32 @@ class AppState {
         console.log("getSponser", data)
         this.Sponser = data;
         this.SponserImage = data.image;
+    }
+
+    async pauseMatch(matchId) {
+        let {data} = await axios.put('/api/matches/'+matchId+'/pause').catch((e) => {
+            console.log(e.response)
+            if (e.response && e.response.status) {
+                Alert.alert(
+                    e.response.status.toString(),
+                    JSON.parse(e.request._response).error[0],
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            } else {
+                Alert.alert(
+                    'Trage verbinding',
+                    'Probeer het later opnieuw',
+                    [
+                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                    ],
+                )
+            }
+        });
+        console.log("pauseMatch", data)
+        this.PauseMatch = data;
+
     }
 }
 
