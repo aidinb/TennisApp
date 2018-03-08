@@ -10,11 +10,9 @@ import {
     Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
-
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
 import BackImage from "../components/BackImage";
@@ -37,8 +35,10 @@ export default class SetUpWedstrijd extends React.Component {
     componentDidMount() {
         const {navigator, store} = this.props;
         store.setService(1)
-        this.setState({kies1:store.Match.short_game,kies2:store.Match.super_tie_break})
-        store.Court='';
+        this.setState({kies1: store.Match.short_game, kies2: store.Match.super_tie_break})
+        store.Court = '';
+        store.MatcheDet=[];
+        store.getMatcheDet(store.Match.id);
     }
 
 
@@ -48,18 +48,17 @@ export default class SetUpWedstrijd extends React.Component {
         store.MatcheDet = [];
 
         if (store.Court !== '') {
-            store.getMatcheDet(store.Match.id).then(()=>{
-                console.log(store.MatcheDet);
-                if(store.MatcheDet.start_time===null){
-                    store.startMatch(store.Match.id,{
+            store.getMatcheDet(store.Match.id).then(() => {
+                if (store.MatcheDet.start_time === null) {
+                    store.startMatch(store.Match.id, {
                         player1: store.Match.player1,
                         player2: store.Match.player2,
                         server: store.Service,
-                        court_id:store.Court.id,
-                        short_game:this.state.kies1,
-                        super_tie_break:this.state.kies2,
+                        court_id: store.Court.id,
+                        short_game: this.state.kies1,
+                        super_tie_break: this.state.kies2,
                     });
-                    store.Play=[];
+                    store.Play = [];
                     if (store.HasService === false) {
                         navigator.push({
                             screen: 'StartMatch',
@@ -75,10 +74,10 @@ export default class SetUpWedstrijd extends React.Component {
                             passProps: {backTitle: 'Set up'}
                         })
                     }
-                }else{
-                    if(store.MatcheDet.winner===0){
-                        store.Play=store.MatcheDet;
-                        this.Service=store.MatcheDet.now_serving;
+                } else {
+                    if (store.MatcheDet.winner === 0) {
+                        store.Play = store.MatcheDet;
+                        store.setService(store.MatcheDet.now_serving)
                         if (store.HasService === false) {
                             navigator.push({
                                 screen: 'StartMatch',
@@ -94,15 +93,13 @@ export default class SetUpWedstrijd extends React.Component {
                                 passProps: {backTitle: 'Set up'}
                             })
                         }
-                    }else {
+                    } else {
                         alert('Wedstrijd is al gespeeld')
                     }
 
 
                 }
             })
-
-
 
 
         } else {
@@ -120,7 +117,6 @@ export default class SetUpWedstrijd extends React.Component {
         const {navigator, store} = this.props;
         const player1 = store.Match.player1.split('+');
         const player2 = store.Match.player2.split('+');
-        console.log(player1)
 
         return (
             <View style={{flex: 1}}>
@@ -150,7 +146,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 padding: 3,
-                                height:28
+                                height: 28
 
                             }}>
                             <Text
@@ -197,7 +193,7 @@ export default class SetUpWedstrijd extends React.Component {
                                         textAlign: 'center',
                                         flex: 0.15,
                                     }} numberOfLines={1}>{player1[0]}</Text>
-                                {player1.length>1&&<View><Text
+                                {player1.length > 1 && <View><Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
                                         color: UI.COLORS_HEX.gray,
@@ -256,7 +252,7 @@ export default class SetUpWedstrijd extends React.Component {
                                         flex: 0.15,
 
                                     }} numberOfLines={1}>{player2[0]}</Text>
-                                {player2.length>1&&<Text
+                                {player2.length > 1 && <Text
                                     style={{
                                         fontFamily: UI.FONT.regular,
                                         color: UI.COLORS_HEX.gray,
@@ -343,7 +339,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 justifyContent: 'center',
                                 alignItems: 'stretch',
                                 flexDirection: 'row',
-                                height:28
+                                height: 28
 
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
@@ -357,7 +353,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
                                 padding: 5,
-                                height:28
+                                height: 28
 
                             }}>
                                 <Text
@@ -367,7 +363,7 @@ export default class SetUpWedstrijd extends React.Component {
                                         fontSize: 14,
                                         backgroundColor: 'transparent',
                                         textAlign: 'center'
-                                    }} numberOfLines={1}>{store.Match.player1.replace('+',' ')}</Text>
+                                    }} numberOfLines={1}>{store.Match.player1.replace('+', ' ')}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                 this.setState({wie: false})
@@ -380,7 +376,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
                                 padding: 5,
-                                height:28
+                                height: 28
 
                             }}>
                                 <Text
@@ -391,7 +387,7 @@ export default class SetUpWedstrijd extends React.Component {
                                         backgroundColor: 'transparent',
                                         textAlign: 'center',
 
-                                    }} numberOfLines={1}>{store.Match.player2.replace('+',' ')}</Text>
+                                    }} numberOfLines={1}>{store.Match.player2.replace('+', ' ')}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -415,7 +411,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 flexDirection: 'row',
-                                height:28
+                                height: 28
 
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
@@ -428,7 +424,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 alignItems: 'center',
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
-                                height:28
+                                height: 28
 
                             }}>
                                 <Text
@@ -450,7 +446,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 alignItems: 'center',
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
-                                height:28
+                                height: 28
                             }}>
                                 <Text
                                     style={{
@@ -484,7 +480,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 flexDirection: 'row',
-                                height:28
+                                height: 28
 
                             }}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => {
@@ -497,7 +493,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 alignItems: 'center',
                                 borderTopLeftRadius: 6,
                                 borderBottomLeftRadius: 6,
-                                height:28
+                                height: 28
 
                             }}>
                                 <Text
@@ -518,7 +514,7 @@ export default class SetUpWedstrijd extends React.Component {
                                 alignItems: 'center',
                                 borderTopRightRadius: 6,
                                 borderBottomRightRadius: 6,
-                                height:28
+                                height: 28
 
                             }}>
                                 <Text

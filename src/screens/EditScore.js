@@ -11,9 +11,10 @@ import {
 } from 'react-native';
 import UI from '../assets/UI';
 
-let {height, width} = Dimensions.get('window');
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {inject, observer} from 'mobx-react/native';
+
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class EditScore extends Component {
@@ -22,33 +23,32 @@ export default class EditScore extends Component {
     }
 
 
-
     onScorePress = (score) => {
         const {store, navigator} = this.props;
         store.setUpdate(true)
-        if(this.props.type==="currentGame"){
+        if (this.props.type === "currentGame") {
             if (this.props.player === 1) {
                 store.Play.score.currentGame.player1 = score;
             } else {
                 store.Play.score.currentGame.player2 = score;
             }
-        }else if(this.props.type==="currentSet"){
+        } else if (this.props.type === "currentSet") {
             if (this.props.player === 1) {
                 store.Play.score.currentSet.player1 = score;
             } else {
                 store.Play.score.currentSet.player2 = score;
             }
 
-        }else if(this.props.type==="prev1"){
+        } else if (this.props.type === "prev1") {
             if (this.props.player === 1) {
-                store.Play.score.previousSets[1].player1=score;
+                store.Play.score.previousSets[1].player1 = score;
                 this.props.setScoreSets();
             } else {
                 store.Play.score.previousSets[1].player2 = score;
                 this.props.setScoreSets();
 
             }
-        }else{
+        } else {
             if (this.props.player === 1) {
                 store.Play.score.previousSets[0].player1 = score;
                 this.props.setScoreSets();
@@ -59,12 +59,11 @@ export default class EditScore extends Component {
 
             }
         }
-        console.log('+++score+++')
-        console.log(store.Play.score)
+
         if (Platform.OS === 'ios') {
             navigator.dismissLightBox();
 
-        }else{
+        } else {
             navigator.dismissModal();
 
         }
@@ -77,7 +76,14 @@ export default class EditScore extends Component {
 
         return (
 
-            <ScrollView showsVerticalScrollIndicator={false} style={{height:height}} contentContainerStyle={{paddingTop:50,paddingBottom:20,justifyContent: 'center', alignItems: 'center'}}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{
+                height: height, backgroundColor: Platform.OS === 'ios' ? 'transparent' : UI.COLORS_HEX.black
+            }} contentContainerStyle={{
+                paddingTop: 50,
+                paddingBottom: 20,
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
                 {this.props.type === "currentGame" ?
                     <View>
 

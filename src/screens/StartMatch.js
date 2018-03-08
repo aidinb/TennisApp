@@ -16,16 +16,13 @@ import UI from '../assets/UI';
 
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import PersonRow from "../components/PersonRow";
 import Box from "../components/Box";
 import BackImage from "../components/BackImage";
 
 let {height, width} = Dimensions.get('window');
 const endTime = '';
-
 let set1Point1 = '';
 let set1Point2 = '';
-
 let set0Point1 = '';
 let set0Point2 = '';
 
@@ -36,10 +33,6 @@ export default class StartMatch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            set0Point1: '',
-            set0Point2: '',
-            set1Point1: '',
-            set1Point2: '',
             scrollHeight: '',
             timerstart: true,
             timeReset: false,
@@ -83,7 +76,6 @@ export default class StartMatch extends React.Component {
     componentDidMount() {
         set1Point1 = '';
         set1Point2 = '';
-
         set0Point1 = '';
         set0Point2 = '';
 
@@ -102,9 +94,6 @@ export default class StartMatch extends React.Component {
             }
         }
     }
-    getFormatedTime = (t) => {
-        this.endTime = t;
-    };
 
     onPlayPress = (player) => {
         const {navigator, store} = this.props;
@@ -127,7 +116,6 @@ export default class StartMatch extends React.Component {
             shot_type: '',
             second_serve: '',
         }).then(() => {
-            console.log(store.Play)
             store.setService(store.Play.now_serving)
             store.setEndTimeMatch(this.endTime)
             store.setWinnerPlayer(store.Play)
@@ -208,12 +196,26 @@ export default class StartMatch extends React.Component {
                         rightBtnTitle={store.Update === false ? "Stop" : "Update"}
                         onPressRightBtn={() => {
                             if (store.Update === false) {
-                                // navigator.push({
-                                //     screen: 'Statics',
-                                //     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                //     animationType: 'fade',
-                                // })
-                                alert('Stop');
+                                Alert.alert(
+                                    'Let op!',
+                                    'Weet u zeker dat u de wedstrijd wilt stoppen?',
+                                    [
+                                        {
+                                            text: 'Ja', onPress: () => store.pauseMatch(store.Match.id).then(() => {
+                                            let diff = moment.duration(moment(store.PauseMatch.end_time).diff(moment(store.PauseMatch.start_time)));
+                                            let endTime1 = diff._data.hours + ':' + diff._data.minutes + ':' + diff._data.seconds;
+
+                                            navigator.push({
+                                                screen: 'Statics',
+                                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                                animationType: 'fade',
+                                                passProps: {endTime: endTime1}
+                                            })
+                                        })
+                                        },
+                                        {text: 'Annuleren', onPress: () => console.log('OK Pressed')},
+                                    ],
+                                )
 
                             } else {
                                 delete store.Play.score.currentGame.tie_break;
@@ -229,7 +231,6 @@ export default class StartMatch extends React.Component {
                                     delete store.Play.score.previousSets[1].finished;
                                 }
                                 store.setMatchScore(store.Match.id, store.Play.score).then(() => {
-                                    console.log(store.Play)
                                     store.setUpdate(false);
                                     if (store.Play.winner !== 0) {
                                         navigator.push({
@@ -495,7 +496,6 @@ export default class StartMatch extends React.Component {
                                 }}>Partij duur: </Text>
                             <Stopwatch start={this.state.timerstart}
                                        options={options}
-                                       getTime={this.getFormatedTime}
                                        reset={this.state.timeReset}/>
                         </View>
                         <View style={{

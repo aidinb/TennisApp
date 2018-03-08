@@ -32,7 +32,6 @@ export default class Menu extends React.Component {
     componentDidMount() {
         const {navigator, store} = this.props;
         store.getSponser().then(()=>{
-            console.log(store.Sponser)
         });
 
         store.setServices(false);

@@ -236,7 +236,7 @@ export default class MatchResult extends React.Component {
                                 color: UI.COLORS_HEX.white,
                                 fontSize: 32,
                                 marginTop: 15,
-                            }}>{store.WinnerPlayer.winner === 1 ? store.WinnerPlayer.player1.replace('+', ' / ') : store.WinnerPlayer.player2.replace('+', ' / ')}</Text>
+                            }}>{store.WinnerPlayer.winner === 1 ? store.WinnerPlayer.player1.replace('+', ' / ') :  store.WinnerPlayer.player2.replace('+', ' / ')}</Text>
                         <Text
                             style={{
                                 fontFamily: UI.FONT.blackItalic,
@@ -252,7 +252,7 @@ export default class MatchResult extends React.Component {
                                    zIndex: 1
                                }}/>
                         <View style={{marginTop: 40}}>
-                            <CButton title={'Toon GameSetStat'} fontSize={16} width={width - 60}
+                            <CButton title={'Toon GameSetStats'} fontSize={16} width={width - 60}
                                      backgroundColor={UI.COLORS_HEX.blue}
                                      color={UI.COLORS_HEX.white}
                                      onPress={() => {

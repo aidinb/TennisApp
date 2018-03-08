@@ -94,8 +94,7 @@ class AppState {
 
     @action
     setService(name) {
-        console.log('+++service+++')
-        console.log(name)
+
         this.Service = name;
     }
 
@@ -149,7 +148,6 @@ class AppState {
             email: opt.email,
             password: opt.pass,
         };
-        console.log(params)
         let {data} = await axios.post('/auth', JSON.stringify(params));
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.token;
         if (remember === true) {
@@ -162,7 +160,7 @@ class AppState {
         }
 
 
-        console.log("Authenticate", data.token)
+        // console.log("Authenticate", data.token)
         this.Authenticate = data;
     }
 
@@ -187,7 +185,7 @@ class AppState {
                 )
             }
         });
-        console.log("getListSettings", data)
+        // console.log("getListSettings", data)
         this.ListSettings = data;
     }
 
@@ -199,7 +197,6 @@ class AppState {
             shot: opt.shot,
             shot_type: opt.shot_type,
         };
-        console.log(params)
         let {data} = await axios.post('/api/settings', JSON.stringify(params)).catch((e) => {
             if (e.response && e.response.status) {
                 Alert.alert(
@@ -219,20 +216,19 @@ class AppState {
                 )
             }
         });
-        console.log("setSettings", data)
+        // console.log("setSettings", data)
     }
 
 
     async getTournamentByNumber(opt) {
         let {data} = await axios.get('/api/tournaments/find/' + opt.tournament_number);
-        console.log("TournamentByNumber", data)
+        // console.log("TournamentByNumber", data)
         this.TournamentByNumber = data;
 
     }
 
     async getTournamentCategories(opt) {
         let {data} = await axios.get('/api/tournaments/' + opt.tournament_id).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -251,7 +247,7 @@ class AppState {
                 )
             }
         });
-        console.log("TournamentCategories", data)
+        // console.log("TournamentCategories", data)
         this.TournamentCategories = data.categories;
         this.TournamentCourts = data.courts;
         this.TournamentId = data.id;
@@ -262,7 +258,6 @@ class AppState {
 
     async getMatches(catId) {
         let {data} = await axios.get('/api/categories/' + catId).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -281,7 +276,7 @@ class AppState {
                 )
             }
         });
-        console.log("getMatches", data)
+        // console.log("getMatches", data)
         this.Matches = data.matches;
 
 
@@ -297,10 +292,7 @@ class AppState {
             short_game: opt.short_game,
             super_tie_break: opt.super_tie_break,
         };
-        console.log('+++++++++++')
-        console.log(params)
         let {data} = await axios.put('/api/matches/' + matchId + '/start', params).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -319,7 +311,7 @@ class AppState {
                 )
             }
         });
-        console.log("startMatch", data)
+        // console.log("startMatch", data)
 
     }
 
@@ -334,9 +326,7 @@ class AppState {
             shot_type: opt.shot_type,
             second_serve: opt.second_serve,
         };
-        console.log(params)
         let {data} = await axios.post('/api/plays', JSON.stringify(params)).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -355,7 +345,7 @@ class AppState {
                 )
             }
         });
-        console.log("addPlay", data)
+        // console.log("addPlay", data)
         this.Play = data;
         this.Service = data.now_serving;
 
@@ -363,9 +353,7 @@ class AppState {
     }
 
     async deleteLastPlay(matchId) {
-        console.log(matchId)
         let {data} = await axios.delete('/api/matches/' + matchId + '/lastplay').catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     'Let op',
@@ -384,7 +372,7 @@ class AppState {
                 )
             }
         });
-        console.log("deleteLastPlay", data)
+        // console.log("deleteLastPlay", data)
         this.Play = [];
         this.Play = data;
         this.Service = data.now_serving;
@@ -393,7 +381,6 @@ class AppState {
 
     async getMatcheDet(matchId) {
         let {data} = await axios.get('/api/matches/' + matchId).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -412,7 +399,7 @@ class AppState {
                 )
             }
         });
-        console.log("getMatcheDet", data)
+        // console.log("getMatcheDet", data)
         this.MatcheDet = data;
 
 
@@ -421,7 +408,6 @@ class AppState {
 
     async getMatcheStatistics(matchId) {
         let {data} = await axios.get('/api/statistics/match/' + matchId).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -442,13 +428,12 @@ class AppState {
         });
         let arr = [];
         Object.keys(data).map(key => arr.push({key: key, value: data[key]}));
-        console.log("MatcheStatistics", arr)
+        // console.log("MatcheStatistics", arr)
         this.MatcheStatistics = arr;
     }
 
     async getLastScore(matchId) {
         let {data} = await axios.get('/api/matches/' + matchId).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -467,7 +452,7 @@ class AppState {
                 )
             }
         });
-        console.log("getLastScore", data)
+        // console.log("getLastScore", data)
         this.Play = data;
         this.Service = data.now_serving;
     }
@@ -476,9 +461,7 @@ class AppState {
         let params = {
             score: score
         }
-        console.log(JSON.stringify(params));
         let {data} = await axios.put('/api/matches/' + matchId + '/score', params).catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -498,7 +481,7 @@ class AppState {
                 )
             }
         });
-        console.log("setMatchScore", data)
+        // console.log("setMatchScore", data)
         this.Play = [];
         this.Play = data;
         this.Service = data.now_serving;
@@ -506,7 +489,6 @@ class AppState {
 
     async getSponser() {
         let {data} = await axios.get('/api/sponsors/main').catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -525,14 +507,13 @@ class AppState {
                 )
             }
         });
-        console.log("getSponser", data)
+        // console.log("getSponser", data)
         this.Sponser = data;
         this.SponserImage = data.image;
     }
 
     async pauseMatch(matchId) {
         let {data} = await axios.put('/api/matches/'+matchId+'/pause').catch((e) => {
-            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -551,7 +532,7 @@ class AppState {
                 )
             }
         });
-        console.log("pauseMatch", data)
+        // console.log("pauseMatch", data)
         this.PauseMatch = data;
 
     }

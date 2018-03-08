@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import BackImage from "../components/BackImage";
-
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 import CTextInput from '../components/CTextInput';
@@ -26,11 +25,9 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // email: 'rob@socialbrothers.nl',
-            //  pass: 'wachtwoord',
             email: '',
             pass: '',
-            checked: false,
+            checked: true,
             isLoading: false
         };
     }

@@ -3,7 +3,6 @@ import {
     Text,
     View,
     Dimensions,
-    Image,
     KeyboardAvoidingView,
     Alert
 } from 'react-native';
@@ -42,7 +41,6 @@ export default class Tourney extends React.Component {
             }).then(() => {
                 this.setState({isLoading: false})
 
-                console.log(store.TournamentByNumber)
 
                 if (store.TournamentByNumber.id > 0) {
                     navigator.push({
@@ -55,7 +53,6 @@ export default class Tourney extends React.Component {
                 }
             }).catch((e) => {
                 this.setState({isLoading: false})
-                console.log(e.response)
                 if (e.response && e.response.status) {
                     Alert.alert(
                         'Fout',

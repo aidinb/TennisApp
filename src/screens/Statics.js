@@ -2,10 +2,8 @@ import React from 'react';
 import {
     Text,
     View,
-    ScrollView,
     TouchableOpacity,
     Dimensions,
-    Image,
     Alert,
     CameraRoll,
     FlatList,
@@ -15,7 +13,6 @@ import {
 import {inject, observer} from 'mobx-react/native';
 import LinearGradient from 'react-native-linear-gradient';
 import UI from '../assets/UI';
-import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import {captureScreen} from "react-native-view-shot";
 import Loading from '../components/Loading';
@@ -23,17 +20,17 @@ import BackImage from '../components/BackImage';
 
 let {height, width} = Dimensions.get('window');
 
-const stat={
-    aces:'Aces',
-    double_faults:'Dubbele fouten',
-    first_serve:'1e service %',
-    forced_errors:'Forced errors',
-    point_first_serve:'% gewonnen op 1e service',
-    point_second_serve:'% gewonnen op 2e service',
-    unforced_errors:'Unforced errors',
-    winners:'Winners',
-    winner_serve:'Winner serve',
-    break_points:'Breakpunten'
+const stat = {
+    aces: 'Aces',
+    double_faults: 'Dubbele fouten',
+    first_serve: '1e service %',
+    forced_errors: 'Forced errors',
+    point_first_serve: '% gewonnen op 1e service',
+    point_second_serve: '% gewonnen op 2e service',
+    unforced_errors: 'Unforced errors',
+    winners: 'Winners',
+    winner_serve: 'Winner serve',
+    break_points: 'Breakpunten'
 
 
 }
@@ -62,14 +59,15 @@ export default class Statics extends React.Component {
 
     componentDidMount() {
         const {store, navigator} = this.props;
-
-        if (store.Play.score.previousSets.length > 1) {
-            this.setState({set1Point1: store.Play.score.previousSets[1].player1});
-            this.setState({set1Point2: store.Play.score.previousSets[1].player2});
-        }
-        if (store.Play.score.previousSets.length > 0) {
-            this.setState({set0Point1: store.Play.score.previousSets[0].player1});
-            this.setState({set0Point2: store.Play.score.previousSets[0].player2});
+        if (store.Play.score&&store.Play.score.previousSets) {
+            if (store.Play.score.previousSets.length > 1) {
+                this.setState({set1Point1: store.Play.score.previousSets[1].player1});
+                this.setState({set1Point2: store.Play.score.previousSets[1].player2});
+            }
+            if (store.Play.score.previousSets.length > 0) {
+                this.setState({set0Point1: store.Play.score.previousSets[0].player1});
+                this.setState({set0Point2: store.Play.score.previousSets[0].player2});
+            }
         }
         this.setState({isLoading: true})
         store.getMatcheStatistics(store.Match.id).then(() => {
@@ -162,7 +160,7 @@ export default class Statics extends React.Component {
                 <Text style={{
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
-                    fontSize: 17,
+                    fontSize: 15,
                     width: width / 8
                 }}>
                     {item.value.player1}
@@ -181,7 +179,7 @@ export default class Statics extends React.Component {
                     <Text style={{
                         fontFamily: UI.FONT.bold,
                         color: UI.COLORS_HEX.white,
-                        fontSize: 14,
+                        fontSize: 11,
                     }}>
                         {stat[Key]}
                     </Text>
@@ -189,7 +187,7 @@ export default class Statics extends React.Component {
                 <Text style={{
                     fontFamily: UI.FONT.bold,
                     color: UI.COLORS_HEX.white,
-                    fontSize: 17,
+                    fontSize: 15,
                     width: width / 8,
                     textAlign: 'right'
                 }}>
@@ -267,8 +265,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score ?  this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
-                                    }}>{store.Play.score ?  this.state.set0Point1 !== '' ? this.state.set0Point1 : 0 : 0}</Text>
+                                        color: store.Play.score ? this.state.set0Point1 !== '' && this.state.set0Point1 >= 6 && parseInt(this.state.set0Point1) > parseInt(this.state.set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ? this.state.set0Point1 !== '' ? this.state.set0Point1 : 0 : 0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,
@@ -340,8 +338,8 @@ export default class Statics extends React.Component {
                                     <Text style={{
                                         fontSize: 24,
                                         fontFamily: UI.FONT.bold,
-                                        color: store.Play.score ?  this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
-                                    }}>{store.Play.score ?  this.state.set0Point2 !== '' ? this.state.set0Point2 : 0 : 0}</Text>
+                                        color: store.Play.score ? this.state.set0Point2 !== '' && this.state.set0Point2 >= 6 && parseInt(this.state.set0Point2) > parseInt(this.state.set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                    }}>{store.Play.score ? this.state.set0Point2 !== '' ? this.state.set0Point2 : 0 : 0}</Text>
                                 </View>
                                 <View style={{
                                     width: (width - 40) / 8 - 4,

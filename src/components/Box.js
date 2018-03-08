@@ -7,8 +7,8 @@ import {
     Image
 } from 'react-native';
 import UI from '../assets/UI';
-let {height, width} = Dimensions.get('window');
 import LinearGradient from 'react-native-linear-gradient';
+let {height, width} = Dimensions.get('window');
 
 export default class Box extends Component {
     constructor(props) {

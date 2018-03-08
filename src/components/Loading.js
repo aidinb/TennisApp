@@ -6,9 +6,8 @@ import {
     Text
 } from 'react-native';
 
-
-let {height, width} = Dimensions.get('window');
 import UI from '../assets/UI';
+let {height, width} = Dimensions.get('window');
 
 
 export default class Loading extends React.Component {

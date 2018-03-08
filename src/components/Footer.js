@@ -2,11 +2,8 @@ import React, {Component} from 'react';
 import {
     View,
     Dimensions,
-    Text,
-    TouchableOpacity,
     Image
 } from 'react-native';
-import UI from '../assets/UI';
 let {height, width} = Dimensions.get('window');
 
 export default class Footer extends Component {
@@ -26,12 +23,12 @@ export default class Footer extends Component {
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-                <Image source={{uri: this.props.image}}
+                {this.props.image?<Image source={{uri: this.props.image}}
                        style={{
                            width: width,
                            height: width/10,
                            resizeMode: 'contain'
-                       }}/>
+                       }}/>:<View/>}
 
             </View>
 

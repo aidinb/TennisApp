@@ -34,8 +34,6 @@ export default class DamesEnkel extends React.Component {
         store.Matches=[];
         store.getMatches(this.props.catId).then(() => {
             this.setState({isLoading: false})
-            console.log('====matches====')
-            console.log(store.Matches)
         })
     }
 

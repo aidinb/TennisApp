@@ -3,7 +3,6 @@ import {
     View,
     Dimensions,
     Text,
-    TouchableOpacity,
     Image
 } from 'react-native';
 import UI from '../assets/UI';
@@ -28,13 +27,13 @@ export default class PersonRow extends Component {
                 borderBottomWidth: 1,
                 paddingBottom: 10,
             }}>
-                {this.props.url!==undefined &&
+                {this.props.url!==undefined ?
                     <Image source={{uri: this.props.url}}
                            style={{
                                width: 70,
                                height: 70,
                                borderRadius:35
-                           }}/>}
+                           }}/>:<View/>}
                 <Text
                     style={{
                         fontFamily: UI.FONT.regular,

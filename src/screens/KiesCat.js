@@ -4,16 +4,15 @@ import {
     Dimensions,
     Text,
     TouchableOpacity,
-    Image,
-    ScrollView,
     Platform,
     FlatList
 } from 'react-native';
 import UI from '../assets/UI';
 
-let {height, width} = Dimensions.get('window');
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {inject, observer} from 'mobx-react/native';
+
+let {height, width} = Dimensions.get('window');
 
 @inject("store") @observer
 export default class KiesCat extends Component {
@@ -22,7 +21,6 @@ export default class KiesCat extends Component {
     }
 
     renderItem = ({item, index}) => {
-        const {store, navigator} = this.props;
         return (
             <TouchableOpacity activeOpacity={0.8} onPress={() => this.props.onSelectKies(item)}
                               style={{
@@ -56,6 +54,7 @@ export default class KiesCat extends Component {
                 height:height,
                 paddingTop:20,
                 paddingBottom:20,
+                backgroundColor:Platform.OS==='ios'?'transparent':UI.COLORS_HEX.black
             }}>
                     {store.TournamentCourts && <FlatList data={store.TournamentCourts}
                                                          keyExtractor={(item, index) => 'Court_' + item.id}

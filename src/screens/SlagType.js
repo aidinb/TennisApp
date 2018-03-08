@@ -4,7 +4,6 @@ import {
     View,
     ScrollView,
     Dimensions,
-    Image,
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import UI from '../assets/UI';

@@ -1,22 +1,13 @@
 import React from 'react';
 import {
-    Text,
     View,
-    ScrollView,
-    TouchableOpacity,
     Dimensions,
-    Linking,
-    FlatList,
-    Platform,
     Image,
-    TextInput,
     Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import lstore from 'react-native-simple-store';
-
 import UI from '../assets/UI';
-import CButton from '../components/CButton';
 
 let {height, width} = Dimensions.get('window');
 
@@ -26,25 +17,8 @@ export default class LandingPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-
     }
 
-    onNavigatorEvent(event) {
-        const {store, navigator} = this.props;
-        switch (event.id) {
-            case 'willAppear':
-                break;
-            case 'didAppear':
-
-                break;
-            case 'willDisappear':
-                break;
-            case 'didDisappear':
-
-                break;
-        }
-    }
 
     componentDidMount() {
         const {navigator, store} = this.props;
@@ -95,9 +69,13 @@ export default class LandingPage extends React.Component {
 
 
     render() {
-        const {navigator, store} = this.props;
         return (
-            <View style={{alignItems: 'center', justifyContent: 'space-around', flex: 1,backgroundColor:UI.COLORS_HEX.black}}>
+            <View style={{
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                flex: 1,
+                backgroundColor: UI.COLORS_HEX.black
+            }}>
                 <Image source={require('../assets/images/BackImage.png')}
                        style={{
                            position: 'absolute',
@@ -109,8 +87,8 @@ export default class LandingPage extends React.Component {
                        }}/>
 
             </View>
-    )
+        )
 
 
     }
-    }
+}

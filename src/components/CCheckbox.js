@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {
-    View,
     Dimensions,
-    Text,
     TouchableOpacity
 } from 'react-native';
 import UI from '../assets/UI';

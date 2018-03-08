@@ -6,8 +6,8 @@ import {
     Dimensions,
     Platform,
     Image,
-    TouchableOpacity
-
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import UI from '../assets/UI';
@@ -25,10 +25,8 @@ let puntWinner = '';
 let score_type = '';
 let shot = '';
 let shot_type = '';
-
 let set1Point1 = '';
 let set1Point2 = '';
-
 let set0Point1 = '';
 let set0Point2 = '';
 
@@ -43,10 +41,6 @@ export default class Services extends React.Component {
             second_Serve: 0,
             fault: 1,
             set: [],
-            set0Point1: '',
-            set0Point2: '',
-            set1Point1: '',
-            set1Point2: '',
             scrollHeight: '',
             timeReset: false,
 
@@ -69,7 +63,7 @@ export default class Services extends React.Component {
                         set0Point1 = store.Play.score.previousSets[0].player1;
                         set0Point2 = store.Play.score.previousSets[0].player2
                     }
-                }else{
+                } else {
                     set1Point1 = '';
                     set1Point2 = '';
 
@@ -89,10 +83,8 @@ export default class Services extends React.Component {
     componentDidMount() {
         set1Point1 = '';
         set1Point2 = '';
-
         set0Point1 = '';
         set0Point2 = '';
-
     }
 
     setScoreSets = () => {
@@ -109,15 +101,12 @@ export default class Services extends React.Component {
             }
         }
     }
-    getFormatedTime = (t) => {
-        this.endTime = t;
-    }
+
 
     onPlayPress = (serviceType) => {
         const {navigator, store} = this.props;
         store.setUpdate(false)
-        console.log('+++serviceType++');
-        console.log(serviceType)
+
         this.setState({timerstart: true})
         if (store.Play.winner && store.Play.winner !== 0) {
             navigator.push({
@@ -128,10 +117,9 @@ export default class Services extends React.Component {
             })
         } else {
             if (serviceType === 'FAULT' && this.state.second_Serve === 0) {
-                console.log('----11111-----')
+
                 this.setState({fault: 2, second_Serve: 1})
             } else if (this.state.second_Serve === 1) {
-                console.log('----22222-----');
                 store.addPlay({
                     match_id: store.Match.id,
                     player: puntWinner !== '' ? puntWinner : store.Service === 1 ? 2 : 1,
@@ -168,9 +156,6 @@ export default class Services extends React.Component {
                     }
                 })
             } else {
-                console.log('----333333-----')
-
-                console.log(puntWinner)
                 store.addPlay({
                     match_id: store.Match.id,
                     player: puntWinner !== '' ? puntWinner : store.Service,
@@ -185,7 +170,6 @@ export default class Services extends React.Component {
                     score_type = '';
                     shot = '';
                     shot_type = '';
-                    console.log(store.Play)
                     store.setService(store.Play.now_serving)
                     this.setState({fault: 1})
                     if (store.Play.score.previousSets.length > 1) {
@@ -271,17 +255,27 @@ export default class Services extends React.Component {
                         rightBtnTitle={store.Update === false ? "Stop" : "Update"}
                         onPressRightBtn={() => {
                             if (store.Update === false) {
-                                store.pauseMatch(store.Match.id).then(()=>{
-                                    let diff = moment.duration(moment(store.PauseMatch.end_time).diff(moment(store.PauseMatch.start_time)));
-                                    let endTime1 = diff._data.hours + ':' + diff._data.minutes + ':' + diff._data.seconds;
+                                Alert.alert(
+                                    'Let op!',
+                                    'Weet u zeker dat u de wedstrijd wilt stoppen?',
+                                    [
+                                        {
+                                            text: 'Ja', onPress: () => store.pauseMatch(store.Match.id).then(() => {
+                                            let diff = moment.duration(moment(store.PauseMatch.end_time).diff(moment(store.PauseMatch.start_time)));
+                                            let endTime1 = diff._data.hours + ':' + diff._data.minutes + ':' + diff._data.seconds;
 
-                                    navigator.push({
-                                        screen: 'Statics',
-                                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                                        animationType: 'fade',
-                                        passProps:{endTime:endTime1}
-                                    })
-                                })
+                                            navigator.push({
+                                                screen: 'Statics',
+                                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                                animationType: 'fade',
+                                                passProps: {endTime: endTime1}
+                                            })
+                                        })
+                                        },
+                                        {text: 'Annuleren', onPress: () => console.log('OK Pressed')},
+                                    ],
+                                )
+
                             } else {
                                 delete store.Play.score.currentGame.tie_break;
                                 delete store.Play.score.currentGame.finished;
@@ -296,9 +290,9 @@ export default class Services extends React.Component {
                                     delete store.Play.score.previousSets[1].finished;
                                 }
                                 store.setMatchScore(store.Match.id, store.Play.score).then(() => {
-                                    console.log(store.Play)
                                     store.setUpdate(false);
                                     if (store.Play.winner !== 0) {
+                                        store.setWinnerPlayer(store.Play)
                                         navigator.push({
                                             screen: 'MatchResult',
                                             navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
@@ -398,8 +392,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?  set0Point1 !== '' && set0Point1 >= 6 && parseInt(set0Point1) > parseInt(set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white:UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?set0Point1 !== '' ? set0Point1 :  store.Play.score.currentSet.player1 : 0}</Text>
+                                            color: store.Play.score ? set0Point1 !== '' && set0Point1 >= 6 && parseInt(set0Point1) > parseInt(set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set0Point1 !== '' ? set0Point1 : store.Play.score.currentSet.player1 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(1, store.Play.score ? set0Point1 !== '' && set1Point1 !== '' ? "prev0" : set0Point1 !== '' ? "currentSet" : 0 : 0)
@@ -413,8 +407,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?set1Point1 !== '' && set1Point1 >= 6 && parseInt(set1Point1) > parseInt(set1Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?  set1Point1 !== '' ? set1Point1 : set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
+                                            color: store.Play.score ? set1Point1 !== '' && set1Point1 >= 6 && parseInt(set1Point1) > parseInt(set1Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point1 !== '' ? set1Point1 : set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(1, set1Point1 !== '' && set0Point1 !== '' ? store.Play.score && store.Play.score.currentSet.player1 !== '' ? "currentSet" : 0 : 0)
@@ -428,8 +422,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ?  store.Play.winner === 1 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ?  store.Play.score.currentSet.player1 : 0 :  0}</Text>
+                                            color: store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ? store.Play.winner === 1 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -503,8 +497,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?  set0Point2 !== '' && set0Point2 >= 6 && parseInt(set0Point2) > parseInt(set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white:UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?set0Point2 !== '' ? set0Point2 :  store.Play.score.currentSet.player2 : 0}</Text>
+                                            color: store.Play.score ? set0Point2 !== '' && set0Point2 >= 6 && parseInt(set0Point2) > parseInt(set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set0Point2 !== '' ? set0Point2 : store.Play.score.currentSet.player2 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(2, store.Play.score ? set0Point2 !== '' && set1Point2 !== '' ? "prev0" : set0Point2 !== '' ? "currentSet" : 0 : 0)
@@ -518,8 +512,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?set1Point2 !== '' && set1Point2 >= 6 && parseInt(set1Point2) > parseInt(set1Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?  set1Point2 !== '' ? set1Point2 : set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
+                                            color: store.Play.score ? set1Point2 !== '' && set1Point2 >= 6 && parseInt(set1Point2) > parseInt(set1Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point2 !== '' ? set1Point2 : set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(2, set1Point2 !== '' && set0Point2 !== '' ? store.Play.score && store.Play.score.currentSet.player2 !== '' ? "currentSet" : 0 : 0)
@@ -533,8 +527,8 @@ export default class Services extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ?  store.Play.winner === 2 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ?  store.Play.score.currentSet.player2 : 0 :  0}</Text>
+                                            color: store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ? store.Play.winner === 2 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -620,9 +614,6 @@ export default class Services extends React.Component {
                                          animationType: 'fade',
                                          passProps: {
                                              backTitle: 'Undo', puntPress: (player, scoreType, shott, shotType) => {
-                                                 console.log('+++punt player++')
-                                                 console.log(player)
-
                                                  puntWinner = player;
                                                  score_type = scoreType;
                                                  shot = shott;
@@ -708,9 +699,6 @@ export default class Services extends React.Component {
                                          animationType: 'fade',
                                          passProps: {
                                              backTitle: 'Undo', puntPress: (player, scoreType, shott, shotType) => {
-                                                 console.log('+++punt player++')
-                                                 console.log(player)
-
                                                  puntWinner = player;
                                                  score_type = scoreType;
                                                  shot = shott;

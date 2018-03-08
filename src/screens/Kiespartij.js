@@ -7,7 +7,6 @@ import {
     FlatList,
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
-
 import UI from '../assets/UI';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Footer from '../components/Footer';
@@ -37,7 +36,6 @@ export default class Kiespartij extends React.Component {
             tournament_id: store.TournamentByNumber.id
         }).then(() => {
             this.setState({isLoading: false})
-            console.log(store.TournamentCategories)
         })
     }
 
@@ -93,7 +91,7 @@ export default class Kiespartij extends React.Component {
                     marginTop: 10
                 }}>
                     {store.TournamentCategories && <FlatList data={store.TournamentCategories}
-                                                             keyExtractor={(item, index) => 'cat__'+item.id}
+                                                             keyExtractor={(item, index) => 'tour__'+item.id}
                                                              renderItem={this.renderItem}
                     />}
 

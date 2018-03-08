@@ -4,7 +4,6 @@ import {
     Dimensions,
     Text,
     TouchableOpacity,
-    Image
 } from 'react-native';
 import UI from '../assets/UI';
 let {height, width} = Dimensions.get('window');

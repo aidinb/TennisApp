@@ -3,11 +3,9 @@ import {
     Text,
     View,
     Dimensions,
-    Image,
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import BackImage from "../components/BackImage";
-
 import UI from '../assets/UI';
 import CButton from '../components/CButton';
 
