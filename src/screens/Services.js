@@ -262,8 +262,7 @@ export default class Services extends React.Component {
                                         {
                                             text: 'Ja', onPress: () => store.pauseMatch(store.Match.id).then(() => {
                                             let diff = moment.duration(moment(store.PauseMatch.end_time).diff(moment(store.PauseMatch.start_time)));
-                                            let endTime1 = diff._data.hours + ':' + diff._data.minutes + ':' + diff._data.seconds;
-
+                                            let endTime1 = moment.utc(diff.as('milliseconds')).format('HH:mm:ss')
                                             navigator.push({
                                                 screen: 'Statics',
                                                 navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},

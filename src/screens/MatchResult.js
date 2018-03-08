@@ -41,8 +41,7 @@ export default class MatchResult extends React.Component {
         }
 
         let diff = moment.duration(moment(store.Play.end_time).diff(moment(store.Play.start_time)));
-         this.setState({endTime: diff._data.hours + ':' + diff._data.minutes + ':' + diff._data.seconds})
-
+         this.setState({endTime: moment.utc(diff.as('milliseconds')).format('HH:mm:ss')})
     }
 
     render() {
