@@ -160,7 +160,7 @@ class AppState {
         }
 
 
-        console.log("Authenticate", data.token)
+        // console.log("Authenticate", data.token)
         this.Authenticate = data;
     }
 

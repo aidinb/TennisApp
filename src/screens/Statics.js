@@ -8,13 +8,14 @@ import {
     CameraRoll,
     FlatList,
     PermissionsAndroid,
-    Platform
+    Platform,
+    ScrollView
 } from 'react-native';
 import {inject, observer} from 'mobx-react/native';
 import LinearGradient from 'react-native-linear-gradient';
 import UI from '../assets/UI';
 import Navbar from '../components/Navbar';
-import {captureScreen} from "react-native-view-shot";
+import {captureScreen, captureRef} from "react-native-view-shot";
 import Loading from '../components/Loading';
 import BackImage from '../components/BackImage';
 
@@ -59,7 +60,7 @@ export default class Statics extends React.Component {
 
     componentDidMount() {
         const {store, navigator} = this.props;
-        if (store.Play.score&&store.Play.score.previousSets) {
+        if (store.Play.score && store.Play.score.previousSets) {
             if (store.Play.score.previousSets.length > 1) {
                 this.setState({set1Point1: store.Play.score.previousSets[1].player1});
                 this.setState({set1Point2: store.Play.score.previousSets[1].player2});
@@ -82,7 +83,7 @@ export default class Statics extends React.Component {
     }
 
     snapshot = () => {
-        captureScreen(this.state.value).then(
+        captureRef(this.full, this.state.value).then(
             res => {
                 this.setState({isLoading: true})
                 CameraRoll.saveToCameraRoll(res, 'photo').then(() => {
@@ -201,8 +202,6 @@ export default class Statics extends React.Component {
         const {navigator, store} = this.props;
         return (
             <View style={{flex: 1}}>
-                <BackImage/>
-
 
                 <Navbar title={'Statistieken'} rightBtnColor={UI.COLORS_HEX.orange}
                         rightBtnTitle={'Deel'}
@@ -226,8 +225,11 @@ export default class Statics extends React.Component {
                         }}/>
 
 
-                <View
-                    style={{width: width, padding: 15, alignItems: 'center', paddingTop: 10, flex: 1}}>
+                <ScrollView
+                    style={{width: width, padding: 15, paddingTop: 10, flex: 1, backgroundColor: UI.COLORS_HEX.black}}
+                    contentContainerStyle={{alignItems: 'center'}}
+                    ref={ref => this.full = ref}>
+                    <BackImage/>
                     <View>
                         <View style={{
                             width: width - 30,
@@ -512,7 +514,7 @@ export default class Statics extends React.Component {
                     />}
 
 
-                </View>
+                </ScrollView>
 
                 {this.state.isLoading && <Loading/>}
 
