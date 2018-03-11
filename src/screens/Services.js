@@ -122,7 +122,7 @@ export default class Services extends React.Component {
             } else if (this.state.second_Serve === 1) {
                 store.addPlay({
                     match_id: store.Match.id,
-                    player: puntWinner !== '' ? puntWinner : store.Service === 1 ? 2 : 1,
+                    player: puntWinner !== '' ? puntWinner : serviceType === 'FAULT'?store.Service === 1 ? 2 : 1:store.Service,
                     service: serviceType,
                     score_type: score_type !== '' ? score_type : '',
                     shot: shot !== '' ? shot : '',
