@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "834220615738",
+    "firebase_url": "https://gamesetstatsnl.firebaseio.com",
+    "project_id": "gamesetstatsnl",
+    "storage_bucket": "gamesetstatsnl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834220615738:android:552985bab72ab2e8",
+        "android_client_info": {
+          "package_name": "nl.gamesetstats.GameSetStats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834220615738-3qstvesf99to8l5o462vkt5j9f1sp1m9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnQd_u2MJBZRVXkseST_KlS7k6qEL5WuM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

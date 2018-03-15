@@ -58,7 +58,13 @@ class AppState {
         this.Category = [];
         this.Match = [];
         this.EndTimeMatch = '';
-        this.Play = [{score: {currentGame: {player1: 0, player2: 0}}}];
+        this.Play = {
+            score: {
+                currentGame: {player1: 0, player2: 0},
+                currentSet: {player1: 0, player2: 0},
+                previousSets: []
+            }
+        };
         this.WinnerPlayer = [];
         this.TournamentId = '';
         this.MatcheDet = [];
@@ -311,7 +317,7 @@ class AppState {
                 )
             }
         });
-        // console.log("startMatch", data)
+        console.log("startMatch", data)
 
     }
 
@@ -345,7 +351,7 @@ class AppState {
                 )
             }
         });
-        // console.log("addPlay", data)
+        console.log("addPlay", data)
         this.Play = data;
         this.Service = data.now_serving;
 
@@ -399,7 +405,7 @@ class AppState {
                 )
             }
         });
-        // console.log("getMatcheDet", data)
+        console.log("getMatcheDet", data)
         this.MatcheDet = data;
 
 
@@ -513,7 +519,7 @@ class AppState {
     }
 
     async pauseMatch(matchId) {
-        let {data} = await axios.put('/api/matches/'+matchId+'/pause').catch((e) => {
+        let {data} = await axios.put('/api/matches/' + matchId + '/pause').catch((e) => {
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),

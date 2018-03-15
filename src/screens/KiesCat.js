@@ -54,7 +54,8 @@ export default class KiesCat extends Component {
                 height:height,
                 paddingTop:20,
                 paddingBottom:20,
-                backgroundColor:Platform.OS==='ios'?'transparent':UI.COLORS_HEX.black
+                backgroundColor:Platform.OS==='ios'?'transparent':UI.COLORS_HEX.black,
+                flex:1
             }}>
                     {store.TournamentCourts && <FlatList data={store.TournamentCourts}
                                                          keyExtractor={(item, index) => 'Court_' + item.id}

@@ -89,7 +89,8 @@ export default class Services extends React.Component {
 
     setScoreSets = () => {
         const {navigator, store} = this.props;
-
+        console.log('++setScoreSets++')
+        console.log(store.Play.score)
         if (store.Play.score) {
             if (store.Play.score.previousSets.length > 1) {
                 set1Point1 = store.Play.score.previousSets[1].player1;
@@ -105,95 +106,218 @@ export default class Services extends React.Component {
 
     onPlayPress = (serviceType) => {
         const {navigator, store} = this.props;
-        store.setUpdate(false)
+        if (store.Update === true) {
+            Alert.alert(
+                'Let op!',
+                'Wilt uw de wijzigingen in de stand doorvoeren?',
+                [
+                    {
+                        text: 'OK', onPress: () => {
+                        store.setUpdate(false)
+                        this.setState({timerstart: true})
+                        if (store.Play.winner && store.Play.winner !== 0) {
+                            navigator.push({
+                                screen: 'MatchResult',
+                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                animationType: 'fade',
+                                passProps: {backTitle: 'Terug'}
+                            })
+                        } else {
+                            if (serviceType === 'FAULT' && this.state.second_Serve === 0) {
 
-        this.setState({timerstart: true})
-        if (store.Play.winner && store.Play.winner !== 0) {
-            navigator.push({
-                screen: 'MatchResult',
-                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                animationType: 'fade',
-                passProps: {backTitle: 'Terug'}
-            })
+                                this.setState({fault: 2, second_Serve: 1})
+                            } else if (this.state.second_Serve === 1) {
+                                store.addPlay({
+                                    match_id: store.Match.id,
+                                    player: puntWinner !== '' ? puntWinner : serviceType === 'FAULT' ? store.Service === 1 ? 2 : 1 : store.Service,
+                                    service: serviceType,
+                                    score_type: score_type !== '' ? score_type : '',
+                                    shot: shot !== '' ? shot : '',
+                                    shot_type: shot_type !== '' ? shot_type : '',
+                                    second_serve: 1,
+                                }).then(() => {
+                                    this.setState({second_Serve: 0, fault: 1});
+                                    puntWinner = '';
+                                    score_type = '';
+                                    shot = '';
+                                    shot_type = '';
+                                    store.setService(store.Play.now_serving)
+                                    if (store.Play.score.previousSets.length > 0) {
+
+                                        if (store.Play.score.previousSets.length > 1) {
+                                            set1Point1 = store.Play.score.previousSets[1].player1;
+                                            set1Point2 = store.Play.score.previousSets[1].player2;
+                                        }
+                                        if (store.Play.score.previousSets.length > 0) {
+                                            set0Point1 = store.Play.score.previousSets[0].player1;
+                                            set0Point2 = store.Play.score.previousSets[0].player2;
+                                        }
+                                    }else{
+                                        store.Play.score.previousSets = [];
+                                        set1Point1 = '';
+                                        set1Point2 = '';
+                                        set0Point1 = '';
+                                        set0Point2 = '';
+                                    }
+                                    if (store.Play.winner !== 0) {
+                                        store.setEndTimeMatch(this.endTime)
+                                        store.setWinnerPlayer(store.Play)
+                                        navigator.push({
+                                            screen: 'MatchResult',
+                                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                            animationType: 'fade',
+                                            passProps: {backTitle: 'Terug', play: store.Play,}
+                                        })
+                                    }
+                                })
+                            } else {
+                                store.addPlay({
+                                    match_id: store.Match.id,
+                                    player: puntWinner !== '' ? puntWinner : store.Service,
+                                    service: serviceType,
+                                    score_type: score_type !== '' ? score_type : '',
+                                    shot: shot !== '' ? shot : '',
+                                    shot_type: shot_type !== '' ? shot_type : '',
+                                    second_serve: serviceType === 'FAULT' ? 1 : '',
+                                }).then(() => {
+                                    this.setState({second_Serve: 0})
+                                    puntWinner = '';
+                                    score_type = '';
+                                    shot = '';
+                                    shot_type = '';
+                                    store.setService(store.Play.now_serving)
+                                    this.setState({fault: 1})
+                                    if (store.Play.score.previousSets.length > 0) {
+                                        if (store.Play.score.previousSets.length > 1) {
+                                            set1Point1 = store.Play.score.previousSets[1].player1;
+                                            set1Point2 = store.Play.score.previousSets[1].player2;
+                                        }
+                                        if (store.Play.score.previousSets.length > 0) {
+                                            set0Point1 = store.Play.score.previousSets[0].player1;
+                                            set0Point2 = store.Play.score.previousSets[0].player2;
+                                        }
+                                    } else {
+                                        console.log('yoooo')
+                                        console.log(store.Play)
+                                        store.Play.score.previousSets = [];
+                                        set1Point1 = '';
+                                        set1Point2 = '';
+                                        set0Point1 = '';
+                                        set0Point2 = '';
+                                    }
+                                    store.setEndTimeMatch(this.endTime)
+                                    store.setWinnerPlayer(store.Play)
+
+                                    if (store.Play.winner !== 0) {
+                                        navigator.push({
+                                            screen: 'MatchResult',
+                                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                            animationType: 'fade',
+                                            passProps: {backTitle: 'Terug'}
+                                        })
+                                    }
+
+
+                                })
+                            }
+                        }
+                    }
+                    },
+                    {text: 'Cancel', onPress: () => console.log('OK Pressed')},
+                ],
+            )
+
+
         } else {
-            if (serviceType === 'FAULT' && this.state.second_Serve === 0) {
 
-                this.setState({fault: 2, second_Serve: 1})
-            } else if (this.state.second_Serve === 1) {
-                store.addPlay({
-                    match_id: store.Match.id,
-                    player: puntWinner !== '' ? puntWinner : serviceType === 'FAULT'?store.Service === 1 ? 2 : 1:store.Service,
-                    service: serviceType,
-                    score_type: score_type !== '' ? score_type : '',
-                    shot: shot !== '' ? shot : '',
-                    shot_type: shot_type !== '' ? shot_type : '',
-                    second_serve: 1,
-                }).then(() => {
-                    this.setState({second_Serve: 0, fault: 1});
-                    puntWinner = '';
-                    score_type = '';
-                    shot = '';
-                    shot_type = '';
-                    store.setService(store.Play.now_serving)
-                    if (store.Play.score.previousSets.length > 1) {
-                        set1Point1 = store.Play.score.previousSets[1].player1;
-                        set1Point2 = store.Play.score.previousSets[1].player2;
-                    }
-                    if (store.Play.score.previousSets.length > 0) {
-                        set0Point1 = store.Play.score.previousSets[0].player1;
-                        set0Point2 = store.Play.score.previousSets[0].player2;
-                    }
-
-                    if (store.Play.winner !== 0) {
-                        store.setEndTimeMatch(this.endTime)
-                        store.setWinnerPlayer(store.Play)
-                        navigator.push({
-                            screen: 'MatchResult',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'Terug', play: store.Play,}
-                        })
-                    }
+            this.setState({timerstart: true})
+            if (store.Play.winner && store.Play.winner !== 0) {
+                navigator.push({
+                    screen: 'MatchResult',
+                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                    animationType: 'fade',
+                    passProps: {backTitle: 'Terug'}
                 })
             } else {
-                store.addPlay({
-                    match_id: store.Match.id,
-                    player: puntWinner !== '' ? puntWinner : store.Service,
-                    service: serviceType,
-                    score_type: score_type !== '' ? score_type : '',
-                    shot: shot !== '' ? shot : '',
-                    shot_type: shot_type !== '' ? shot_type : '',
-                    second_serve: serviceType === 'FAULT' ? 1 : '',
-                }).then(() => {
-                    this.setState({second_Serve: 0})
-                    puntWinner = '';
-                    score_type = '';
-                    shot = '';
-                    shot_type = '';
-                    store.setService(store.Play.now_serving)
-                    this.setState({fault: 1})
-                    if (store.Play.score.previousSets.length > 1) {
-                        set1Point1 = store.Play.score.previousSets[1].player1;
-                        set1Point2 = store.Play.score.previousSets[1].player2;
-                    }
-                    if (store.Play.score.previousSets.length > 0) {
-                        set0Point1 = store.Play.score.previousSets[0].player1;
-                        set0Point2 = store.Play.score.previousSets[0].player2;
-                    }
-                    store.setEndTimeMatch(this.endTime)
-                    store.setWinnerPlayer(store.Play)
+                if (serviceType === 'FAULT' && this.state.second_Serve === 0) {
 
-                    if (store.Play.winner !== 0) {
-                        navigator.push({
-                            screen: 'MatchResult',
-                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                            animationType: 'fade',
-                            passProps: {backTitle: 'Terug'}
-                        })
-                    }
+                    this.setState({fault: 2, second_Serve: 1})
+                } else if (this.state.second_Serve === 1) {
+                    store.addPlay({
+                        match_id: store.Match.id,
+                        player: puntWinner !== '' ? puntWinner : serviceType === 'FAULT' ? store.Service === 1 ? 2 : 1 : store.Service,
+                        service: serviceType,
+                        score_type: score_type !== '' ? score_type : '',
+                        shot: shot !== '' ? shot : '',
+                        shot_type: shot_type !== '' ? shot_type : '',
+                        second_serve: 1,
+                    }).then(() => {
+                        this.setState({second_Serve: 0, fault: 1});
+                        puntWinner = '';
+                        score_type = '';
+                        shot = '';
+                        shot_type = '';
+                        store.setService(store.Play.now_serving)
+                        if (store.Play.score.previousSets.length > 1) {
+                            set1Point1 = store.Play.score.previousSets[1].player1;
+                            set1Point2 = store.Play.score.previousSets[1].player2;
+                        }
+                        if (store.Play.score.previousSets.length > 0) {
+                            set0Point1 = store.Play.score.previousSets[0].player1;
+                            set0Point2 = store.Play.score.previousSets[0].player2;
+                        }
+
+                        if (store.Play.winner !== 0) {
+                            store.setEndTimeMatch(this.endTime)
+                            store.setWinnerPlayer(store.Play)
+                            navigator.push({
+                                screen: 'MatchResult',
+                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                animationType: 'fade',
+                                passProps: {backTitle: 'Terug', play: store.Play,}
+                            })
+                        }
+                    })
+                } else {
+                    store.addPlay({
+                        match_id: store.Match.id,
+                        player: puntWinner !== '' ? puntWinner : store.Service,
+                        service: serviceType,
+                        score_type: score_type !== '' ? score_type : '',
+                        shot: shot !== '' ? shot : '',
+                        shot_type: shot_type !== '' ? shot_type : '',
+                        second_serve: serviceType === 'FAULT' ? 1 : '',
+                    }).then(() => {
+                        this.setState({second_Serve: 0})
+                        puntWinner = '';
+                        score_type = '';
+                        shot = '';
+                        shot_type = '';
+                        store.setService(store.Play.now_serving)
+                        this.setState({fault: 1})
+                        if (store.Play.score.previousSets.length > 1) {
+                            set1Point1 = store.Play.score.previousSets[1].player1;
+                            set1Point2 = store.Play.score.previousSets[1].player2;
+                        }
+                        if (store.Play.score.previousSets.length > 0) {
+                            set0Point1 = store.Play.score.previousSets[0].player1;
+                            set0Point2 = store.Play.score.previousSets[0].player2;
+                        }
+                        store.setEndTimeMatch(this.endTime)
+                        store.setWinnerPlayer(store.Play)
+
+                        if (store.Play.winner !== 0) {
+                            navigator.push({
+                                screen: 'MatchResult',
+                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                animationType: 'fade',
+                                passProps: {backTitle: 'Terug'}
+                            })
+                        }
 
 
-                })
+                    })
+                }
             }
         }
     }
@@ -205,9 +329,8 @@ export default class Services extends React.Component {
 
     onScorePress = (player, type) => {
         const {navigator, store} = this.props;
+        console.log(type)
         if (type === 0) {
-            alert('Niet toegestaan om te wijzigen')
-        } else if (type === 'prev1' || type === 'prev0') {
             alert('Niet toegestaan om te wijzigen')
         }
         else {
@@ -237,13 +360,28 @@ export default class Services extends React.Component {
         const {navigator, store} = this.props;
 
         if (store.Play.score) {
-            if (store.Play.score.previousSets.length > 1) {
-                set1Point1 = store.Play.score.previousSets[1].player1;
-                set1Point2 = store.Play.score.previousSets[1].player2;
-            }
             if (store.Play.score.previousSets.length > 0) {
-                set0Point1 = store.Play.score.previousSets[0].player1;
-                set0Point2 = store.Play.score.previousSets[0].player2;
+                if (store.Play.score.previousSets.length > 1) {
+                    set1Point1 = store.Play.score.previousSets[1].player1;
+                    set1Point2 = store.Play.score.previousSets[1].player2;
+                }else{
+                    set1Point1 = '';
+                    set1Point2 = '';
+                }
+                if (store.Play.score.previousSets.length > 0) {
+                    set0Point1 = store.Play.score.previousSets[0].player1;
+                    set0Point2 = store.Play.score.previousSets[0].player2;
+                }else{
+                    set0Point1 = '';
+                    set0Point2 = '';
+                }
+            } else {
+                console.log('boooo')
+                console.log(store.Play)
+                set1Point1 = '';
+                set1Point2 = '';
+                set0Point1 = '';
+                set0Point2 = '';
             }
         }
         return (
@@ -379,7 +517,7 @@ export default class Services extends React.Component {
                                         }}>{store.Play.score && store.Play.score.currentGame.player1 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player1 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player1 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8}
-                                                      onPress={() => this.onScorePress(1, store.Play.score ? set1Point1 !== '' ? "prev1" : set0Point1 !== '' ? "prev0" : store.Play.score.currentSet.player1 ? "currentSet" : "currentSet" : 0)}
+                                                      onPress={() => this.onScorePress(1, store.Play.score ? set0Point1 !== '' ? "prev0" : store.Play.score.currentSet.player1 ? "currentSet" : "currentSet" : 0)}
                                                       style={{
                                                           width: (width - 40) / 8 - 4,
                                                           backgroundColor: UI.COLORS_HEX.gray,
@@ -395,7 +533,7 @@ export default class Services extends React.Component {
                                         }}>{store.Play.score ? set0Point1 !== '' ? set0Point1 : store.Play.score.currentSet.player1 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                        this.onScorePress(1, store.Play.score ? set0Point1 !== '' && set1Point1 !== '' ? "prev0" : set0Point1 !== '' ? "currentSet" : 0 : 0)
+                                        this.onScorePress(1, store.Play.score ? set1Point1 !== '' ? "prev1" : set0Point1 !== '' ? "currentSet" : 0 : 0)
                                     }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
@@ -466,7 +604,7 @@ export default class Services extends React.Component {
 
                                 }}>
                                     <TouchableOpacity activeOpacity={0.8}
-                                                      onPress={() => this.onScorePress(2, store.Play.score ? "currentGame" : 0)}
+                                                      onPress={() => this.onScorePress(2, "currentGame")}
                                                       style={{
                                                           width: (width - 40) / 8 - 4,
                                                           backgroundColor: UI.COLORS_HEX.gray,
@@ -484,7 +622,7 @@ export default class Services extends React.Component {
                                         }}>{store.Play.score && store.Play.score.currentGame.player2 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player2 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player2 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8}
-                                                      onPress={() => this.onScorePress(2, store.Play.score ? set1Point2 !== '' ? "prev1" : set0Point2 !== '' ? "prev0" : store.Play.score.currentSet.player2 ? "currentSet" : "currentSet" : 0)}
+                                                      onPress={() => this.onScorePress(2, store.Play.score ? set0Point2 !== '' ? "prev0" : store.Play.score.currentSet.player2 ? "currentSet" : "currentSet" : 0)}
                                                       style={{
                                                           width: (width - 40) / 8 - 4,
                                                           backgroundColor: UI.COLORS_HEX.gray,
@@ -500,7 +638,7 @@ export default class Services extends React.Component {
                                         }}>{store.Play.score ? set0Point2 !== '' ? set0Point2 : store.Play.score.currentSet.player2 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                        this.onScorePress(2, store.Play.score ? set0Point2 !== '' && set1Point2 !== '' ? "prev0" : set0Point2 !== '' ? "currentSet" : 0 : 0)
+                                        this.onScorePress(2, set1Point2 !== '' ? "prev1" : set0Point2 !== '' ? "currentSet" : 0)
                                     }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
@@ -515,7 +653,7 @@ export default class Services extends React.Component {
                                         }}>{store.Play.score ? set1Point2 !== '' ? set1Point2 : set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                        this.onScorePress(2, set1Point2 !== '' && set0Point2 !== '' ? store.Play.score && store.Play.score.currentSet.player2 !== '' ? "currentSet" : 0 : 0)
+                                        this.onScorePress(2, set1Point2 !== '' && set0Point2 !== '' ? "currentSet" : 0)
                                     }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',

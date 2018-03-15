@@ -23,6 +23,7 @@ export default class EditScore extends Component {
     }
 
 
+
     onScorePress = (score) => {
         const {store, navigator} = this.props;
         store.setUpdate(true)
@@ -40,23 +41,77 @@ export default class EditScore extends Component {
             }
 
         } else if (this.props.type === "prev1") {
-            if (this.props.player === 1) {
-                store.Play.score.previousSets[1].player1 = score;
-                this.props.setScoreSets();
-            } else {
-                store.Play.score.previousSets[1].player2 = score;
-                this.props.setScoreSets();
+            if (store.Play.score.previousSets[1]) {
 
+                if (this.props.player === 1) {
+                    store.Play.score.previousSets[1].player1 = score;
+                    this.props.setScoreSets();
+                } else {
+                    store.Play.score.previousSets[1].player2 = score;
+                    this.props.setScoreSets();
+                }
+            } else {
+                if (this.props.player === 1) {
+                    if (store.Play.score.previousSets[1] && parseInt(store.Play.score.previousSets[1].player2) !== 0) {
+                        store.Play.score.previousSets.push({...store.Play.score.previousSets, player1: score});
+                    } else {
+                        store.Play.score.previousSets.push({
+                            ...store.Play.score.previousSets,
+                            player1: score,
+                            player2: ''
+                        });
+                    }
+                    this.props.setScoreSets();
+                } else {
+                    if (store.Play.score.previousSets[1].player2 && parseInt(store.Play.score.previousSets[1].player2) !== 0) {
+                        store.Play.score.previousSets.push({...store.Play.score.previousSets, player2: score});
+                    } else {
+                        store.Play.score.previousSets.push({
+                            ...store.Play.score.previousSets,
+                            player2: score,
+                            player1: ''
+                        });
+                    }
+                    this.props.setScoreSets();
+
+                }
             }
         } else {
-            if (this.props.player === 1) {
-                store.Play.score.previousSets[0].player1 = score;
-                this.props.setScoreSets();
+            if (store.Play.score.previousSets[0]) {
+                if (this.props.player === 1) {
+                    store.Play.score.previousSets[0].player1 = score;
+                    this.props.setScoreSets();
 
+                } else {
+                    store.Play.score.previousSets[0].player2 = score;
+                    this.props.setScoreSets();
+
+                }
             } else {
-                store.Play.score.previousSets[0].player2 = score;
-                this.props.setScoreSets();
+                if (this.props.player === 1) {
+                    if (store.Play.score.previousSets[0] && parseInt(store.Play.score.previousSets[0].player2) !== 0) {
+                        store.Play.score.previousSets.push({...store.Play.score.previousSets, player1: score});
+                    } else {
+                        store.Play.score.previousSets.push({
+                            ...store.Play.score.previousSets,
+                            player1: score,
+                            player2: ''
+                        });
+                    }
+                    this.props.setScoreSets();
+                } else {
+                    if (store.Play.score.previousSets[0].player2 && parseInt(store.Play.score.previousSets[0].player2) !== 0) {
+                        store.Play.score.previousSets.push({...store.Play.score.previousSets, player2: score});
+                    } else {
+                        store.Play.score.previousSets.push({
+                            ...store.Play.score.previousSets,
+                            player2: score,
+                            player1: ''
+                        });
+                    }
+                    this.props.setScoreSets();
 
+                }
             }
         }
 

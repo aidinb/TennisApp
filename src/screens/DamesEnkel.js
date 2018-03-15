@@ -31,7 +31,7 @@ export default class DamesEnkel extends React.Component {
     componentDidMount() {
         const {store, navigator} = this.props;
         this.setState({isLoading: true})
-        store.Matches=[];
+        store.Matches = [];
         store.getMatches(this.props.catId).then(() => {
             this.setState({isLoading: false})
         })
@@ -47,7 +47,7 @@ export default class DamesEnkel extends React.Component {
                     screen: 'SetUpWedstrijd',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
-                    passProps: {backTitle: 'kies partij',category:item.subcategory}
+                    passProps: {backTitle: 'kies partij', category: item.subcategory}
                 })
             }} style={{
                 width: width,
@@ -63,12 +63,13 @@ export default class DamesEnkel extends React.Component {
                 paddingRight: 10
             }}>
                 <Text
-                    style={[UI.regularWhiteText25,{
+                    style={[UI.regularWhiteText25, {
                         fontSize: 17,
                         width: width - 55
-                    }]}>{item.subcategory + ' ' + item.player1.replace('+',' / ') + ' vs ' + item.player2.replace('+',' / ')}</Text>
+                    }]}>{item.subcategory + ' ' + item.player1.replace('+', ' / ') + ' vs ' + item.player2.replace('+', ' / ')}</Text>
                 <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
             </TouchableOpacity>
+
         )
     };
 
@@ -82,14 +83,14 @@ export default class DamesEnkel extends React.Component {
                         onPressLeftBtn={() => navigator.pop()}/>
 
                 <PersonRow title={store.TournamentByNumber.name} url={store.TournomentImage}/>
+                <View style={{flex:1}}>
+                    {store.Matches && <FlatList data={store.Matches}
+                                                keyExtractor={(item, index) => 'Match' + item.id}
+                                                renderItem={this.renderItem}
+                                                contentContainerStyle={{paddingBottom: width/2}}
+                    />}
 
-                {store.Matches && <FlatList data={store.Matches}
-                                            keyExtractor={(item, index) => 'Match' + item.id}
-                                            renderItem={this.renderItem}
-                                            contentContainerStyle={{paddingBottom: 40}}
-                />}
-
-
+                </View>
                 <Footer image={store.SponserImage}/>
                 {this.state.isLoading && <Loading/>}
             </View>

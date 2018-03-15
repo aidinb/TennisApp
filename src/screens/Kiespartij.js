@@ -88,11 +88,15 @@ export default class Kiespartij extends React.Component {
                     borderColor: UI.COLORS_HEX.gray,
                     borderTopWidth: 1,
                     borderBottomWidth: 1,
-                    marginTop: 10
+                    marginTop: 10,
+                    flex:1
                 }}>
                     {store.TournamentCategories && <FlatList data={store.TournamentCategories}
                                                              keyExtractor={(item, index) => 'tour__'+item.id}
                                                              renderItem={this.renderItem}
+                                                             contentContainerStyle={{paddingBottom:width/10}}
+
+
                     />}
 
                 </View>

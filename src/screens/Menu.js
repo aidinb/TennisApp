@@ -13,6 +13,7 @@ import Navbar from '../components/Navbar';
 import PersonRow from "../components/PersonRow";
 import BackImage from "../components/BackImage";
 import lstore from 'react-native-simple-store';
+import firebase from 'react-native-firebase';
 
 let {height, width} = Dimensions.get('window');
 
@@ -31,11 +32,13 @@ export default class Menu extends React.Component {
 
     componentDidMount() {
         const {navigator, store} = this.props;
-        store.getSponser().then(()=>{
-        });
+        // let l = firebase.fabric.crashlytics();
+        // l.crash();
+
+        store.getSponser();
 
         store.setServices(false);
-        this.setState({isLoading:true});
+        this.setState({isLoading: true});
         store.getListSettings().then(() => {
             if (store.ListSettings.service && store.ListSettings.service === "1") {
                 store.setHasService(true)
@@ -58,7 +61,7 @@ export default class Menu extends React.Component {
                 store.setHasStrokeType(false)
             }
 
-            this.setState({isLoading:false});
+            this.setState({isLoading: false});
 
         })
 
@@ -75,13 +78,14 @@ export default class Menu extends React.Component {
                     lstore.delete("profile");
                     store.deleteToken();
                     navigator.push({
-                    screen: 'Login',
-                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                    animationType: 'fade',
-                    passProps:{backTitle:'Registration'}
-                })}}/>
+                        screen: 'Login',
+                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                        animationType: 'fade',
+                        passProps: {backTitle: 'Registration'}
+                    })
+                }}/>
 
-               <PersonRow title={store.User.name}/>
+                <PersonRow title={store.User.name}/>
 
                 <TouchableOpacity onPress={() => {
                     store.setServices(true)
@@ -89,7 +93,7 @@ export default class Menu extends React.Component {
                         screen: 'Setting',
                         navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                         animationType: 'fade',
-                        passProps:{backTitle:'Home'}
+                        passProps: {backTitle: 'Home'}
                     })
                 }} activeOpacity={0.7} style={{
                     width: width,
@@ -98,7 +102,7 @@ export default class Menu extends React.Component {
                     justifyContent: 'space-between'
                 }}>
                     <Text
-                        style={[UI.regularWhiteText25,{
+                        style={[UI.regularWhiteText25, {
                             fontSize: 17,
                         }]}>Stap 1: Statistieken instellingen</Text>
                     <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
@@ -108,7 +112,7 @@ export default class Menu extends React.Component {
                     screen: 'Tourney',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
-                    passProps:{backTitle:'Home'}
+                    passProps: {backTitle: 'Home'}
 
                 })} style={{
                     width: width,
@@ -118,12 +122,12 @@ export default class Menu extends React.Component {
                     paddingTop: 0
                 }}>
                     <Text
-                        style={[UI.regularWhiteText25,{
+                        style={[UI.regularWhiteText25, {
                             fontSize: 17,
                         }]}>Stap 2: Zoek toernooi en start</Text>
                     <Ionicons name="ios-arrow-forward" size={28} color={UI.COLORS_HEX.darkGray}/>
                 </TouchableOpacity>
-               <Footer image={store.SponserImage}/>
+                <Footer image={store.SponserImage}/>
             </View>
         )
 

@@ -41,10 +41,12 @@ export default class SlagType extends React.Component {
 
 
 
-                <Navbar title={'Wedstrijd ' + store.Court.name} leftBtnTitle={'Undo'}
-                        onPressLeftBtn={() => navigator.pop({
-                            animated: true,
+                <Navbar title={'Wedstrijd ' + store.Court.name} leftBtnTitle={'Cancel'}
+                        onPressLeftBtn={() =>  navigator.push({
+                            screen: 'Services',
+                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                             animationType: 'fade',
+                            passProps: {backTitle: 'Set up'}
                         })}/>
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center'}}>

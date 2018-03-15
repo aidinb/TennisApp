@@ -58,7 +58,14 @@ export default class SetUpWedstrijd extends React.Component {
                         short_game: this.state.kies1,
                         super_tie_break: this.state.kies2,
                     });
-                    store.Play = [];
+                    store.Play={};
+                    store.Play = {
+                        score: {
+                            currentGame: {player1: 0, player2: 0},
+                            currentSet: {player1: 0, player2: 0},
+                            previousSets: [{player1: 0, player2: 0},{player1: 0, player2: 0}]
+                        }
+                    };
                     if (store.HasService === false) {
                         navigator.push({
                             screen: 'StartMatch',

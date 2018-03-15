@@ -37,7 +37,10 @@ export default class Winner extends React.Component {
                 <BackImage/>
 
 
-                <Navbar title={'Wedstrijd ' + store.Court.name}/>
+                <Navbar title={'Wedstrijd ' + store.Court.name} leftBtnColor={UI.COLORS_HEX.orange}
+                        leftBtnTitle={"Cancel"} onPressLeftBtn={()=>{
+                    navigator.pop()
+                }}/>
 
 
                 <ScrollView contentContainerStyle={{paddingBottom: 70, alignItems: 'center'}}
@@ -135,7 +138,7 @@ export default class Winner extends React.Component {
                             width: width - 90,
 
                         }}>
-                            <Box title={'Punt'} colors={['#00914C', '#00A550', '#64C08A']}
+                            <Box title={'Punt'} colors={['#666666', '#808080', '#999999']}
                                  onPress={() => {
                                      if (store.HasWinner === true) {
                                          this.myScroll.scrollTo({y: this.state.scrollHeight/3});
@@ -152,7 +155,7 @@ export default class Winner extends React.Component {
 
                                  }}
                                  selected={this.state.player1.punt}/>
-                            <Box title={'Punt'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
+                            <Box title={'Punt'} colors={['#666666', '#808080', '#999999']}
                                  onPress={() => {
                                      if (store.HasWinner === true) {
                                          this.myScroll.scrollTo({y: this.state.scrollHeight/3});
@@ -223,7 +226,7 @@ export default class Winner extends React.Component {
                                  selected={this.state.player1.winner}
                                  service1Disable={this.state.service1Disable}
                             />
-                            <Box title={'Forced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
+                            <Box title={'Forced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
                                  onPress={() => {
                                      if (store.HasStroke === true) {
                                          navigator.push({
@@ -246,7 +249,7 @@ export default class Winner extends React.Component {
                                  selected={this.state.player1.forced}
                                  service1Disable={this.state.service1Disable}
                             />
-                            <Box title={'Unforced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
+                            <Box title={'Unforced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
                                  onPress={() => {
                                      if (store.HasStroke === true) {
                                          navigator.push({
@@ -322,7 +325,7 @@ export default class Winner extends React.Component {
                                  selected={this.state.player2.winner}
                                  service2Disable={this.state.service2Disable}
                             />
-                            <Box title={'Forced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
+                            <Box title={'Forced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
                                  onPress={() => {
                                      if (store.HasStroke === true) {
                                          navigator.push({
@@ -345,7 +348,7 @@ export default class Winner extends React.Component {
                                  selected={this.state.player2.forced}
                                  service1Disable={this.state.service2Disable}
                             />
-                            <Box title={'Unforced\n error'} colors={['#0095DA', '#00AEEE', '#2BC4F3']}
+                            <Box title={'Unforced\n error'} colors={['#CD118C', '#EB008B', '#F074AC']}
                                  onPress={() => {
                                      if (store.HasStroke === true) {
                                          navigator.push({

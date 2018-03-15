@@ -82,61 +82,137 @@ export default class StartMatch extends React.Component {
     }
     setScoreSets = () => {
         const {navigator, store} = this.props;
-
+        console.log('++setScoreSets++')
+        console.log(store.Play.score)
         if (store.Play.score) {
             if (store.Play.score.previousSets.length > 1) {
-                this.setState({set1Point1: store.Play.score.previousSets[1].player1});
-                this.setState({set1Point2: store.Play.score.previousSets[1].player2});
+                set1Point1 = store.Play.score.previousSets[1].player1;
+                set1Point2 = store.Play.score.previousSets[1].player2;
             }
             if (store.Play.score.previousSets.length > 0) {
-                this.setState({set0Point1: store.Play.score.previousSets[0].player1});
-                this.setState({set0Point2: store.Play.score.previousSets[0].player2});
+                set0Point1 = store.Play.score.previousSets[0].player1;
+                set0Point2 = store.Play.score.previousSets[0].player2;
             }
         }
     }
 
     onPlayPress = (player) => {
         const {navigator, store} = this.props;
-        store.setUpdate(false)
-        this.setState({timerstart: true});
-        if (store.Play.winner&&store.Play.winner !== 0) {
-            navigator.push({
-                screen: 'MatchResult',
-                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
-                animationType: 'fade',
-                passProps: {backTitle: 'Terug'}
-            })
+        if (store.Update === true) {
+
+            Alert.alert(
+                'Attention',
+                'are you sure?',
+                [
+                    {text: 'OK', onPress: () => {
+                        store.setUpdate(false)
+                        this.setState({timerstart: true});
+                        if (store.Play.winner&&store.Play.winner !== 0) {
+                            navigator.push({
+                                screen: 'MatchResult',
+                                navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                animationType: 'fade',
+                                passProps: {backTitle: 'Terug'}
+                            })
+                        }else{
+                            store.addPlay({
+                                match_id: store.Match.id,
+                                player: player,
+                                service: '',
+                                score_type: '',
+                                shot: '',
+                                shot_type: '',
+                                second_serve: '',
+                            }).then(() => {
+                                store.setService(store.Play.now_serving)
+                                store.setEndTimeMatch(this.endTime)
+                                store.setWinnerPlayer(store.Play)
+                                store.setService(store.Play.now_serving)
+                                if (store.Play.score.previousSets.length > 0) {
+
+                                    if (store.Play.score.previousSets.length > 1) {
+                                        set1Point1 = store.Play.score.previousSets[1].player1;
+                                        set1Point2 = store.Play.score.previousSets[1].player2;
+                                    }
+                                    if (store.Play.score.previousSets.length > 0) {
+                                        set0Point1 = store.Play.score.previousSets[0].player1;
+                                        set0Point2 = store.Play.score.previousSets[0].player2;
+                                    }
+                                }else{
+                                    store.Play.score.previousSets = [];
+                                    set1Point1 = '';
+                                    set1Point2 = '';
+                                    set0Point1 = '';
+                                    set0Point2 = '';
+                                }
+                                if (store.Play.winner !== 0) {
+                                    navigator.push({
+                                        screen: 'MatchResult',
+                                        navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                        animationType: 'fade',
+                                        passProps: {backTitle: 'Terug'}
+                                    })
+                                }
+
+                            })}
+                    }},
+                    {text: 'CANCEL', onPress: () => console.log('OK Pressed')},
+                ],
+            )
         }else{
-        store.addPlay({
-            match_id: store.Match.id,
-            player: player,
-            service: '',
-            score_type: '',
-            shot: '',
-            shot_type: '',
-            second_serve: '',
-        }).then(() => {
-            store.setService(store.Play.now_serving)
-            store.setEndTimeMatch(this.endTime)
-            store.setWinnerPlayer(store.Play)
-            if (store.Play.score.previousSets.length > 1) {
-                this.setState({set1Point1: store.Play.score.previousSets[1].player1});
-                this.setState({set1Point2: store.Play.score.previousSets[1].player2});
-            }
-            if (store.Play.score.previousSets.length > 0) {
-                this.setState({set0Point1: store.Play.score.previousSets[0].player1});
-                this.setState({set0Point2: store.Play.score.previousSets[0].player2});
-            }
-            if (store.Play.winner !== 0) {
+            store.setUpdate(false)
+            this.setState({timerstart: true});
+            if (store.Play.winner&&store.Play.winner !== 0) {
                 navigator.push({
                     screen: 'MatchResult',
                     navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
                     animationType: 'fade',
                     passProps: {backTitle: 'Terug'}
                 })
-            }
+            }else{
+                store.addPlay({
+                    match_id: store.Match.id,
+                    player: player,
+                    service: '',
+                    score_type: '',
+                    shot: '',
+                    shot_type: '',
+                    second_serve: '',
+                }).then(() => {
+                    store.setService(store.Play.now_serving)
+                    store.setEndTimeMatch(this.endTime)
+                    store.setWinnerPlayer(store.Play)
+                    store.setService(store.Play.now_serving)
+                    if (store.Play.score.previousSets.length > 0) {
 
-        })}
+                        if (store.Play.score.previousSets.length > 1) {
+                            set1Point1 = store.Play.score.previousSets[1].player1;
+                            set1Point2 = store.Play.score.previousSets[1].player2;
+                        }
+                        if (store.Play.score.previousSets.length > 0) {
+                            set0Point1 = store.Play.score.previousSets[0].player1;
+                            set0Point2 = store.Play.score.previousSets[0].player2;
+                        }
+                    }else{
+                        store.Play.score.previousSets = [];
+                        set1Point1 = '';
+                        set1Point2 = '';
+                        set0Point1 = '';
+                        set0Point2 = '';
+                    }
+                    if (store.Play.winner !== 0) {
+                        navigator.push({
+                            screen: 'MatchResult',
+                            navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                            animationType: 'fade',
+                            passProps: {backTitle: 'Terug'}
+                        })
+                    }
+
+                })}
+        }
+
+
 
     }
 
@@ -148,9 +224,8 @@ export default class StartMatch extends React.Component {
 
     onScorePress = (player, type) => {
         const {navigator, store} = this.props;
+        console.log(type)
         if (type === 0) {
-            alert('Niet toegestaan om te wijzigen')
-        } else if (type === 'prev1' || type === 'prev0') {
             alert('Niet toegestaan om te wijzigen')
         }
         else {
@@ -179,13 +254,28 @@ export default class StartMatch extends React.Component {
     render() {
         const {navigator, store} = this.props;
         if (store.Play.score) {
-            if (store.Play.score.previousSets.length > 1) {
-                set1Point1 = store.Play.score.previousSets[1].player1;
-                set1Point2 = store.Play.score.previousSets[1].player2;
-            }
             if (store.Play.score.previousSets.length > 0) {
-                set0Point1 = store.Play.score.previousSets[0].player1;
-                set0Point2 = store.Play.score.previousSets[0].player2;
+                if (store.Play.score.previousSets.length > 1) {
+                    set1Point1 = store.Play.score.previousSets[1].player1;
+                    set1Point2 = store.Play.score.previousSets[1].player2;
+                }else{
+                    set1Point1 = '';
+                    set1Point2 = '';
+                }
+                if (store.Play.score.previousSets.length > 0) {
+                    set0Point1 = store.Play.score.previousSets[0].player1;
+                    set0Point2 = store.Play.score.previousSets[0].player2;
+                }else{
+                    set0Point1 = '';
+                    set0Point2 = '';
+                }
+            } else {
+                console.log('boooo')
+                console.log(store.Play)
+                set1Point1 = '';
+                set1Point2 = '';
+                set0Point1 = '';
+                set0Point2 = '';
             }
         }
         return (
@@ -323,7 +413,7 @@ export default class StartMatch extends React.Component {
                                         }}>{store.Play.score && store.Play.score.currentGame.player1 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player1 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player1 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8}
-                                                      onPress={() => this.onScorePress(1, store.Play.score ? set1Point1 !== '' ? "prev1" : set0Point1 !== '' ? "prev0" : store.Play.score.currentSet.player1 ? "currentSet" : "currentSet" : 0)}
+                                                      onPress={() => this.onScorePress(1, store.Play.score ? set0Point1 !== '' ? "prev0" : store.Play.score.currentSet.player1 ? "currentSet" : "currentSet" : 0)}
                                                       style={{
                                                           width: (width - 40) / 8 - 4,
                                                           backgroundColor: UI.COLORS_HEX.gray,
@@ -335,11 +425,11 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?  set0Point1 !== '' && set0Point1 >= 6 && parseInt(set0Point1) > parseInt(set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white:UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?set0Point1 !== '' ? set0Point1 :  store.Play.score.currentSet.player1 : 0}</Text>
+                                            color: store.Play.score ? set0Point1 !== '' && set0Point1 >= 6 && parseInt(set0Point1) > parseInt(set0Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set0Point1 !== '' ? set0Point1 : store.Play.score.currentSet.player1 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                        this.onScorePress(1, store.Play.score ? set0Point1 !== '' && set1Point1 !== '' ? "prev0" : set0Point1 !== '' ? "currentSet" : 0 : 0)
+                                        this.onScorePress(1, store.Play.score ? set1Point1 !== '' ? "prev1" : set0Point1 !== '' ? "currentSet" : 0 : 0)
                                     }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
@@ -350,8 +440,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?set1Point1 !== '' && set1Point1 >= 6 && parseInt(set1Point1) > parseInt(set1Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?  set1Point1 !== '' ? set1Point1 : set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
+                                            color: store.Play.score ? set1Point1 !== '' && set1Point1 >= 6 && parseInt(set1Point1) > parseInt(set1Point2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point1 !== '' ? set1Point1 : set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
                                         this.onScorePress(1, set1Point1 !== '' && set0Point1 !== '' ? store.Play.score && store.Play.score.currentSet.player1 !== '' ? "currentSet" : 0 : 0)
@@ -365,8 +455,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ?  store.Play.winner === 1 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ?  store.Play.score.currentSet.player1 : 0 :  0}</Text>
+                                            color: store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ? store.Play.winner === 1 && parseInt(store.Play.score.currentSet.player1) > parseInt(store.Play.score.currentSet.player2) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point1 !== '' && set0Point1 !== '' ? store.Play.score.currentSet.player1 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -415,7 +505,7 @@ export default class StartMatch extends React.Component {
 
                                 }}>
                                     <TouchableOpacity activeOpacity={0.8}
-                                                      onPress={() => this.onScorePress(2, store.Play.score ? "currentGame" : 0)}
+                                                      onPress={() => this.onScorePress(2, "currentGame")}
                                                       style={{
                                                           width: (width - 40) / 8 - 4,
                                                           backgroundColor: UI.COLORS_HEX.gray,
@@ -433,7 +523,7 @@ export default class StartMatch extends React.Component {
                                         }}>{store.Play.score && store.Play.score.currentGame.player2 === "deuce" ? 40 : store.Play.score && store.Play.score.currentGame.player2 === "adv" ? "AD" : store.Play.score ? store.Play.score.currentGame.player2 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8}
-                                                      onPress={() => this.onScorePress(2, store.Play.score ? set1Point2 !== '' ? "prev1" : set0Point2 !== '' ? "prev0" : store.Play.score.currentSet.player2 ? "currentSet" : "currentSet" : 0)}
+                                                      onPress={() => this.onScorePress(2, store.Play.score ? set0Point2 !== '' ? "prev0" : store.Play.score.currentSet.player2 ? "currentSet" : "currentSet" : 0)}
                                                       style={{
                                                           width: (width - 40) / 8 - 4,
                                                           backgroundColor: UI.COLORS_HEX.gray,
@@ -445,11 +535,11 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?  set0Point2 !== '' && set0Point2 >= 6 && parseInt(set0Point2) > parseInt(set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white:UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?set0Point2 !== '' ? set0Point2 :  store.Play.score.currentSet.player2 : 0}</Text>
+                                            color: store.Play.score ? set0Point2 !== '' && set0Point2 >= 6 && parseInt(set0Point2) > parseInt(set0Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set0Point2 !== '' ? set0Point2 : store.Play.score.currentSet.player2 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                        this.onScorePress(2, store.Play.score ? set0Point2 !== '' && set1Point2 !== '' ? "prev0" : set0Point2 !== '' ? "currentSet" : 0 : 0)
+                                        this.onScorePress(2, set1Point2 !== '' ? "prev1" : set0Point2 !== '' ? "currentSet" : 0)
                                     }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
@@ -460,11 +550,11 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score?set1Point2 !== '' && set1Point2 >= 6 && parseInt(set1Point2) > parseInt(set1Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white: UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ?  set1Point2 !== '' ? set1Point2 : set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
+                                            color: store.Play.score ? set1Point2 !== '' && set1Point2 >= 6 && parseInt(set1Point2) > parseInt(set1Point1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point2 !== '' ? set1Point2 : set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                        this.onScorePress(2, set1Point2 !== '' && set0Point2 !== '' ? store.Play.score && store.Play.score.currentSet.player2 !== '' ? "currentSet" : 0 : 0)
+                                        this.onScorePress(2, set1Point2 !== '' && set0Point2 !== '' ? "currentSet" : 0)
                                     }} style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
@@ -475,8 +565,8 @@ export default class StartMatch extends React.Component {
                                         <Text style={{
                                             fontSize: 24,
                                             fontFamily: UI.FONT.bold,
-                                            color: store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ?  store.Play.winner === 2 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
-                                        }}>{store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ?  store.Play.score.currentSet.player2 : 0 :  0}</Text>
+                                            color: store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ? store.Play.winner === 2 && parseInt(store.Play.score.currentSet.player2) > parseInt(store.Play.score.currentSet.player1) ? UI.COLORS_HEX.orange : UI.COLORS_HEX.white : UI.COLORS_HEX.white : UI.COLORS_HEX.white,
+                                        }}>{store.Play.score ? set1Point2 !== '' && set0Point2 !== '' ? store.Play.score.currentSet.player2 : 0 : 0}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
