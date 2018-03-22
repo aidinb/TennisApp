@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class MainApplication extends NavigationApplication implements ReactApplication {
     @Override
@@ -38,5 +40,11 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     @Override
     public String getJSMainModuleName() {
         return "index";
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fabric.with(this, new Crashlytics());
     }
 }

@@ -361,6 +361,7 @@ class AppState {
     async deleteLastPlay(matchId) {
         let {data} = await axios.delete('/api/matches/' + matchId + '/lastplay').catch((e) => {
             if (e.response && e.response.status) {
+                console.log(e.response)
                 Alert.alert(
                     'Let op',
                     'Je kan niet verder terug',
@@ -434,7 +435,7 @@ class AppState {
         });
         let arr = [];
         Object.keys(data).map(key => arr.push({key: key, value: data[key]}));
-        // console.log("MatcheStatistics", arr)
+        console.log("MatcheStatistics", arr)
         this.MatcheStatistics = arr;
     }
 

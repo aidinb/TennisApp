@@ -226,11 +226,18 @@ export default class Statics extends React.Component {
 
 
                 <ScrollView
-                    style={{width: width, padding: 15, paddingTop: 10, flex: 1, backgroundColor: UI.COLORS_HEX.black}}
+                    style={{
+                        width: width,
+                        padding: 15,
+                        paddingTop: 10,
+                        flex: 1,
+                        backgroundColor: UI.COLORS_HEX.black,
+                        paddingLeft: 0
+                    }}
                     contentContainerStyle={{alignItems: 'center'}}
                     ref={ref => this.full = ref}>
                     <BackImage/>
-                    <View>
+                    <View style={{paddingLeft: 15}}>
                         <View style={{
                             width: width - 30,
                             flexDirection: 'row',
@@ -377,7 +384,8 @@ export default class Statics extends React.Component {
                         width: width - 30,
                         flexDirection: 'row',
                         height: 25,
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        paddingLeft: 9
                     }}>
                         <Text
                             style={[UI.regularWhiteText25, {
@@ -391,25 +399,37 @@ export default class Statics extends React.Component {
                             }]}>{this.props.endTime} </Text>
 
                     </View>
-                    <View
+                    <ScrollView
                         style={{
-
                             backgroundColor: UI.COLORS_HEX.white,
                             borderRadius: 6,
                             borderColor: UI.COLORS_HEX.blue,
                             borderWidth: 0.5,
-                            justifyContent: 'center',
-                            alignItems: 'center',
+
                             flexDirection: 'row',
                             marginTop: 5,
-                            height: 30
+                            height: 30,
+                            marginLeft: 15
+                        }}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
                         }}>
+
                         {store.MatcheStatistics.map((s, index) => {
                             return (
                                 <TouchableOpacity key={'stat' + index} activeOpacity={0.8} onPress={() => {
-                                    let arr = [];
-                                    Object.keys(s.value).map(key => arr.push({key: key, value: s.value[key]}));
-                                    this.setState({showSeg: s.key, statValue: arr})
+
+                                    if (s.value.length > 0) {
+                                        this.setState({showSeg: s.key, statValue: []})
+                                    } else {
+                                        let arr = [];
+                                        Object.keys(s.value).map(key => arr.push({key: key, value: s.value[key]}));
+                                        this.setState({showSeg: s.key, statValue: arr})
+                                    }
+
 
                                 }} style={{
                                     width: (width - 39) / 4,
@@ -435,7 +455,7 @@ export default class Statics extends React.Component {
                                 </TouchableOpacity>
                             )
                         })}
-                    </View>
+                    </ScrollView>
 
 
                     <View style={{
@@ -444,6 +464,7 @@ export default class Statics extends React.Component {
                         justifyContent: 'space-around',
                         flexDirection: 'row',
                         marginTop: 10,
+                        marginLeft: 15
                     }}>
                         <LinearGradient
                             start={{x: 0.5, y: 0}}
@@ -460,7 +481,7 @@ export default class Statics extends React.Component {
                                 top: 0,
                                 left: 0,
                                 right: 0,
-                                bottom: 0
+                                bottom: 0,
                             }}/>
                         <View style={{
                             flex: 0.42,
@@ -506,9 +527,10 @@ export default class Statics extends React.Component {
                         </View>
                     </View>
 
-                    {this.state.statValue && <FlatList data={this.state.statValue}
-                                                       keyExtractor={(item, index) => 'Match' + index}
-                                                       renderItem={this.renderItem}
+                    {this.state.statValue && this.state.statValue.length > 0 && <FlatList data={this.state.statValue}
+                                                                                          keyExtractor={(item, index) => 'Match' + index}
+                                                                                          renderItem={this.renderItem}
+                                                                                          style={{marginLeft: 15}}
 
 
                     />}
