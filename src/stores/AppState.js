@@ -7,7 +7,7 @@ import site from '../Site';
 import lstore from 'react-native-simple-store';
 
 axios.defaults.baseURL = site;
-axios.defaults.timeout = 20000;
+axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
 axios.defaults.headers.delete['Content-Type'] = 'application/json';

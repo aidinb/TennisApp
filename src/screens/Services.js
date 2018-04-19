@@ -17,6 +17,7 @@ import Box from "../components/Box";
 import BackImage from "../components/BackImage";
 import {Stopwatch} from 'react-native-stopwatch-timer'
 import moment from 'moment';
+import Loading from "../components/Loading";
 
 let {height, width} = Dimensions.get('window');
 
@@ -43,6 +44,8 @@ export default class Services extends React.Component {
             set: [],
             scrollHeight: '',
             timeReset: false,
+            isLoading:false
+
 
         }
         ;
@@ -414,6 +417,7 @@ export default class Services extends React.Component {
                                 )
 
                             } else {
+                                this.setState({isLoading:true})
                                 delete store.Play.score.currentGame.tie_break;
                                 delete store.Play.score.currentGame.finished;
                                 delete store.Play.score.currentSet.super_tie_break;
@@ -427,6 +431,8 @@ export default class Services extends React.Component {
                                     delete store.Play.score.previousSets[1].finished;
                                 }
                                 store.setMatchScore(store.Match.id, store.Play.score).then(() => {
+                                    this.setState({isLoading:false})
+
                                     store.setUpdate(false);
                                     if (store.Play.winner !== 0) {
                                         store.setWinnerPlayer(store.Play)
@@ -853,6 +859,7 @@ export default class Services extends React.Component {
                     </View>
                 </ScrollView>
                 <Footer image={store.SponserImage}/>
+                {this.state.isLoading && <Loading/>}
 
             </View>
         )

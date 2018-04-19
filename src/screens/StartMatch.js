@@ -18,6 +18,7 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import Box from "../components/Box";
 import BackImage from "../components/BackImage";
+import Loading from "../components/Loading";
 
 let {height, width} = Dimensions.get('window');
 const endTime = '';
@@ -36,6 +37,7 @@ export default class StartMatch extends React.Component {
             scrollHeight: '',
             timerstart: true,
             timeReset: false,
+            isLoading:false
 
 
         };
@@ -308,6 +310,7 @@ export default class StartMatch extends React.Component {
                                 )
 
                             } else {
+                                this.setState({isLoading:true})
                                 delete store.Play.score.currentGame.tie_break;
                                 delete store.Play.score.currentGame.finished;
                                 delete store.Play.score.currentSet.super_tie_break;
@@ -321,6 +324,7 @@ export default class StartMatch extends React.Component {
                                     delete store.Play.score.previousSets[1].finished;
                                 }
                                 store.setMatchScore(store.Match.id, store.Play.score).then(() => {
+                                    this.setState({isLoading:false})
                                     store.setUpdate(false);
                                     if (store.Play.winner !== 0) {
                                         navigator.push({
@@ -688,6 +692,7 @@ export default class StartMatch extends React.Component {
                     </View>
                 </ScrollView>
                 <Footer image={store.SponserImage}/>
+                {this.state.isLoading && <Loading/>}
 
             </View>
         )
