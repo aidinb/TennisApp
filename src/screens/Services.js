@@ -116,6 +116,36 @@ export default class Services extends React.Component {
                 [
                     {
                         text: 'OK', onPress: () => {
+                        this.setState({isLoading:true})
+                        delete store.Play.score.currentGame.tie_break;
+                        delete store.Play.score.currentGame.finished;
+                        delete store.Play.score.currentSet.super_tie_break;
+                        delete store.Play.score.currentSet.finished;
+                        if (store.Play.score.previousSets[0]) {
+                            delete store.Play.score.previousSets[0].super_tie_break;
+                            delete store.Play.score.previousSets[0].finished;
+                        }
+                        if (store.Play.score.previousSets[1]) {
+                            delete store.Play.score.previousSets[1].super_tie_break;
+                            delete store.Play.score.previousSets[1].finished;
+                        }
+                        store.setMatchScore(store.Match.id, store.Play.score).then(() => {
+                            this.setState({isLoading:false})
+
+                            store.setUpdate(false);
+                            if (store.Play.winner !== 0) {
+                                store.setWinnerPlayer(store.Play)
+                                navigator.push({
+                                    screen: 'MatchResult',
+                                    navigatorStyle: {...UI.NAVIGATION_STYLE, navBarHidden: true},
+                                    animationType: 'fade',
+                                    passProps: {backTitle: 'Terug'}
+                                })
+                            }
+                        })
+                    }
+                    },
+                    {text: 'Cancel', onPress: () => {
                         store.setUpdate(false)
                         this.setState({timerstart: true})
                         if (store.Play.winner && store.Play.winner !== 0) {
@@ -224,9 +254,7 @@ export default class Services extends React.Component {
                                 })
                             }
                         }
-                    }
-                    },
-                    {text: 'Cancel', onPress: () => console.log('OK Pressed')},
+                    }},
                 ],
             )
 

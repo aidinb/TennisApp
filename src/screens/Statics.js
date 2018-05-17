@@ -420,7 +420,7 @@ export default class Statics extends React.Component {
 
                         {store.MatcheStatistics.map((s, index) => {
                             return (
-                                <TouchableOpacity key={'stat' + index} activeOpacity={0.8} onPress={() => {
+                               <TouchableOpacity key={'stat' + index} activeOpacity={0.8} onPress={() => {
 
                                     if (s.value.length > 0) {
                                         this.setState({showSeg: s.key, statValue: []})

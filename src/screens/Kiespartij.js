@@ -32,6 +32,7 @@ export default class Kiespartij extends React.Component {
     componentDidMount() {
         const {store, navigator} = this.props;
         this.setState({isLoading: true})
+        console.log(store.TournamentByNumber.id)
         store.getTournamentCategories({
             tournament_id: store.TournamentByNumber.id
         }).then(() => {

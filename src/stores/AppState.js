@@ -228,13 +228,14 @@ class AppState {
 
     async getTournamentByNumber(opt) {
         let {data} = await axios.get('/api/tournaments/find/' + opt.tournament_number);
-        // console.log("TournamentByNumber", data)
+        console.log("TournamentByNumber", data)
         this.TournamentByNumber = data;
 
     }
 
     async getTournamentCategories(opt) {
         let {data} = await axios.get('/api/tournaments/' + opt.tournament_id).catch((e) => {
+            console.log(e.response)
             if (e.response && e.response.status) {
                 Alert.alert(
                     e.response.status.toString(),
@@ -253,7 +254,7 @@ class AppState {
                 )
             }
         });
-        // console.log("TournamentCategories", data)
+        console.log("TournamentCategories", data)
         this.TournamentCategories = data.categories;
         this.TournamentCourts = data.courts;
         this.TournamentId = data.id;
@@ -433,8 +434,14 @@ class AppState {
                 )
             }
         });
+        console.log("MatcheStatistics data", data)
+
         let arr = [];
-        Object.keys(data).map(key => arr.push({key: key, value: data[key]}));
+        Object.keys(data).map(key => {
+            if (key !== 'player1' && key !== 'player2') {
+                arr.push({key: key, value: data[key]})
+            }
+        });
         console.log("MatcheStatistics", arr)
         this.MatcheStatistics = arr;
     }
